@@ -1,5 +1,6 @@
 const {app, BrowserWindow} = require('electron');
 
+
 function createWindow () {
 	
   console.log('Hello from electron');
@@ -9,6 +10,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/../index.html`)
+
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -21,7 +23,6 @@ function createWindow () {
     mainWindow = null
   })
 }
-
 
 app.on('ready', createWindow);
 
