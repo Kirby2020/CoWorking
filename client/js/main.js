@@ -5,7 +5,7 @@ function createWindow () {
   console.log('Hello from electron');
 	
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1280, height: 720})
+  mainWindow = new BrowserWindow({width: 1440, height: 720})
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/../index.html`)
