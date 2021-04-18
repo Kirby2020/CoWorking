@@ -1,6 +1,10 @@
 // Verbinding maken met server
 const sock = io();
 
+// Eventlistener voor het sturen van een chatbericht
+window.addEventListener('load', () => {
+    document.getElementById('chatForm').addEventListener('submit', onChat);
+});
 
 // voegt een bericht toe aan de chatbox
 function logChat(message) {
@@ -27,13 +31,13 @@ function getUsername() {
     return window.prompt('Enter username');
 };
 
-
-// Eventlistener voor het sturen van een chatbericht
-document.getElementById('chatForm').addEventListener('submit', onChat);
-
 // Bij het ontvangen van een chatbericht door de server of andere client
 // wordt het bericht in de chatbox weergegeven
 sock.on('chatMessage', logChat);
 
-
+// Stuurt je gebruikersnaam naar de server
 sock.emit('user joined', getUsername());
+
+sock.on('mouse move', ({ x, y }) => {
+
+})

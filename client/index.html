@@ -5,8 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
-    <script type="module" src="./js/game.js"></script>
+
     <script type="module" src="./socket.io/socket.io.js"></script>
+    <script type="module" src="./js/game/game.js"></script>
+    <script type="module" src="./js/chat.js"></script>
+    <script type="module" src="./js/client.js"></script>
 
 
     <title>Document</title>
@@ -14,8 +17,7 @@
 <body>
     <div id="chat">
         <div id="messages">
-            <p>temp</p>
-            <p>temp2</p>
+            <h1 id="chatHeader">chat</h1>
         </div>
         <form id="chatForm">
             <input type="text" name="chat" id="chatMessage" placeholder="Send a message..." autocomplete="off" tabindex="1" autofocus>
@@ -24,7 +26,5 @@
     </div>
     <canvas id="screen" height="600" width="1080"></canvas>
 
-    <script type="module" src="./js/client.js"></script>
-    <script type="module" src="./js/chat.js"></script>
 </body>
 </html>

@@ -26,7 +26,9 @@ const io = socketio(server);
 io.on('connection', (sock) => {
     // Alle events komen hier
 
-    sock.on('user joined', username => {
+    sock.on('user joined', (username) => {
+        console.log('user connected');
+
         // Stuurt een bericht naar de huidige gebruiker
         sock.emit('chatMessage', `Welcome ${username}`);
 
@@ -42,10 +44,12 @@ io.on('connection', (sock) => {
         sock.on('disconnect', () => {
             io.emit('chatMessage', `${username} has disconnected`);
         });
-
     });
 
 
+    sock.on('mouse move', ({ x, y }) => {
+        io.emit('mouse move', { x, y });
+    });
 
 });
 
