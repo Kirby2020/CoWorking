@@ -1,4 +1,4 @@
-const sock = io();
+const sock = io('http://localhost:3001');
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
 

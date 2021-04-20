@@ -1,5 +1,5 @@
 // Verbinding maken met server
-const sock = io();
+const sock = io('http://localhost:3001');
 
 // Eventlistener voor het sturen van een chatbericht
 window.addEventListener('load', () => {
@@ -39,5 +39,7 @@ sock.on('chatMessage', logChat);
 sock.emit('user joined', getUsername());
 
 sock.on('mouse move', ({ x, y }) => {
-
+    const canvas = document.getElementById('screen');
+    const context = canvas.getContext('2d');
+    context.fillRect(x, y, 10, 10);
 })
