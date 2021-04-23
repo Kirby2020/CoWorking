@@ -12,6 +12,8 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 
+const Players = require('players');
+
 const app = express();
 const port = 3001;
 
@@ -26,8 +28,14 @@ const io = socketio(server);
 io.on('connection', (sock) => {
     // Alle events komen hier
 
-    sock.on('user joined', (username) => {
+    const players = new Players();
+
+    sock.on('login', (username) => {
+        // Wanneer iemand is ingelogd wordt hij toegevoegd aan de spelerlijst
+        // en stuurt de server een lijst met alle spelers terug naar de clients
         console.log('user connected');
+        players.add(username);
+        io.emit('playerList', players);
 
         // Stuurt een bericht naar de huidige gebruiker
         sock.emit('chatMessage', `Welcome ${username}`);
@@ -43,6 +51,7 @@ io.on('connection', (sock) => {
         // Als iemand de server verlaat, wordt iedereen op de hoogte gebracht
         sock.on('disconnect', () => {
             io.emit('chatMessage', `${username} has disconnected`);
+            players.remove(username);
         });
     });
 
