@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
 
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous"></script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"
+            integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU"
+            crossorigin="anonymous"></script>
 
     <script type="module" src="./js/game/game.js"></script>
     <script type="module" src="./js/chat.js"></script>
@@ -16,16 +18,27 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="chat">
-        <div id="messages">
-            <h1 id="chatHeader">chat</h1>
-        </div>
-        <form id="chatForm">
-            <input type="text" name="chat" id="chatMessage" placeholder="Send a message..." autocomplete="off" tabindex="1" autofocus>
-            <input type="submit" value="Send" id="sendChatMessage">
-        </form>
+<div id="chat">
+    <div id="messages">
+        <h1 id="chatHeader">Chat</h1>
     </div>
-    <canvas id="screen" height="600" width="1080"></canvas>
+    <form id="chatForm">
+        <input type="text" name="chat" id="chatMessage" placeholder="Zeg iets..." autocomplete="off" tabindex="1" autofocus>
+        <input type="submit" value="Sturen" id="sendChatMessage" disabled>
+    </form>
+</div>
+<canvas id="screen" height="600" width="1080"></canvas>
+<div id="playerList">
+    <div id="players">
+        <h1 id="playerListHeader">Spelers</h1>
+        <div></div>
+    </div>
+
+    <form action="#" id="loginForm">
+        <input type="text" placeholder="Gebruikersnaam..." tabindex="0" autofocus name="nameBox" id="nameBox">
+        <input type="submit" value="Inloggen" id="loginButton">
+    </form>
+</div>
 
 </body>
 </html>

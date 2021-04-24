@@ -12,8 +12,8 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 
-const Players = require('players');
-const GameState = require('gameState');
+const Players = require('./players');
+const GameState = require('./gameState');
 
 const app = express();
 const port = 3001;
@@ -25,35 +25,42 @@ app.use(express.static(path.join(__dirname, '../client')));
 const server = http.createServer(app);
 const io = socketio(server);
 
+let playerSet = [];
+let gameState = new GameState();
+
 // Wanneer iemand verbind met de server (naar de site gaat)
 io.on('connection', (sock) => {
     // Alle events komen hier
 
-    const players = new Players();
-    const gameState = new GameState();
+    // let playerSet = new Players();
 
-    sock.on('login', (username) => {
+
+    sock.on('login', function logged(player){
         // Wanneer iemand is ingelogd wordt hij toegevoegd aan de spelerlijst
         // en stuurt de server een lijst met alle spelers terug naar de clients
         console.log('user connected');
-        players.add(username);
-        io.emit('playerList', players);
+        playerSet.push(player = {
+            username: player,
+            playerState: 'in lobby'
+        });
+        io.emit('playerList', playerSet);
 
         // Stuurt een bericht naar de huidige gebruiker
-        sock.emit('chatMessage', `Welcome ${username}`);
+        sock.emit('chatMessage', `> Welkom ${player.username}.`);
 
         // Stuurt een bericht naar alle andere users
-        sock.broadcast.emit('chatMessage', `${username} has connected`);
+        sock.broadcast.emit('chatMessage', `> ${player.username} speelt mee!`);
 
         // Als de server een bericht ontvangt, stuurt hij die door naar de andere gebruikers
         sock.on('chatMessage', (message) => {
-            io.emit('chatMessage', `${username}: ${message}`);
+            io.emit('chatMessage', `${player.username}: ${message}`);
         });
 
         // Als iemand de server verlaat, wordt iedereen op de hoogte gebracht
-        sock.on('disconnect', () => {
-            io.emit('chatMessage', `${username} has disconnected`);
-            players.remove(username);
+        sock.on('logout', (leavingPlayer) => {
+            io.emit('chatMessage', `> ${leavingPlayer.username} speelt niet meer mee.`);
+            playerSet.splice(playerSet.indexOf(leavingPlayer), 1);
+            io.emit('playerList', playerSet);
         });
     });
 

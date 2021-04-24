@@ -2,18 +2,21 @@ const {app, BrowserWindow} = require('electron');
 
 
 function createWindow () {
-	
+
   console.log('Hello from electron');
 	
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 1440, height: 720})
+  let mainWindow = new BrowserWindow({
+    width: 1920, // 1440
+    height: 1080, // 720
+    fullscreen: false
+  })
 
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/../index.html`)
 
-
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

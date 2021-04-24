@@ -19,18 +19,20 @@ function logChat(message) {
 
     parent.appendChild(p);
     parent.scrollTop = parent.scrollHeight;
-};
+}
 
 // Voegt de lijst van spelers toe op het scherm
-function logPlayers(players) {
-    const parent = document.querySelector('#players');
+function logPlayers(playerSet) {
+    console.log(playerSet);
+    const parent = document.querySelector('#players div');
+    parent.innerHTML = '';
 
-    // foreach player in players, Set!
-        const li = document.createElement('li');
-        li.innerHTML = message;
-
-        parent.appendChild(li);
-        parent.scrollTop = parent.scrollHeight;
+    playerSet.forEach(function(player) {
+        const p = document.createElement('p');
+        p.innerHTML = player.username + ' (' + player.playerState + ')';
+        parent.appendChild(p);
+    })
+    parent.scrollTop = parent.scrollHeight;
 }
 
 // Eventhandler voor het sturen van een chatbericht
@@ -38,24 +40,45 @@ function onChat(e) {
     e.preventDefault();
 
     const input = document.getElementById('chatMessage');
-    const message = input.value;
-    input.value = '';
+    let message = input.value;
 
-    // Stuurt het bericht naar de io server
-    sock.emit('chatMessage', message);
-};
+    if (message !== '') {
+        input.value = '';
+        // Stuurt het bericht naar de io server
+        sock.emit('chatMessage', message);
+    }
+}
 
 // Eventhandler voor het inloggen 
 function onLogin(e) {
     e.preventDefault();
 
-    const input = document.getElementById('chatMessage');
+    const button = document.getElementById("loginButton")
+    const input = document.getElementById('nameBox');
+    const sendChat = document.getElementById("sendChatMessage");
     const username = input.value;
-    input.value = '';
 
-    // Stuurt de username naar de io server
-    sock.emit('login', username);
-};
+    // input.value = '';
+    if (username !== '') {
+        if (button.value === "Inloggen") {
+            input.disabled = true;
+            sendChat.disabled = false;
+            input.classList.add("disabled");
+            button.value = "Uitloggen";
+
+            // Stuurt de username naar de io server
+            sock.emit('login', username);
+        } else if (button.value === "Uitloggen") {
+            input.disabled = false;
+            sendChat.disabled = true;
+            input.classList.remove("disabled");
+            button.value = "Inloggen";
+
+            // Stuurt de username naar de io server
+            sock.emit('logout', username);
+        }
+    }
+}
 
 // Bij het ontvangen van een chatbericht door de server of andere client
 // wordt het bericht in de chatbox weergegeven
@@ -65,8 +88,8 @@ sock.on('chatMessage', logChat);
 sock.on('playerList', logPlayers);
 
 // Bij het ontvangen van een muisbeweging wordt deze getoond op het scherm (TESTING)
-sock.on('mouse move', ({ x, y }) => {
+sock.on('mouse move', ({x, y}) => {
     const canvas = document.getElementById('screen');
     const context = canvas.getContext('2d');
     context.fillRect(x, y, 10, 10);
-});
+})
