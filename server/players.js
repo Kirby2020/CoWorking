@@ -2,17 +2,19 @@
 // Alle spelers worden in een lijst opgeslagen
 // Je kan alle spelers opvragen of een enkele speler
 
-class Player {
-    constructor(username) {
-        this.players = new Set([username]);
+// Player states: in lobby, selecting, in game, (loading)
+
+class Players {
+    constructor(username, playerState = 'in lobby') {
+        this.players = new Set([{username, playerState}]);
     }
 
     constructor() {
         this.players = new Set();
     }
 
-    add(username) {
-        this.players.add(username);
+    add(username, playerState = 'in lobby') {
+        this.players.add({username, playerState});
     }
 
     remove(username) {
@@ -26,11 +28,17 @@ class Player {
     getOne(username) {
         if (this.players.has(username)) {
             this.players.forEach(player => {
-                if (player === username) {
+                if (player.username === username) {
                     return player;
                 } 
             });
         }
         return undefined;
     }
+
+    getState(username) {
+        return this.getOne(username).playerState;
+    }
 }
+
+module.exports = Player;

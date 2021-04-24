@@ -13,6 +13,7 @@ const express = require('express');
 const socketio = require('socket.io');
 
 const Players = require('players');
+const GameState = require('gameState');
 
 const app = express();
 const port = 3001;
@@ -29,6 +30,7 @@ io.on('connection', (sock) => {
     // Alle events komen hier
 
     const players = new Players();
+    const gameState = new GameState();
 
     sock.on('login', (username) => {
         // Wanneer iemand is ingelogd wordt hij toegevoegd aan de spelerlijst
