@@ -2,13 +2,15 @@
 
 :root {
     --default-font-size: 1.5em;
-    --primary-color: ;
-    --secondary-color: ;
+    /*--primary-color: ;*/
+    /*--secondary-color: ;*/
 }
 
 body {
     background-color: lightgrey;
     display: flex;
+    flex-direction: row;
+    justify-content: space-around;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -27,18 +29,18 @@ canvas {
     margin: auto;
 }
 
-#chat {
+#chat, #playerList {
     background-color: lightblue;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     min-height: 100vh;
     min-width: 300px;
     width: 20vw;
 }
 
-#messages {
+#messages, #players {
     background-color: lightpink;
     border: 4px solid grey;
     border-radius: 20px;
@@ -50,14 +52,18 @@ canvas {
     overflow-y: scroll;
 }
 
-#chatForm {
+#chatForm, #loginForm, #logOutForm {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem 1rem;
 }
 
-#chatMessage {
+.disabled {
+    font-style: italic;
+}
+
+#chatMessage, #nameBox {
     background-color: skyblue;
     color: white;
     border: none;
@@ -69,7 +75,7 @@ canvas {
     max-width: 100%;
 }
 
-#sendChatMessage {
+#sendChatMessage, #loginButton, #logoutButton {
     background-color: skyblue;
     color: white;
     border: none;
@@ -80,8 +86,7 @@ canvas {
     
     max-width: fit-content;
     margin-top: 1rem;
-}  
-
+}
 
 
 ::-webkit-scrollbar {

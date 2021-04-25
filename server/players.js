@@ -4,10 +4,10 @@
 
 // Player states: in lobby, selecting, in game, (loading)
 
-class Players {
-    constructor(username, playerState = 'in lobby') {
-        this.players = new Set([{username, playerState}]);
-    }
+module.exports = class Players {
+    // constructor(username, playerState = 'in lobby') {
+    //     this.players = new Set([{username, playerState}]);
+    // }
 
     constructor() {
         this.players = new Set();
@@ -30,7 +30,7 @@ class Players {
             this.players.forEach(player => {
                 if (player.username === username) {
                     return player;
-                } 
+                }
             });
         }
         return undefined;
@@ -40,5 +40,3 @@ class Players {
         return this.getOne(username).playerState;
     }
 }
-
-module.exports = Player;
