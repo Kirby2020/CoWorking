@@ -7,10 +7,12 @@
 }
 
 body {
+    min-width: 100vw;
+    min-height: 100vh;
     background-color: lightgrey;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: space-between;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -23,10 +25,36 @@ p {
     font-size: var(--default-font-size);
 }
 
+.sidePane {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    /*min-width: 300px;*/
+    max-height: 100vh;
+    max-width: 20vw;
+}
+
 canvas {
     border: 1px solid black;
-    height: fit-content;
-    margin: auto;
+    /*height: fit-content;*/
+    /*width: 300%;*/
+    /*min-width: 60vw;*/
+    /*max-width: 99vw;*/
+    /*max-height: 99vh;*/
+    height: 600px;
+    width: 1080px;
+    align-self: center;
+    justify-self: center;
+}
+
+#chat.hide, #playerList.hide {
+    display: none;
+}
+
+#chatHeader, #playerListHeader {
+    text-align: center;
+    font-size: 1.5rem;
+    border-bottom: black solid 2px;
 }
 
 #chat, #playerList {
@@ -35,9 +63,6 @@ canvas {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    min-width: 300px;
-    width: 20vw;
 }
 
 #messages, #players {
@@ -50,13 +75,16 @@ canvas {
     margin: 1rem;
     padding: 1rem;
     overflow-y: scroll;
+    align-self: center;
 }
 
-#chatForm, #loginForm, #logOutForm {
+#chatForm, #loginForm {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem 1rem;
+    max-height: 30vh;
+    max-width: 20vw;
 }
 
 .disabled {
@@ -71,11 +99,11 @@ canvas {
     padding: 1rem;
     border-radius: 1rem;
     font-size: calc(var(--default-font-size) + 0.4em);
-
-    max-width: 100%;
+    cursor: text;
+    max-width: 20vw;
 }
 
-#sendChatMessage, #loginButton, #logoutButton {
+#sendChatMessage, #loginButton {
     background-color: skyblue;
     color: white;
     border: none;
@@ -83,8 +111,8 @@ canvas {
     padding: 1rem;
     border-radius: 1rem;
     font-size: calc(var(--default-font-size) + 0.4em);
-    
-    max-width: fit-content;
+    cursor: pointer;
+    max-width: 20vw;
     margin-top: 1rem;
 }
 

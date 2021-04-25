@@ -9,8 +9,17 @@ window.addEventListener('load', () => {
     // Eventlistener voor het inloggen
     document.getElementById('loginForm').addEventListener('submit', onLogin);
 
+    document.getElementById("left").addEventListener('click', hideLeft);
+    document.getElementById("right").addEventListener('click', hideRight);
 });
 
+function hideLeft() {
+    document.getElementById('chat').classList.toggle('hide');
+}
+
+function hideRight() {
+    document.getElementById('playerList').classList.toggle('hide');
+}
 
 // Voegt een bericht toe aan de chatbox
 function logChat(message) {
@@ -34,7 +43,6 @@ function logPlayers(playerSet) {
         p.innerHTML = player.username + ' (' + player.playerState + ')';
         parent.appendChild(p);
     });
-
 
     parent.scrollTop = parent.scrollHeight;
 }
@@ -64,10 +72,12 @@ function onLogin(e) {
 
     // input.value = '';
     if (username !== '') {
-        input.style.display = 'none';
-        button.style.display = 'none';
+        // input.style.display = 'none';
+        // button.style.display = 'none';
+        input.style.visibility = 'hidden';
+        button.style.visibility = 'hidden';
         sendChat.disabled = false;
-        
+
         // Stuurt de username naar de io server
         sock.emit('login', username);
     }

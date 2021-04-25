@@ -11,7 +11,7 @@ function loadImage(url) {
         });
         image.src = url;
     })
-};
+}
 
 loadImage('./assets/images/backgrounds/background1.jpg')
 .then(image => {
@@ -23,19 +23,19 @@ function getMouseCoordinates(element, event) {
     const { top, left } = element.getBoundingClientRect();
     // coördinaten van de muis t.o.v. het volledige browser window
     const { clientX, clientY } = event;
-    //console.log(event)
-    //console.log(clientX, clientY)
+    // console.log(event)
+    // console.log(clientX, clientY)
     return {
         x: clientX - left,
         y: clientY - top
     };
-};
+}
 
 
 canvas.addEventListener('mousemove', (e) => {
     const { x, y } = getMouseCoordinates(canvas, e);
     sock.emit('mouse move', { x, y });
 
-    context.fillRect(x, y, 10, 10);
+    // context.fillRect(x, y, 10, 10);
 });
    

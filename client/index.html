@@ -17,27 +17,35 @@
     <title>Document</title>
 </head>
 <body>
-<div id="chat">
-    <div id="messages">
-        <h1 id="chatHeader">Chat</h1>
+<section class="sidePane">
+    <div id="chat">
+        <div id="messages">
+            <h1 id="chatHeader">Chat</h1>
+        </div>
+        <form id="chatForm">
+            <input type="text" name="chat" id="chatMessage" placeholder="Zeg iets..." autocomplete="off" tabindex="1" autofocus>
+            <input type="submit" value="Sturen" id="sendChatMessage" disabled>
+        </form>
     </div>
-    <form id="chatForm">
-        <input type="text" name="chat" id="chatMessage" placeholder="Zeg iets..." autocomplete="off" tabindex="2">
-        <input type="submit" value="Sturen" id="sendChatMessage" disabled>
-    </form>
-</div>
-<canvas id="screen" height="600" width="1080"></canvas>
-<div id="playerList">
-    <div id="players">
-        <h1 id="playerListHeader">Spelers</h1>
-        <div></div>
-    </div>
+    <button id="left">C<br>H<br>A<br>T</button>
+</section>
 
-    <form action="#" id="loginForm">
-        <input type="text" placeholder="Gebruikersnaam..." name="nameBox" id="nameBox" tabindex="1" autofocus>
-        <input type="submit" value="Inloggen" id="loginButton">
-    </form>
-</div>
+<canvas id="screen" height="600" width="1080"></canvas>
+
+<section class="sidePane">
+    <button id="right">P<br>L<br>A<br>Y<br>E<br>R<br>S</button>
+    <div id="playerList">
+        <div id="players">
+            <h1 id="playerListHeader">Spelers</h1>
+            <div></div>
+        </div>
+
+        <form action="#" id="loginForm">
+            <input type="text" placeholder="Gebruikersnaam..." tabindex="0" autofocus name="nameBox" id="nameBox">
+            <input type="submit" value="Inloggen" id="loginButton">
+        </form>
+    </div>
+</section>
 
 </body>
 </html>
