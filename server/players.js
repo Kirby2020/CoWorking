@@ -14,26 +14,28 @@ module.exports = class Players {
     }
 
     add(username, playerState = 'in lobby') {
+        console.log('_Add', username)
         this.players.add({username, playerState});
     }
 
     remove(username) {
-        this.players.delete(username)
+        console.log('_Delete', username)
+        this.players.delete(this.getOne(username))
     }
 
     getAll() {
+        console.log('TEST', this.players)
         return this.players;
     }
 
     getOne(username) {
-        if (this.players.has(username)) {
-            this.players.forEach(player => {
-                if (player.username === username) {
-                    return player;
-                }
-            });
-        }
-        return undefined;
+        for (const player of this.players) {
+            if (player.username === username) {
+                console.log('Player found_', player);
+                return player;
+            }
+        };
+        return 'no';
     }
 
     getState(username) {

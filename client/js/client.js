@@ -8,6 +8,7 @@ window.addEventListener('load', () => {
 
     // Eventlistener voor het inloggen
     document.getElementById('loginForm').addEventListener('submit', onLogin);
+
 });
 
 
@@ -23,15 +24,18 @@ function logChat(message) {
 
 // Voegt de lijst van spelers toe op het scherm
 function logPlayers(playerSet) {
+    playerSet = JSON.parse(playerSet);
     console.log(playerSet);
     const parent = document.querySelector('#players div');
     parent.innerHTML = '';
 
-    playerSet.forEach(function(player) {
+    playerSet.forEach(player => {
         const p = document.createElement('p');
         p.innerHTML = player.username + ' (' + player.playerState + ')';
         parent.appendChild(p);
-    })
+    });
+
+
     parent.scrollTop = parent.scrollHeight;
 }
 
@@ -53,30 +57,19 @@ function onChat(e) {
 function onLogin(e) {
     e.preventDefault();
 
-    const button = document.getElementById("loginButton")
+    const button = document.getElementById("loginButton");
     const input = document.getElementById('nameBox');
-    const sendChat = document.getElementById("sendChatMessage");
+    const sendChat = document.getElementById('sendChatMessage');
     const username = input.value;
 
     // input.value = '';
     if (username !== '') {
-        if (button.value === "Inloggen") {
-            input.disabled = true;
-            sendChat.disabled = false;
-            input.classList.add("disabled");
-            button.value = "Uitloggen";
-
-            // Stuurt de username naar de io server
-            sock.emit('login', username);
-        } else if (button.value === "Uitloggen") {
-            input.disabled = false;
-            sendChat.disabled = true;
-            input.classList.remove("disabled");
-            button.value = "Inloggen";
-
-            // Stuurt de username naar de io server
-            sock.emit('logout', username);
-        }
+        input.style.display = 'none';
+        button.style.display = 'none';
+        sendChat.disabled = false;
+        
+        // Stuurt de username naar de io server
+        sock.emit('login', username);
     }
 }
 

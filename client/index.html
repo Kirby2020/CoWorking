@@ -11,7 +11,6 @@
             crossorigin="anonymous"></script>
 
     <script type="module" src="./js/game/game.js"></script>
-    <script type="module" src="./js/chat.js"></script>
     <script type="module" src="./js/client.js"></script>
 
 
@@ -23,7 +22,7 @@
         <h1 id="chatHeader">Chat</h1>
     </div>
     <form id="chatForm">
-        <input type="text" name="chat" id="chatMessage" placeholder="Zeg iets..." autocomplete="off" tabindex="1" autofocus>
+        <input type="text" name="chat" id="chatMessage" placeholder="Zeg iets..." autocomplete="off" tabindex="2">
         <input type="submit" value="Sturen" id="sendChatMessage" disabled>
     </form>
 </div>
@@ -35,7 +34,7 @@
     </div>
 
     <form action="#" id="loginForm">
-        <input type="text" placeholder="Gebruikersnaam..." tabindex="0" autofocus name="nameBox" id="nameBox">
+        <input type="text" placeholder="Gebruikersnaam..." name="nameBox" id="nameBox" tabindex="1" autofocus>
         <input type="submit" value="Inloggen" id="loginButton">
     </form>
 </div>
