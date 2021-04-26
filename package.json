@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "electron": "^12.0.2",
+    "electron": "^12.0.5",
     "nodemon": "^2.0.7"
   },
   "name": "coworking",
@@ -25,6 +25,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "socket.io": "^4.0.1",
-    "socket.io-client": "^4.0.1"
+    "socket.io-client": "^4.0.1",
+    "update-electron-app": "^2.0.1"
   }
 }
