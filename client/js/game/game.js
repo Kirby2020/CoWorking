@@ -1,4 +1,6 @@
-const sock = io('http://localhost:3001');
+// const sock = io('http://localhost:3001');
+const sock = io('https://game.jonathanvercammen.ikdoeict.be');
+
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
 
