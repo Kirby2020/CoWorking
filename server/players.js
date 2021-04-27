@@ -16,11 +16,16 @@ module.exports = class Players {
     add(username, playerState = 'in lobby') {
         console.log('_Add', username)
         this.players.add({username, playerState});
+        return this.players;
     }
 
     remove(username) {
-        console.log('_Delete', username)
-        this.players.delete(this.getOne(username))
+        return new Promise(resolve => {
+            console.log('_Delete', username)
+            this.players.delete(this.getOne(username));
+            console.log('AFTER DELETE', this.players) 
+            resolve(this.players);
+        })
     }
 
     getAll() {

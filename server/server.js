@@ -96,8 +96,15 @@ io.on('connection', (sock) => {
         // en verwijderd uit de spelerlijst
         sock.on('disconnect', (reason) => {
             sock.broadcast.emit('chatMessage', `> ${sock.username} speelt niet meer mee.`);
-            playerSet.remove(sock.username);
-            io.emit('playerList', playerSet);
+            try {
+                playerSet.remove(sock.username)
+                .then(players => {
+                    sock.broadcast.emit('playerList', JSON.stringify([...players]))
+                })    
+            }
+            catch (error) {
+                console.log(error);
+            }
         });
 
 
