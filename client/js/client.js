@@ -1,5 +1,6 @@
 // Verbinding maken met server
-const sock = io('http://localhost:3001');
+// const sock = io('http://localhost:3001');
+const sock = io('https://game.jonathanvercammen.ikdoeict.be');
 
 
 window.addEventListener('load', () => {

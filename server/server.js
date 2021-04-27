@@ -34,7 +34,12 @@ app.use(function(req, res, next) {
 
 // Maken van de server
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    }
+})
 
 //let playerSet = [];
 const playerSet = new Players();
