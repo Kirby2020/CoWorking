@@ -38,4 +38,11 @@ canvas.addEventListener('mousemove', (e) => {
 
     // context.fillRect(x, y, 10, 10);
 });
+
+// Bij het ontvangen van een muisbeweging wordt deze getoond op het scherm (TESTING)
+sock.on('mouse move', ({x, y}) => {
+    const canvas = document.getElementById('screen');
+    const context = canvas.getContext('2d');
+    context.fillRect(x, y, 10, 10);
+})
    

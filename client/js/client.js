@@ -9,14 +9,15 @@ window.addEventListener('load', () => {
     // Eventlistener voor het inloggen
     document.getElementById('loginForm').addEventListener('submit', onLogin);
 
+    // Eventlisteners voor het verbergen en weergeven van de zijpanelen
     document.getElementById("left").addEventListener('click', hideLeft);
     document.getElementById("right").addEventListener('click', hideRight);
 });
 
+// Toggled de zijpanelen
 function hideLeft() {
     document.getElementById('chat').classList.toggle('hide');
 }
-
 function hideRight() {
     document.getElementById('playerList').classList.toggle('hide');
 }
@@ -89,10 +90,3 @@ sock.on('chatMessage', logChat);
 
 // Bij het ontvangen een spelerlijst van de server wordt die weergegeven rechts op het scherm
 sock.on('playerList', logPlayers);
-
-// Bij het ontvangen van een muisbeweging wordt deze getoond op het scherm (TESTING)
-sock.on('mouse move', ({x, y}) => {
-    const canvas = document.getElementById('screen');
-    const context = canvas.getContext('2d');
-    context.fillRect(x, y, 10, 10);
-})

@@ -6,6 +6,7 @@ socketio: websocket
 sock: socket of 1 verbinding
 io: alle verbindingen
 */
+console.log('Server Starting...')
 
 const path = require('path');
 const http = require('http');
@@ -16,10 +17,20 @@ const Players = require('./players');
 const GameState = require('./gameState');
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'))
+});
 // Static folder voor client bestanden te vinden
 app.use(express.static(path.join(__dirname, '../client')));
+
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 // Maken van de server
 const server = http.createServer(app);
@@ -104,3 +115,33 @@ server.on('error', (error) => {
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
 })
+
+
+
+
+
+
+
+
+/*
+Package.json voor hosted server
+{
+  "name": "coworking",
+  "version": "1.0.0",
+  "scripts": {
+	"start": "node server/server.js
+  },
+  "engines": {
+	  "node": "14.16.x"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "pvz multiplayer game",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  }
+}
+*/
