@@ -12,7 +12,7 @@ li>a:link, li>a:visited {
     border-radius: 2rem;
     text-align: center;
 }
-a:hover, img:hover{
+a:hover, .picture:hover{
     background-color: #00e600;
 }
 li:not(:first-child){
@@ -29,17 +29,15 @@ ul, li{
     display: flex;
     justify-content: space-between;
 }
-header, img, a {
+header, .picture, a {
     justify-content: space-between;
     background-color: #99ff99;
 }
-img{
-    width: 10%;
-    order: 1;
-}
-.picture, img{
+.picture{
     display: flex;
     margin: auto;
+    width: 10%;
+    order: 1;
 }
 header {
     display: flex;

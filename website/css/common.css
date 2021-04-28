@@ -2,9 +2,7 @@ main{
     width: 65%;
     background-color: rgba(153, 255, 153, 0.5);
     margin: 0 auto;
-    padding-bottom: 30rem;
     padding-top: 1rem;
-
 }
 html{
     background-image: url(./img/backgroundmaybe.jpg);
@@ -14,11 +12,14 @@ html{
 body{
     background-color: rgba(178, 178, 178, 0.6);
 }
-section{
+.top{
     width: 80%;
     margin: auto;
-    padding: 2rem 5rem;
+    padding: 2vh 5vw;
     background-color: rgb(239, 180, 65);
     text-align: center;
     border-radius: 5rem;
+}
+h1{
+    font-size: 30px;
 }

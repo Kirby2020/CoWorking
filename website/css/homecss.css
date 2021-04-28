@@ -1,0 +1,23 @@
+.picturezombie{
+    background-color: transparent;
+    height: 20vw;
+    transform: rotateY(180deg);
+}
+.classfirst, .classsecond{
+    display: inline-flex;
+    justify-content: space-between;
+}
+.textfirst, .textsecond{
+    width: 90%;
+    margin: auto 2rem;
+}
+h2{
+    font-size: 20px;
+    margin-bottom: 1rem;
+}
+.pictureplant{
+    background-color: transparent;
+    height: 20vw;
+    transform: rotateY(180deg);
+    margin-left: 2rem;
+}
