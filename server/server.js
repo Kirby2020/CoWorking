@@ -13,13 +13,15 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 
+const randomColor = require('randomcolor');
+
 const Players = require('./players');
 const GameState = require('./gameState');
 
 const app = express();
 const port = process.env.PORT || 3001;
 
-
+// Basic express server
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/index.html'))
 });
@@ -32,7 +34,8 @@ app.use(function(req, res, next) {
     next();
 });
 
-// Maken van de server
+
+// Maken van de io server
 const server = http.createServer(app);
 const io = socketio(server, {
     cors: {
@@ -41,7 +44,8 @@ const io = socketio(server, {
     }
 })
 
-//let playerSet = [];
+
+
 const playerSet = new Players();
 const gameState = new GameState();
 
@@ -69,10 +73,21 @@ io.on('connection', (sock) => {
     // Stuurt de playerlijst ook naar de mensen die nog niet ingelogd zijn
     io.emit('playerList', JSON.stringify([...playerSet.players]));
 
+    // Elke client krijgt een unieke kleur van cursor
+    let color = randomColor() || 'black';
+
+    // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
+    
+    sock.on('mouse move', ({ x, y }) => {
+        io.emit('mouse move', { x, y, color });
+        console.log(x,y)
+    });
+
 
     sock.on('login', (player) => {
         // Wanneer iemand is ingelogd wordt hij toegevoegd aan de spelerlijst
         // en stuurt de server een lijst met alle spelers terug naar de clients
+        // Elke speler krijgt een andere kleur van cursor
         
         //console.log('user connected', player);
         playerSet.add(player, 'in lobby');
@@ -110,10 +125,6 @@ io.on('connection', (sock) => {
 
     });
 
-
-    sock.on('mouse move', ({ x, y }) => {
-        io.emit('mouse move', { x, y });
-    });
 
 });
 
