@@ -1,10 +1,11 @@
 import { drawBackground, drawCursor, drawSeedBanks } from './drawLayers.js';
 import { canvas, context, CELL_SIZE, gameGrid } from './constants.js';
 import { drawGameGrid } from './gameGrid.js';
+import { Cell } from './classes/Cell.js';
 
 // Verbindt ofwel met de live server of de local server
-// const sock = io('http://localhost:3001');
-const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
+const sock = io('http://localhost:3001');
+// const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
 
 // Zoekt de muispositie op
 function getMouseCoordinates(element, event) {
@@ -20,11 +21,10 @@ function getMouseCoordinates(element, event) {
     };
 }
 
-const timer = 4;
+const timer = 5;
 let startTime = performance.now();
 // Eventlistener voor de muiscoördinaten door te sturen naar de server
 canvas.addEventListener('mousemove', (e) => {
-
     let currentTime = performance.now();
 
     if (currentTime - startTime > timer) {
@@ -32,36 +32,43 @@ canvas.addEventListener('mousemove', (e) => {
         sock.emit('mouse move', { x, y });
         startTime = currentTime;
     }
-
-
-
 });
 
+let currentMousePos = {}
 // Bij het ontvangen van een muisbeweging wordt deze getoond op het scherm (TESTING)
 sock.on('mouse move', ({x, y, color}) => {
-    drawCursor(x, y, color);
+    currentMousePos = {x, y, color};
 });
+
+sock.on('selectedCell', cell => {
+    cell = new Cell(cell.x, cell.y)
+    cell.drawSelected();
+})
 
 console.log(gameGrid)
 
 function isIn(pos, cell) {
-    if (pos.x < cell.x && pos.x > cell.x + CELL_SIZE.width) {
-        if (pos.y < cell.y && pos.y > cell.y + CELL_SIZE.height) {
+    if (pos.x > cell.x && pos.x < cell.x + CELL_SIZE.width) {
+        if (pos.y > cell.y && pos.y < cell.y + CELL_SIZE.height) {
             return true;
         }
     }
 }
 
-// drawSelectedCells(cell) {
-
-// }
+function drawSelectedCells() {
+    gameGrid.forEach(cell => {
+        if (isIn(currentMousePos, cell)) {
+            sock.emit('selectedCell', cell)
+        }
+    })
+}
 
 function update() {
     drawBackground();
     drawSeedBanks();
     drawGameGrid();
-
-    //drawSelectedCells();
+    drawCursor(currentMousePos.x, currentMousePos.y, currentMousePos.color)
+    drawSelectedCells();
     requestAnimationFrame(update);
 }
 

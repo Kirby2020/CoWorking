@@ -1,8 +1,6 @@
 // Verbindt ofwel met de live server of de local server
-// const sock = io('http://localhost:3001');
-const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be', {
-    secure: true 
-});
+const sock = io('http://localhost:3001');
+// const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
 
 
 
