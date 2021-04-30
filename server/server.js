@@ -167,4 +167,25 @@ Package.json voor hosted server
     "utf-8-validate": "^5.0.2"
   }
 }
+
+
+
+{
+  "name": "coworking",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.17.1",
+    "randomcolor": "^0.6.2",
+    "socket.io": "^4.0.1",
+    "socket.io-client": "^4.0.1"
+  }
+}
+
 */
