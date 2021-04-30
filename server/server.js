@@ -9,7 +9,7 @@ io: alle verbindingen
 console.log('Server Starting...')
 
 const path = require('path');
-const http = require('http');
+const https = require('https');
 const express = require('express');
 const socketio = require('socket.io');
 
@@ -38,13 +38,21 @@ app.use(function(req, res, next) {
 
 
 // Maken van de io server
-const server = http.createServer(app);
+// const server = http.createServer(app);
+
+const server = https.createServer({ 
+    key: fs.readFileSync('privkey.pem'),
+    cert: fs.readFileSync('fullchain.pem') 
+ },app);
+
 const io = socketio(server, {
     cors: {
         origin: "*",
         methods: ["GET", "POST"],
     }
 })
+
+
 
 
 
