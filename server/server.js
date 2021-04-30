@@ -9,7 +9,7 @@ io: alle verbindingen
 console.log('Server Starting...')
 
 const path = require('path');
-const http = require('http');
+const http = require('https');
 const express = require('express');
 const socketio = require('socket.io');
 
@@ -20,6 +20,8 @@ const GameState = require('./gameState');
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+
 
 // Basic express server
 app.get('/', (req, res) => {
@@ -77,10 +79,8 @@ io.on('connection', (sock) => {
     let color = randomColor() || 'black';
 
     // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
-    
     sock.on('mouse move', ({ x, y }) => {
         io.emit('mouse move', { x, y, color });
-        console.log(x,y)
     });
 
 
