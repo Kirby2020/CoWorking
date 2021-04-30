@@ -12,6 +12,7 @@ const path = require('path');
 const https = require('https');
 const express = require('express');
 const socketio = require('socket.io');
+const fs = require('fs');
 
 const randomColor = require('randomcolor');
 
