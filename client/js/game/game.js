@@ -61,7 +61,7 @@ function update() {
     drawSeedBanks();
     drawGameGrid();
 
-    drawSelectedCells();
+    //drawSelectedCells();
     requestAnimationFrame(update);
 }
 

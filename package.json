@@ -25,6 +25,7 @@
   "dependencies": {
     "bufferutil": "^4.0.3",
     "express": "^4.17.1",
+    "node-gyp-build": "^4.2.3",
     "randomcolor": "^0.6.2",
     "socket.io": "^4.0.1",
     "socket.io-client": "^4.0.1",
