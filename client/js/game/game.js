@@ -5,8 +5,9 @@ import { drawSeedBanks } from './seedBanks.js';
 import { Cell } from './classes/Cell.js';
 
 // Verbindt ofwel met de live server of de local server
-export const sock = io('http://localhost:3001');
-// const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
+export const sock = io('https://pvz-game.herokuapp.com/');
+// https://pvz-game.herokuapp.com/
+// http://localhost:3001
 
 
 // ---------- MUIS ----------
