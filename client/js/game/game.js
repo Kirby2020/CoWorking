@@ -1,11 +1,11 @@
-import { drawBackground, drawCursor } from './drawLayers.js';
+import { drawBackground, drawCursors } from './drawLayers.js';
 import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from './constants.js';
 import { drawGameGrid } from './gameGrid.js';
 import { drawSeedBanks } from './seedBanks.js';
 import { Cell } from './classes/Cell.js';
 
 // Verbindt ofwel met de live server of de local server
-export const sock = io('https://pvz-game.herokuapp.com/');
+export const sock = io('http://localhost:3001');
 // https://pvz-game.herokuapp.com/
 // http://localhost:3001
 
@@ -13,6 +13,7 @@ export const sock = io('https://pvz-game.herokuapp.com/');
 // ---------- MUIS ----------
 
 const timer = 5;
+let currentMousePositions = [];
 let currentMousePos = {};
 let startTime = performance.now();
 
@@ -96,8 +97,8 @@ function update() {
     drawSeedBanks();
     drawGameGrid();
     drawSelectedCells();
-    drawCursor(currentMousePos.x, currentMousePos.y, currentMousePos.color);
-
+    //drawCursor(currentMousePos.x, currentMousePos.y, currentMousePos.color);
+    drawCursors(currentMousePositions);
     requestAnimationFrame(update);
 }
 

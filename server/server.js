@@ -17,6 +17,7 @@ const randomColor = require('randomcolor');
 
 const Players = require('./players');
 const GameState = require('./gameState');
+const Cursors = require('./cursors');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -54,6 +55,8 @@ const io = socketio(server, {
 
 const playerSet = new Players();
 const gameState = new GameState();
+const cursors = new Cursors();
+
 
 // DEBUG
 // const players = new Players();
@@ -81,6 +84,9 @@ io.on('connection', (sock) => {
 
     // Elke client krijgt een unieke kleur van cursor
     let color = randomColor() || 'black';
+    cursors.add(null, null, color);
+
+    console.log(cursors)
 
     // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
     sock.on('mouse move', ({ x, y }) => {
@@ -97,7 +103,7 @@ io.on('connection', (sock) => {
         // Elke speler krijgt een andere kleur van cursor
         
         //console.log('user connected', player);
-        playerSet.add(player, 'in lobby');
+        playerSet.add(player, 'in lobby', sock.id);
         sock.username = playerSet.getOne(player).username;
 
         // Stuurt de playerlijst naar alle users
@@ -114,6 +120,22 @@ io.on('connection', (sock) => {
             io.emit('chatMessage', `${player}: ${message}`);
         });
 
+        // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
+        // De ontvanger krijgt de invite met naam
+        sock.on('invite', ({from, to}) => {
+            console.log(from, to);
+            io.to(getId(to)).emit('invite', (from))
+            sock.emit('statusInvite', "pending");
+            // Als de persoon reageert op jouw invite stuurt hij die response terug naar jou
+            // Beide spelers hun status verandere naar selecting
+            // Later worden ze in een aparte gameroom gestoken
+            sock.on('responseInvite', response => {
+                
+            })
+        });
+
+
+
         // Als iemand de server verlaat, wordt iedereen op de hoogte gebracht
         // en verwijderd uit de spelerlijst
         sock.on('disconnect', (reason) => {
@@ -123,6 +145,7 @@ io.on('connection', (sock) => {
                 .then(players => {
                     sock.broadcast.emit('playerList', JSON.stringify([...players]))
                 })    
+                cursors.remove(color)
             }
             catch (error) {
                 console.log(error);
@@ -151,7 +174,9 @@ server.listen(port, () => {
 
 
 
-
+function getId(username) {
+    return playerSet.getOne(username).id;
+}
 
 /*
 Package.json voor hosted server

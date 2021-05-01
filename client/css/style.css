@@ -92,6 +92,19 @@ canvas:hover {
     align-self: center;
 }
 
+#players p {
+    display: inline;
+    line-height: 2em;
+}
+
+#players button {
+    max-width: max-content;
+    max-height: max-content;
+    padding: 0.1rem 0.3rem;
+    margin-top: 0.4rem;
+    float: right;
+}
+
 #chatForm, #loginForm {
     display: flex;
     flex-direction: column;

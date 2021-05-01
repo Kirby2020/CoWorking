@@ -15,3 +15,9 @@ export function drawCursor(x, y, color) {
     context.fillRect(x, y, 20, 20);
 }
 
+export function drawCursors(cursors) {
+    cursors.forEach(cursor => {
+        console.log(cursor);
+        drawCursor(cursor.x, cursor.y, cursor.color);
+    });
+}
