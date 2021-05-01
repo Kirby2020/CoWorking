@@ -52,8 +52,9 @@ canvas.addEventListener('mousemove', (e) => {
 });
 
 // Bij het ontvangen van een muisbeweging wordt deze getoond op het scherm (TESTING)
-sock.on('mouse move', ({x, y, color}) => {
-    currentMousePos = {x, y, color};
+sock.on('mouse move', (cursors) => {
+    console.log(cursors.cursors)
+    currentMousePositions.push(...[cursors])
 });
 
 // ---------- Geselecteerde cellen ----------

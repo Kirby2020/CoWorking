@@ -16,6 +16,7 @@ export function drawCursor(x, y, color) {
 }
 
 export function drawCursors(cursors) {
+    console.warn(cursors)
     cursors.forEach(cursor => {
         console.log(cursor);
         drawCursor(cursor.x, cursor.y, cursor.color);

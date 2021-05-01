@@ -8,16 +8,16 @@ module.exports = class Cursors {
         return this.cursors;
     }
 
-    update(x, y, color) {
+    update(color, x, y) {
         const cursor = this.getOne(color);
         cursor.x = x;
         cursor.y = y;
     }
 
-    remove(cursor) {
-        console.log('DELETE', cursor )
+    remove(color) {
+        console.log('DELETE', color )
         return new Promise(resolve => {
-            this.cursors.delete(this.getOne(cursor.color)); 
+            this.cursors.delete(this.getOne(color)); 
             resolve(this.cursors);
         })
     }

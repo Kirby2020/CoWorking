@@ -72,6 +72,7 @@ const cursors = new Cursors();
 
 setInterval(() => {
     console.log('SET', playerSet);
+    console.log('CURSORS', cursors)
 }, 1000)
 
 
@@ -82,26 +83,18 @@ io.on('connection', (sock) => {
     // Stuurt de playerlijst ook naar de mensen die nog niet ingelogd zijn
     io.emit('playerList', JSON.stringify([...playerSet.players]));
 
-    // Elke client krijgt een unieke kleur van cursor
-    let color = randomColor() || 'black';
-    cursors.add(null, null, color);
 
-    console.log(cursors)
-
-    // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
-    sock.on('mouse move', ({ x, y }) => {
-        io.emit('mouse move', { x, y, color });
-    });
-    sock.on('selectedCell', cell => {
-        sock.broadcast.emit('selectedCell', cell);
-    })
 
 
     sock.on('login', (player) => {
         // Wanneer iemand is ingelogd wordt hij toegevoegd aan de spelerlijst
         // en stuurt de server een lijst met alle spelers terug naar de clients
         // Elke speler krijgt een andere kleur van cursor
-        
+
+        // Elke client krijgt een unieke kleur van cursor
+        let color = randomColor() || 'black';
+        cursors.add(null, null, color);
+
         //console.log('user connected', player);
         playerSet.add(player, 'in lobby', sock.id);
         sock.username = playerSet.getOne(player).username;
@@ -119,6 +112,18 @@ io.on('connection', (sock) => {
         sock.on('chatMessage', (message) => {
             io.emit('chatMessage', `${player}: ${message}`);
         });
+
+
+        
+        // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
+        sock.on('mouse move', ({ x, y }) => {
+            cursors.update(color, x, y)
+            console.log(cursors)
+            io.emit('mouse move', cursors);
+        });
+        sock.on('selectedCell', cell => {
+            sock.broadcast.emit('selectedCell', cell);
+        })
 
         // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
         // De ontvanger krijgt de invite met naam
