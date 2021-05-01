@@ -7,19 +7,30 @@ export const CELL_SIZE = {
     width: 83,
     height: 93
 }
+export const SEEDSLOT_SIZE = {
+    width: 66,
+    height: 93
+}
+export const CELL_GAP = 0;
 export const gameGrid = [];
+export const seedBankGridPlants = [];
+export const seedBankGridZombies = [];
 
 
 export const seedBankPlants = {
-    width: canvas.width / 2.5,
-    height: CELL_SIZE.height,
+    x: 10,
+    y: 10,
+    width: canvas.width / 2 - 20,
+    height: SEEDSLOT_SIZE.height,
     color: 'red',
     slots: 6
 };
 
 export const seedBankZombies = {
-    width: canvas.width / 2.5,
-    height: CELL_SIZE.height,
+    x: canvas.width / 2 + 10,
+    y: 10,
+    width: canvas.width / 2 - 20,
+    height: SEEDSLOT_SIZE.height,
     color: 'blue',
     slots: 6
 };

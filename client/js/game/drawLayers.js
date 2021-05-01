@@ -1,5 +1,5 @@
 import { loadImage } from './loaders.js';
-import { canvas, context, seedBankPlants, seedBankZombies, gameGrid } from './constants.js';
+import { canvas, context, seedBankPlants, seedBankZombies, gameGrid, seedBankGridPlants, seedBankGridZombies } from './constants.js';
 
 // TEMP Laad de achtergrond
 export function drawBackground() {
@@ -15,11 +15,3 @@ export function drawCursor(x, y, color) {
     context.fillRect(x, y, 20, 20);
 }
 
-// Tekent de lege seedbanks voor zowel de planten als de zombies
-export function drawSeedBanks() {
-    context.fillStyle = seedBankPlants.color;
-    context.fillRect(100, 10, seedBankPlants.width, seedBankPlants.height);
-
-    context.fillStyle = seedBankZombies.color;
-    context.fillRect(canvas.width - 100 - seedBankZombies.width, 10, seedBankZombies.width, seedBankZombies.height);
-}

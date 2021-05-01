@@ -58,7 +58,7 @@ image, canvas {
 }
 
 canvas:hover {
-    /*cursor: none;*/
+    cursor: none;
 }
 
 #chat.hide, #playerList.hide {

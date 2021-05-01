@@ -1,5 +1,5 @@
 // Verbindt ofwel met de live server of de local server
-const sock = io('http://localhost:3001');
+import { sock } from './game/game.js';
 // const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
 
 
