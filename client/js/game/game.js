@@ -6,7 +6,7 @@ import { Cell } from './classes/Cell.js';
 import { isIn } from './utils.js';
 
 // Verbindt ofwel met de live server of de local server
-export const sock = io('http://localhost:3001');
+export const sock = io('https://pvz-game.herokuapp.com/');
 // https://pvz-game.herokuapp.com/
 // http://localhost:3001
 
