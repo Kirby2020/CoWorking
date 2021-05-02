@@ -1,8 +1,9 @@
-import { drawBackground, drawCursors } from './drawLayers.js';
+import { drawBackground, drawCursors, drawSelectedCells } from './drawLayers.js';
 import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from './constants.js';
 import { drawGameGrid } from './gameGrid.js';
 import { drawSeedBanks } from './seedBanks.js';
 import { Cell } from './classes/Cell.js';
+import { isIn } from './utils.js';
 
 // Verbindt ofwel met de live server of de local server
 export const sock = io('http://localhost:3001');
@@ -10,11 +11,15 @@ export const sock = io('http://localhost:3001');
 // http://localhost:3001
 
 
+console.log('gameGrid', gameGrid);
+console.log('seedBankGridPlants', seedBankGridPlants);
+console.log('seedBankGridZombies', seedBankGridZombies);
+
+
 // ---------- MUIS ----------
 
 const timer = 5;
 let currentMousePositions = [];
-let currentMousePos = {};
 let startTime = performance.now();
 
 // Zoekt de muispositie op
@@ -31,15 +36,6 @@ function getMouseCoordinates(element, event) {
     };
 }
 
-// Kijkt of er collision is tussen een positie en een cell
-function isIn(pos, cell) {
-    if (pos.x > cell.x - CELL_GAP && pos.x < cell.x - CELL_GAP + cell.width) {
-        if (pos.y > cell.y - CELL_GAP && pos.y < cell.y - CELL_GAP + cell.height) {
-            return true;
-        }
-    }
-}
-
 // Eventlistener voor de muiscoördinaten door te sturen naar de server
 canvas.addEventListener('mousemove', (e) => {
     let currentTime = performance.now();
@@ -53,43 +49,11 @@ canvas.addEventListener('mousemove', (e) => {
 
 // Bij het ontvangen van een muisbeweging wordt deze getoond op het scherm (TESTING)
 sock.on('mouse move', (cursors) => {
-    console.log(cursors.cursors)
-    currentMousePositions.push(...[cursors])
+    currentMousePositions = JSON.parse(cursors);
 });
 
-// ---------- Geselecteerde cellen ----------
-
-// Tekent alle geselecteerde cells
-function drawSelectedCells() {
-    gameGrid.forEach(cell => {
-        if (cell && isIn(currentMousePos, cell)) {
-            cell.drawSelected();
-            // sock.emit('selectedCell', cell);
-        }
-    })
-    seedBankGridPlants.forEach(cell => {
-        if (cell && isIn(currentMousePos, cell)) {
-            cell.drawSelected();
-            // sock.emit('selectedCell', cell);
-        }
-    })
-    seedBankGridZombies.forEach(cell => {
-        if (cell && isIn(currentMousePos, cell)) {
-            cell.drawSelected();
-            // sock.emit('selectedCell', cell);
-        }
-    })
-}
-
-// sock.on('selectedCell', cell => {
-//     cell = new Cell(cell.x, cell.y)
-//     cell.drawSelected();
-// })
 
 
-console.log('gameGrid', gameGrid);
-console.log('seedBankGridPlants', seedBankGridPlants);
-console.log('seedBankGridZombies', seedBankGridZombies);
 
 
 
@@ -97,8 +61,7 @@ function update() {
     drawBackground();
     drawSeedBanks();
     drawGameGrid();
-    drawSelectedCells();
-    //drawCursor(currentMousePos.x, currentMousePos.y, currentMousePos.color);
+    drawSelectedCells(currentMousePositions);
     drawCursors(currentMousePositions);
     requestAnimationFrame(update);
 }

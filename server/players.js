@@ -46,4 +46,11 @@ module.exports = class Players {
     getState(username) {
         return this.getOne(username).playerState;
     }
+
+    setState(username, state) {
+        const player = this.getOne(username);
+        player.playerState = state;
+
+        return player;
+    }
 }

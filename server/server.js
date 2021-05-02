@@ -56,6 +56,8 @@ const io = socketio(server, {
 const playerSet = new Players();
 const gameState = new GameState();
 const cursors = new Cursors();
+let gameRoomNumber = 1;
+let playersInRoom = 0;
 
 
 // DEBUG
@@ -70,10 +72,10 @@ const cursors = new Cursors();
 // }, 5000)
 
 
-setInterval(() => {
-    console.log('SET', playerSet);
-    console.log('CURSORS', cursors)
-}, 1000)
+// setInterval(() => {
+//     console.log('SET', playerSet);
+//     console.log('CURSORS', cursors)
+// }, 1000)
 
 
 // Wanneer iemand verbind met de server (naar de site gaat)
@@ -117,9 +119,8 @@ io.on('connection', (sock) => {
         
         // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
         sock.on('mouse move', ({ x, y }) => {
-            cursors.update(color, x, y)
-            console.log(cursors)
-            io.emit('mouse move', cursors);
+            cursors.update(color, x, y);
+            io.emit('mouse move', JSON.stringify([...cursors.cursors]));
         });
         sock.on('selectedCell', cell => {
             sock.broadcast.emit('selectedCell', cell);
@@ -128,16 +129,44 @@ io.on('connection', (sock) => {
         // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
         // De ontvanger krijgt de invite met naam
         sock.on('invite', ({from, to}) => {
-            console.log(from, to);
+            console.log('from', from, 'to', to);
             io.to(getId(to)).emit('invite', (from))
             sock.emit('statusInvite', "pending");
-            // Als de persoon reageert op jouw invite stuurt hij die response terug naar jou
-            // Beide spelers hun status verandere naar selecting
-            // Later worden ze in een aparte gameroom gestoken
-            sock.on('responseInvite', response => {
-                
-            })
+
         });
+    
+        // Als de persoon reageert op jouw invite stuurt hij die response terug naar jou
+        // Beide spelers hun status verandere naar selecting
+        // Later worden ze in een aparte gameroom gestoken
+        sock.on('responseInvite', ({response, to, from}) => {
+            console.log(to + ' ' + response + ' ' + from);
+            
+            io.to(getId(from)).emit('statusInvite', (response))
+            io.to(getId(to)).emit('statusInvite', (response))
+            
+            if(response === 'accepted') {
+                console.log('Setting playerStates...')
+                playerSet.setState(from, 'selecting');
+                playerSet.setState(to, 'selecting');
+
+                io.emit('playerList', JSON.stringify([...playerSet.players]));
+            }
+        })
+
+        sock.on('requestGameRoom', (player) => {
+            console.log('Joining room: ', gameRoomNumber, 'player', player)
+            playersInRoom++;
+
+            if (playersInRoom >= 2) {
+                gameRoomNumber++;
+                playersInRoom = 0;
+            }
+            else {
+                sock.join('gameRoom' + gameRoomNumber);
+                gameState.set('selecting');
+                console.log(gameState.get());
+            }
+        })
 
 
 

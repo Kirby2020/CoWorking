@@ -1,5 +1,6 @@
 import { loadImage } from './loaders.js';
 import { canvas, context, seedBankPlants, seedBankZombies, gameGrid, seedBankGridPlants, seedBankGridZombies } from './constants.js';
+import { isIn } from './utils.js';
 
 // TEMP Laad de achtergrond
 export function drawBackground() {
@@ -10,15 +11,37 @@ export function drawBackground() {
 }
 
 // Tekent de cursor op het scherm
-export function drawCursor(x, y, color) {
+function drawCursor(x, y, color) {
     context.fillStyle = color;
     context.fillRect(x, y, 20, 20);
 }
 
+// Krijgt alle cursors binnen en tekent ze op het scherm
 export function drawCursors(cursors) {
-    console.warn(cursors)
-    cursors.forEach(cursor => {
-        console.log(cursor);
-        drawCursor(cursor.x, cursor.y, cursor.color);
+    if (cursors) {          
+        cursors.forEach(cursor => {
+            drawCursor(cursor.x, cursor.y, cursor.color);
+        });
+    }
+}
+
+// Tekent alle geselecteerde cells
+export function drawSelectedCells(mousePositions) {
+    mousePositions.forEach(mousePos => {
+        gameGrid.forEach(cell => {
+            if (cell && isIn(mousePos, cell)) {
+                cell.drawSelected();
+            }
+        });
+        seedBankGridPlants.forEach(cell => {
+            if (cell && isIn(mousePos, cell)) {
+                cell.drawSelected();
+            }
+        });
+        seedBankGridZombies.forEach(cell => {
+            if (cell && isIn(mousePos, cell)) {
+                cell.drawSelected();
+            }
+        });
     });
 }

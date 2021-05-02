@@ -23,11 +23,11 @@ body {
 
 p {
     font-size: var(--default-font-size);
+    padding: 0 1em;
 }
 
 .sidePane {
     display: flex;
-    flex-direction: row;
     min-height: 100vh;
     /*min-width: 300px;*/
     max-height: 100vh;
@@ -61,14 +61,15 @@ canvas:hover {
     cursor: none;
 }
 
-#chat.hide, #playerList.hide {
+#chat.hide, #playerList.hide, #inviteList.hide {
     display: none;
 }
 
-#chatHeader, #playerListHeader {
+.header, #chatHeader, #playerListHeader {
     text-align: center;
     font-size: 1.5rem;
     border-bottom: black solid 2px;
+    padding: 0 1rem;
 }
 
 #chat, #playerList {
@@ -77,16 +78,19 @@ canvas:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    min-width: 10vw;
+    max-width: 25vw;
 }
 
 #messages, #players {
     background-color: lightpink;
     border: 4px solid grey;
     border-radius: 20px;
-    min-height: 70vh;
+    min-height: 60vh;
     max-height: 70vh;
     min-width: 80%;
     margin: 1rem;
+    margin-bottom: auto;
     padding: 1rem;
     overflow-y: scroll;
     align-self: center;

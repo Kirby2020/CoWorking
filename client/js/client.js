@@ -7,6 +7,9 @@ let memory = {};
 
 
 window.addEventListener('load', () => {
+    // Zet de lijst van invites op onzichtbaar
+    document.getElementById('inviteList').classList.add('hide');
+
     // Eventlistener voor het sturen van een chatbericht
     document.getElementById('chatForm').addEventListener('submit', onChat);
 
@@ -63,26 +66,6 @@ function logPlayers(playerSet) {
     inviteListener();
 }
 
-function inviteListener() {
-    const inviteButtons = document.querySelectorAll('.inviteButton');
-
-    inviteButtons.forEach(inviteButton => {
-        console.log(inviteButton)
-        inviteButton.addEventListener('click', (e) => {
-            const fromUsername = memory.username;
-            const toUsername = e.target.dataset.username;
-        
-            console.log('you: ', fromUsername);
-            console.log('other', toUsername);
-            if (fromUsername !== toUsername) {
-                sock.emit('invite', {from: fromUsername, to: toUsername})
-            }
-        });
-    })
-}
-
-
-
 // Eventhandler voor het sturen van een chatbericht
 function onChat(e) {
     e.preventDefault();
@@ -108,11 +91,12 @@ function onLogin(e) {
 
     // input.value = '';
     if (username !== '') {
-        // input.style.display = 'none';
-        // button.style.display = 'none';
-        input.style.visibility = 'hidden';
-        button.style.visibility = 'hidden';
+        input.style.display = 'none';
+        button.style.display = 'none';
+        // input.style.visibility = 'hidden';
+        // button.style.visibility = 'hidden';
         sendChat.disabled = false;
+        document.getElementById('inviteList').classList.toggle('hide');
 
         memory.username = username;
         // Stuurt de username naar de io server
@@ -122,12 +106,88 @@ function onLogin(e) {
 
 // Bepaalt wat er gebeurt bij een invite status
 // pending, rejected, accepted
+// Stap 2 & 4 in het invite system
 function handleInviteStatus(status) {
     console.log('invite status', status)
+
+    if (status === 'accepted') {
+        console.log('Changing state');
+        sock.emit('requestGameRoom', (memory.username));
+    }
+
 }
 
-function handleInvite(invite) {
-    console.log('invite from', invite)
+// Toont de invite op jouw scherm en geeft je de optie om te accepteren of te weigeren
+// Stap 2 in het invite system
+function handleInviteReceived(from) {
+    console.log('invite from', from);
+
+    const parent = document.querySelector('#invitesReceived');
+
+    let markup = `
+        <div>
+            <p>${from} heeft je uitgenodigd om te spelen!</p>
+            <button class="inviteAcceptButton" data-username="${from}">V</button>
+            <button class="inviteDeclineButton" data-username="${from}">X</button>
+        </div>
+    `;
+    // https://css-tricks.com/get-references-from-html-built-with-template-literals/
+    const getNodes = str => { 
+        return new DOMParser().parseFromString(str, 'text/html').body.childNodes;
+    }
+
+    parent.appendChild(getNodes(markup)[0]);
+    parent.scrollTop = parent.scrollHeight;
+
+    inviteResponseListener();
+}
+
+// Voegt een eventlistener aan elke invite knop in de playerlijst
+// On click wordt de invite naar de server gestuurd
+// Stap 1 in invite system
+function inviteListener() {
+    const inviteButtons = document.querySelectorAll('.inviteButton');
+
+    inviteButtons.forEach(inviteButton => {
+        console.log(inviteButton)
+        inviteButton.addEventListener('click', (e) => {
+            const fromUsername = memory.username;
+            const toUsername = e.target.dataset.username;
+        
+            console.log('you: ', fromUsername);
+            console.log('other', toUsername);
+            if (fromUsername !== toUsername) {
+                sock.emit('invite', {from: fromUsername, to: toUsername})
+            }
+        });
+    });
+}
+
+// Voegt een eventlistener aan alle invite accept en decline knoppen
+// On click wordt de response naar de server gestuurd
+// Stap 3 in het invite system
+function inviteResponseListener() {
+    const inviteAcceptButtons = document.querySelectorAll('.inviteAcceptButton');
+    const inviteDeclineButtons = document.querySelectorAll('.inviteDeclineButton');
+
+    inviteAcceptButtons.forEach(acceptButton => {
+        acceptButton.addEventListener('click', (e) => {
+            console.log('Accepted invite from', e.target.dataset.username);
+            const to = memory.username;
+            const from = e.target.dataset.username;
+            const response = 'accepted';
+            sock.emit('responseInvite', ({response: response, to, from}));  // accepted, invited person (YOU, to), inviter (from)
+            e.target.parentNode.remove();
+        });
+    });
+
+
+    inviteDeclineButtons.forEach(declineButton => {
+        declineButton.addEventListener('click', (e) => {
+            console.log('Declined invite from', e.target.dataset.username);
+            e.target.parentNode.remove();
+        });
+    });
 }
 
 // Bij het ontvangen van een chatbericht door de server of andere client
@@ -142,4 +202,4 @@ sock.on('statusInvite', handleInviteStatus);
 
 // Bij het ontvangen van een invite wordt die weergeven op jouw scherm (rechtsonderaan)
 // Als je reageert wordt de response doorgestuurd met sock.emit('responseInvite', response)
-sock.on('invite', handleInvite)
+sock.on('invite', handleInviteReceived)
