@@ -1,7 +1,9 @@
 .picturezombie{
     background-color: transparent;
-    height: 20vw;
+    height: 15vw;
     transform: rotateY(180deg);
+    margin-top: 1rem;
+    margin-right: 2rem;
 }
 .classfirst, .classsecond{
     display: inline-flex;

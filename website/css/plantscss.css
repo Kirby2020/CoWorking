@@ -1,0 +1,32 @@
+.sunflower, .peashooter, .repeater, .snowpea, .wallnut, .tallnut, .potatomine{
+    width: 33.3%;
+}
+.flower, .peashoot, .repeat, .snow{
+    width: 25%;
+    display: flex;
+    margin: auto;
+}
+.wall{
+    width: 42%;
+    display: flex;
+    margin: auto;
+}
+.tall{
+    width: 14%;
+    display: flex;
+    margin: auto;
+}
+.mine{
+    width: 30%;
+    display: flex;
+    margin: auto;
+}
+.firstline, .secondline, .thirdline{
+    display: inline-flex;
+    justify-content: space-around;
+    padding: 0;
+    margin: 1rem;
+}
+body{
+    padding-bottom: 100rem;
+}
