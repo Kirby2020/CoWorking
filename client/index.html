@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self' https://cdn.socket.io https://pvz-game.herokuapp.com wss://pvz-game.herokuapp.com https://fonts.googleapis.com https://fonts.gstatic.com">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
 
@@ -12,7 +14,7 @@
 
     <script type="module" src="./js/game/game.js"></script>
     <script type="module" src="./js/client.js"></script>
-    <title>Document</title>
+    <title>Plants Versus Zombies - Game</title>
 </head>
 <body>
 <section class="sidePane">
@@ -46,8 +48,8 @@
         <div id="inviteList">
             <h1 class="header">Invites Sent</h1>
             <div id="invitesSent"></div>
-    
-    
+
+
             <h1 class="header">Invites Received</h1>
             <div id="invitesReceived"></div>
         </div>
