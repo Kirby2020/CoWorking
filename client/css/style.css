@@ -17,7 +17,8 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-family: Montserrat, sans-serif;
-    font-size: 62.5%;
+    /*font-size: 62.5%;*/
+    font-size: 1vh;
     font-weight: 600;
 }
 
@@ -28,23 +29,23 @@ p {
 
 .sidePane {
     display: flex;
-    min-height: 100vh;
+    /*min-height: 100vh;*/
     /*min-width: 300px;*/
-    max-height: 100vh;
-    max-width: 20vw;
+    /*max-height: 100vh;*/
+    /*max-width: 20vw;*/
+    height: 100vh;
+    width: 15vw;
 }
 
 canvas {
     border: 1px solid black;
-    /*height: fit-content;*/
-    /*width: 300%;*/
-    /*min-width: 60vw;*/
-    /*max-width: 99vw;*/
-    /*max-height: 99vh;*/
-    height: 600px;
-    width: 1080px;
-    align-self: center;
-    justify-self: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    width: 70vw;
+    max-height: 99vh;
 }
 
 image, canvas {
@@ -67,19 +68,23 @@ canvas:hover {
 
 .header, #chatHeader, #playerListHeader {
     text-align: center;
-    font-size: 1.5rem;
+    /*font-size: 1.5rem;*/
+    font-size: calc(var(--default-font-size) + 0.4em);
+
     border-bottom: black solid 2px;
-    padding: 0 1rem;
+    padding: 0;
+    width: 13vw;
 }
 
 #chat, #playerList {
     background-color: lightblue;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
-    min-width: 10vw;
-    max-width: 25vw;
+    /*min-width: 10vw;*/
+    /*max-width: 25vw;*/
+    width: 15vw;
 }
 
 #messages, #players {
@@ -88,10 +93,10 @@ canvas:hover {
     border-radius: 20px;
     min-height: 60vh;
     max-height: 70vh;
-    min-width: 80%;
-    margin: 1rem;
-    margin-bottom: auto;
-    padding: 1rem;
+    /*min-width: 80%;*/
+    width: 14vw;
+    margin: 1rem 0;
+    padding: 1rem 0 2rem;
     overflow-y: scroll;
     align-self: center;
 }
@@ -113,9 +118,9 @@ canvas:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 1rem;
+    padding: 1rem 0;
     max-height: 30vh;
-    max-width: 20vw;
+    max-width: 14vw;
 }
 
 .disabled {
@@ -131,7 +136,7 @@ canvas:hover {
     border-radius: 1rem;
     font-size: calc(var(--default-font-size) + 0.4em);
     cursor: text;
-    max-width: 20vw;
+    max-width: 13vw;
 }
 
 #sendChatMessage, #loginButton {
@@ -143,7 +148,7 @@ canvas:hover {
     border-radius: 1rem;
     font-size: calc(var(--default-font-size) + 0.4em);
     cursor: pointer;
-    max-width: 20vw;
+    max-width: 13vw;
     margin-top: 1rem;
 }
 

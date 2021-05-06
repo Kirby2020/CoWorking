@@ -25,15 +25,26 @@ let startTime = performance.now();
 // Zoekt de muispositie op
 function getMouseCoordinates(element, event) {
     // coördinaten van het element
-    const { top, left } = element.getBoundingClientRect();
+    // const { top, left } = element.getBoundingClientRect();
+
     // coördinaten van de muis t.o.v. het volledige browser window
-    const { clientX, clientY } = event;
+    // const { clientX, clientY } = event;
+
     // console.log(event)
     // console.log(clientX, clientY)
+    // return {
+    //     x: clientX - left,
+    //     y: clientY - top
+    // };
+
+    let rect = element.getBoundingClientRect(), // abs. size of element
+        scaleX = element.width / rect.width,    // relationship bitmap vs. element for X
+        scaleY = element.height / rect.height;  // relationship bitmap vs. element for Y
+
     return {
-        x: clientX - left,
-        y: clientY - top
-    };
+        x: (event.clientX - rect.left) * scaleX,   // scale mouse coordinates after they have
+        y: (event.clientY - rect.top) * scaleY     // been adjusted to be relative to element
+    }
 }
 
 // Eventlistener voor de muiscoördinaten door te sturen naar de server

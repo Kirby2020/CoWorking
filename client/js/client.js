@@ -3,6 +3,7 @@ import { sock } from './game/game.js';
 // const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
 
 let memory = {};
+let players = {};
 
 
 
@@ -17,18 +18,18 @@ window.addEventListener('load', () => {
     document.getElementById('loginForm').addEventListener('submit', onLogin);
 
     // Eventlisteners voor het verbergen en weergeven van de zijpanelen
-    document.getElementById("left").addEventListener('click', hideLeft);
-    document.getElementById("right").addEventListener('click', hideRight);
+    // document.getElementById("left").addEventListener('click', hideLeft);
+    // document.getElementById("right").addEventListener('click', hideRight);
 
 });
 
 // Toggled de zijpanelen
-function hideLeft() {
-    document.getElementById('chat').classList.toggle('hide');
-}
-function hideRight() {
-    document.getElementById('playerList').classList.toggle('hide');
-}
+// function hideLeft() {
+//     document.getElementById('chat').classList.toggle('hide');
+// }
+// function hideRight() {
+//     document.getElementById('playerList').classList.toggle('hide');
+// }
 
 // Voegt een bericht toe aan de chatbox
 function logChat(message) {
@@ -44,6 +45,7 @@ function logChat(message) {
 function logPlayers(playerSet) {
     playerSet = JSON.parse(playerSet);
     console.log(playerSet);
+    players = playerSet;
     const parent = document.querySelector('#players div');
     parent.innerHTML = '';
 
@@ -90,7 +92,7 @@ function onLogin(e) {
     const username = input.value;
 
     // input.value = '';
-    if (username !== '') {
+    if (username !== '' && players.indexOf(username) === -1) {
         input.style.display = 'none';
         button.style.display = 'none';
         // input.style.visibility = 'hidden';

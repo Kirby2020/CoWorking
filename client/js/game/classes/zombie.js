@@ -1,4 +1,4 @@
-import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from './constants.js';
+import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from '../constants.js';
 import {SEEDSLOT_SIZE} from "../constants";
 
 class zombie {

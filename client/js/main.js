@@ -1,10 +1,11 @@
+const path = require("path");
 const {app, BrowserWindow} = require('electron');
 require('update-electron-app')();
 
 
 function createWindow () {
 
-  console.log('Hello from electron');
+  // console.log('Hello from electron');
 	
   // Create the browser window.
   let mainWindow = new BrowserWindow({
@@ -17,10 +18,13 @@ function createWindow () {
   mainWindow.loadURL(`file://${__dirname}/../index.html`)
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 
   // Remove default toolbar
-  mainWindow.removeMenu()
+  mainWindow.removeMenu();
+
+  // https://www.deviantart.com/raptor02/art/Plants-vs-Zombies-ICON-206838879
+  mainWindow.setIcon(path.join(__dirname, '../assets/pvz.png'));
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {

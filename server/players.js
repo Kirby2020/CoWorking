@@ -39,7 +39,7 @@ module.exports = class Players {
                 console.log('Player found_', player);
                 return player;
             }
-        };
+        }
         return 'no';
     }
 

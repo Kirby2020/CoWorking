@@ -1,5 +1,5 @@
 import { SEEDSLOT_SIZE } from '../constants.js';
-import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from './constants.js';
+import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from '../constants.js';
 
 // Geïnspireerd van https://www.youtube.com/watch?v=QxYg8-mhhhs&t=1484s
 // Deze klasse wordt niet zelf gebruikt.

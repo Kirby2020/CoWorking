@@ -31,7 +31,7 @@ module.exports = class Cursors {
             if (cursor.color === color) {
                 return cursor;
             }
-        };
+        }
         return 'no';
     }
 }
