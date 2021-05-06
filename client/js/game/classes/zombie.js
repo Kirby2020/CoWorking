@@ -1,43 +1,62 @@
+import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from './constants.js';
+
 class zombie {
-
-
-    icon() {
-        this.icon=icon;
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.width = x * CELL_SIZE.width;
+        this.height = y * CELL_SIZE.height;
+        this.isShooting = false;
+        this.projectiles = [];
+        this.timer = 0;
     }
-
-    sprite() {
-        this.sprite=sprite;
+}
+class zombieNormaal extends zombie {
+    constructor(x, y, attackDamage, attackSpeed, walkSpeed, cooldown, sprite,) {
+        super(x, y);
+        this.health = 270;
+        this.attackDamage = attackDamage;
+        this.attackSpeed = attackSpeed;
+        this.walkSpeed = walkSpeed;
+        this.cooldown = cooldown;
+        this.sprite = sprite;
     }
+}
+class coneHead extends zombie{
+    constructor(x,y, attackDamage, attackSpeed, walkSpeed, cooldown, sprite) {
+        super(x,y);
 
-    animation(stand, walk, run, die) {
-        this.animation();
+        this.health = 640;
+        this.attackDamage = attackDamage;
+        this.attackSpeed = attackSpeed;
+        this.walkSpeed = walkSpeed;
+        this.cooldown = cooldown;
+        this.sprite = sprite;
     }
+}
+class newsPaper extends zombie{
+    constructor(x,y, attackDamage, attackSpeed, walkSpeed, cooldown, sprite, hasNewspaper) {
+        super(x, y);
 
-    health() {
-        this.health=health;
+        this.health = 420;
+        this.attackDamage = attackDamage;
+        this.attackSpeed = attackSpeed;
+        this.walkSpeed = walkSpeed;
+        this.cooldown = cooldown;
+        this.sprite = sprite;
+        this.hasNewspaper= hasNewspaper;
     }
+}
+class screenDoor extends zombie{
+    constructor(x,y, attackDamage, attackSpeed, walkSpeed, cooldown, sprite, hasDoor) {
+        super(x,y);
 
-    attack_damage() {
-        this.attack_damage=attack_damage;
-    }
-
-    attack_speed() {
-        this.attack_speed=attack_speed;
-    }
-
-    walk_speed() {
-        this.walk_speed=walk_speed;
-    }
-
-    cost() {
-        this.cost=cost;
-    }
-
-    cooldown() {
-        this.cooldown=cooldown;
-    }
-
-    special(canJump, instaKill, impThrow, hasDoor, hasNewspaper) {
-        this.special();
+        this.health = 1000;
+        this.attackDamage = attackDamage;
+        this.attackSpeed = attackSpeed;
+        this.walkSpeed = walkSpeed;
+        this.cooldown = cooldown;
+        this.sprite = sprite;
+        this.hasDoor= hasDoor;
     }
 }
