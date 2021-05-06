@@ -1,0 +1,28 @@
+.standardsize{
+    width: 33.3%;
+}
+.allclass{
+    display: flex;
+    margin: auto;
+}
+.standardsizeclass{
+    width: 30%;
+}
+.bucket{
+    width: 28%;
+}
+.cone{
+    width: 25%;
+}
+.pole{
+    width: 52%;
+}
+.lines{
+    display: inline-flex;
+    justify-content: space-around;
+    padding: 0;
+    margin: 1rem;
+}
+p{
+    width: 95%;
+}
