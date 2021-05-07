@@ -1,9 +1,11 @@
 import { drawBackground, drawCursors, drawSelectedCells } from './drawLayers.js';
-import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from './constants.js';
+import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP, SEEDSLOT_SIZE } from './constants.js';
 import { drawGameGrid } from './gameGrid.js';
 import { drawSeedBanks } from './seedBanks.js';
 import { Cell } from './classes/Cell.js';
 import { isIn } from './utils.js';
+import * as Plant from './classes/plants.js';
+import * as Zombie from './classes/zombie.js'; 
 
 // Verbindt ofwel met de live server of de local server
 export const sock = io('https://pvz-game.herokuapp.com/');
@@ -64,8 +66,41 @@ sock.on('mouse move', (cursors) => {
 });
 
 
+// ---------- GAME ----------
+
+let currentRole; // plant of zombie
+let resources = 200; // Je begint steeds met 75 sun/brains 
+const plants = [];
+const zombies = [];
+
+canvas.addEventListener('click', (e) => {
+    const { x, y } = getMouseCoordinates(canvas, e);
+    const gridPositionX = x - (x % CELL_SIZE.width);
+    const gridPositionY = y - (y % CELL_SIZE.height);
+
+    if (gridPositionY < SEEDSLOT_SIZE.height) {
+        return;
+    }
+    let tempCost = 50;
+
+    if (resources >= tempCost) {
+        plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
+        resources -= tempCost;
+    }
+});
 
 
+function drawPlants() {
+    for (let i = 0; i < plants.length; i++) {
+        plants[i].draw();
+    }
+}
+
+function drawResources() {
+    context.fillStyle = 'gold'
+    context.font = '25px Arial';
+    context.fillText(resources, SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height)
+}
 
 
 function update() {
@@ -73,6 +108,8 @@ function update() {
     drawSeedBanks();
     drawGameGrid();
     drawSelectedCells(currentMousePositions);
+    drawPlants();
+    drawResources();
     drawCursors(currentMousePositions);
     requestAnimationFrame(update);
 }

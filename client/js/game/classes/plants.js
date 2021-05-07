@@ -1,25 +1,28 @@
 import { SEEDSLOT_SIZE } from '../constants.js';
 import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from '../constants.js';
+import { loadImage } from '../loaders.js';
 
 // Geïnspireerd van https://www.youtube.com/watch?v=QxYg8-mhhhs&t=1484s
 // Deze klasse wordt niet zelf gebruikt.
 // Enkel ter ondersteuning voor de andere klassen.
 // Heeft een teken methode en een update methode om te bewegen en/of aan te vallen
-class Plant {
+export class Plant {
     constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.width = x * CELL_SIZE.width;
-        this.height = y * CELL_SIZE.height;
-        this.seedslotWidth = x * SEEDSLOT_SIZE.width;
-        this.seedslotHeight = y * SEEDSLOT_SIZE.height;
+        this.width = CELL_SIZE.width;
+        this.height = CELL_SIZE.height;
+        this.seedslotWidth = SEEDSLOT_SIZE.width;
+        this.seedslotHeight = SEEDSLOT_SIZE.height;
         this.isShooting = false;
         this.projectiles = [];
         this.timer = 0;
     }
 
     draw() {
-
+        const sprite = new Image();
+        sprite.src = this.sprite;
+        context.drawImage(sprite, this.x, this.y, this.width, this.height);
     }
 
     update() {
@@ -33,19 +36,21 @@ class Plant {
 // Cost in sun
 
 // Een sunflower genereert zon om de zoveel seconden
-class Sunflower extends Plant {
+export class Sunflower extends Plant {
     constructor(x, y) {
         super(x, y);
 
         this.health = 100;
         this.cooldown = 5;
         this.cost = 50;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.cleanpng.com/png-plants-vs-zombies-2-it-s-about-time-plants-vs-zomb-696886/download-png.html
+        this.sprite = './assets/images/plants/sunflower1/Sunflower_idle.gif';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png';   // https://www.cleanpng.com/png-plants-vs-zombies-2-it-s-about-time-plants-vs-zomb-696886/download-png.html
     }
+
+
 }
 
-class Peashooter extends Plant {
+export class Peashooter extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -59,7 +64,7 @@ class Peashooter extends Plant {
     }
 }
 
-class Repeater extends Plant {
+export class Repeater extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -73,7 +78,7 @@ class Repeater extends Plant {
     }
 }
 
-class Wallnut extends Plant {
+export class Wallnut extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -85,7 +90,7 @@ class Wallnut extends Plant {
     }
 }
 
-class Tallnut extends Plant {
+export class Tallnut extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -97,7 +102,7 @@ class Tallnut extends Plant {
     }
 }
 
-class Snowpea extends Plant {
+export class Snowpea extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -113,7 +118,7 @@ class Snowpea extends Plant {
     }
 }
 
-class PotatoMine extends Plant {
+export class PotatoMine extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -128,7 +133,7 @@ class PotatoMine extends Plant {
     }
 }
 
-class CherryBomb extends Plant {
+export class CherryBomb extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -143,7 +148,7 @@ class CherryBomb extends Plant {
     }
 }
 
-class Chomper extends Plant {
+export class Chomper extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -159,7 +164,7 @@ class Chomper extends Plant {
     }
 }
 
-class Squash extends Plant {
+export class Squash extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -174,7 +179,7 @@ class Squash extends Plant {
     }
 }
 
-class Jalapeno extends Plant {
+export class Jalapeno extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -189,7 +194,7 @@ class Jalapeno extends Plant {
     }
 }
 
-class Pumpkin extends Plant {
+export class Pumpkin extends Plant {
     constructor(x, y) {
         super(x, y);
 
@@ -201,7 +206,7 @@ class Pumpkin extends Plant {
     }
 }
 
-class Torchwood extends Plant {
+export class Torchwood extends Plant {
     constructor(x, y) {
         super(x, y);
 
