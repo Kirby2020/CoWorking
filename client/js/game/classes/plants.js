@@ -124,7 +124,7 @@ class PotatoMine extends Plant {
         this.sprite = sprite;
         this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8Z5H7b1K9i8b1_zombies-2-generator-site-%5Bnew%5D-plants-vs-pvz-2-potato-mine/
 
-        this.range = {x: 2, y: 0};
+        this.special = {effect: 'range', x: 2, y: 0};
     }
 }
 
@@ -139,7 +139,7 @@ class CherryBomb extends Plant {
         this.sprite = sprite;
         this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8i8Z5m2K9m2A0_plants-vs-zombies-cherry-bomb/
 
-        this.range = {x: 3, y: 3};
+        this.special = {effect: 'range', x: 3, y: 3};
     }
 }
 
@@ -155,7 +155,7 @@ class Chomper extends Plant {
         this.sprite = sprite;
         this.seedSlotSprite = seedSlotSprite;
 
-        this.range = {x: 2, y: 0};
+        this.special = {effect: 'range', x: 2, y: 0};
     }
 }
 
@@ -170,7 +170,7 @@ class Squash extends Plant {
         this.sprite = sprite;
         this.seedSlotSprite = seedSlotSprite;
 
-        this.range = {x: 2, y: 0};
+        this.special = {effect: 'range', x: 2, y: 0};
     }
 }
 
@@ -185,7 +185,7 @@ class Jalapeno extends Plant {
         this.sprite = sprite;
         this.seedSlotSprite = seedSlotSprite;
 
-        this.range = {x: 9, y: 0};
+        this.special = {effect: 'range', x: 9, y: 0};
     }
 }
 
