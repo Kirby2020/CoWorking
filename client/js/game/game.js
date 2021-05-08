@@ -160,7 +160,8 @@ function drawZombies() {
 function drawResources() {
     context.fillStyle = 'gold'
     context.font = '25px Arial';
-    context.fillText(resources, SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height)
+    context.fillText(resourcesPlants, SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height);
+    context.fillText(resourcesZombies, canvas.width - SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height);
 }
 
 
