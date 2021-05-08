@@ -68,11 +68,12 @@ sock.on('mouse move', (cursors) => {
 
 // ---------- GAME ----------
 
-let currentRole = "Spectator"; // plant of zombie, default : spectator
+let currentRole = "Zombies"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
+let currentFrame = 0;
 
 // Wanneer er geklikt wordt op het game venster worden er een aantal dingen gedaan
 // Controleren of je planten speelt of zombies
@@ -85,6 +86,10 @@ canvas.addEventListener('click', (e) => {
     const { x, y } = getMouseCoordinates(canvas, e);
     const gridPositionX = x - (x % CELL_SIZE.width);
     const gridPositionY = y - (y % CELL_SIZE.height);
+
+    console.log('gridX', gridPositionX)
+    console.log('gridY', gridPositionY)
+    console.log('x', x, 'y', y)
 
     if (currentRole === "Plants") {
         // ---------- SEEDBANKS ----------
@@ -136,6 +141,14 @@ canvas.addEventListener('click', (e) => {
             resourcesZombies -= tempCost;
             sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
                          resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+
+                // alternative maybe: verzendt naam, x en y naar de server
+                // server voegt die toe aan de array en stuurt de array terug
+                // client maakt object met naam (switch statement) en x, y
+                // verwijderen???
+                // verzendt index naar de server
+                // server zoekt op de index en verwijderd die plaats en stuurt terug de array
+                // index client == index server 
         }
     }
     else {
@@ -146,13 +159,16 @@ canvas.addEventListener('click', (e) => {
 
 function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
+        // console.log(plants[i])
+        plants[i].update();
         plants[i].draw();
     }
 }
 
 function drawZombies() {
     for (let i = 0; i < zombies.length; i++) {
-        console.log(zombies[i])
+        // console.log(zombies[i])
+        zombies[i].update();
         zombies[i].draw();
     }
 }
@@ -160,8 +176,8 @@ function drawZombies() {
 function drawResources() {
     context.fillStyle = 'gold'
     context.font = '25px Arial';
-    context.fillText(resourcesPlants, SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height);
-    context.fillText(resourcesZombies, canvas.width - SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height);
+    context.fillText(resourcesPlants, SEEDSLOT_SIZE.width / 2 - 10, SEEDSLOT_SIZE.height);
+    context.fillText(resourcesZombies, canvas.width - SEEDSLOT_SIZE.width, SEEDSLOT_SIZE.height);
 }
 
 
@@ -171,12 +187,24 @@ sock.on('role', role => {
 });
 
 sock.on('gameField', gameField => {
+    plants = [];
+    zombies = [];
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
 
-    plants = gameField.plants;
-    zombies = gameField.zombies;
+
+    for (let i = 0; i < gameField.plants.length; i++) {
+        // console.log(plants[i])
+        plants.push(new Plant.Sunflower(gameField.plants[i].x, gameField.plants[i].y));
+    }
+
+
+    for (let i = 0; i < gameField.zombies.length; i++) {
+        // console.log(zombies[i])
+        zombies.push(new Zombie.NormalZombie(gameField.zombies[i].x, gameField.zombies[i].y));
+    }
+
     resourcesPlants = gameField.resourcesPlants;
     resourcesZombies = gameField.resourcesZombies;
 });
@@ -191,6 +219,7 @@ function update() {
     drawZombies();
     drawResources();
     drawCursors(currentMousePositions);
+    currentFrame++;
     requestAnimationFrame(update);
 }
 

@@ -22,14 +22,14 @@ export class Plant {
         sprite.src = this.sprite;
         context.drawImage(sprite, this.x, this.y, this.width, this.height);
 
-        context.fillStyle = 'gold';
+        context.fillStyle = 'red';
         context.font = '20px Arial';
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
 
     }
 
     update() {
-
+        
     }
 }
 

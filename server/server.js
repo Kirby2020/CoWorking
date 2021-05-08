@@ -84,6 +84,9 @@ io.on('connection', (sock) => {
 
     // Stuurt de playerlijst ook naar de mensen die nog niet ingelogd zijn
     io.emit('playerList', JSON.stringify([...playerSet.players]));
+    // En toont het huidige spel (spectating)
+    // Later gaat dit weg als we kunnen werken met rooms en meerdere games tegelijk kunnen runnen
+    io.emit('gameField', gameField);
 
 
 

@@ -8,7 +8,7 @@ class Zombie {
 
         this.width = CELL_SIZE.width;
         this.height = CELL_SIZE.height;
-        
+
         this.seedslotWidth = SEEDSLOT_SIZE.width;
         this.seedslotHeight = SEEDSLOT_SIZE.height;
 
@@ -25,7 +25,7 @@ class Zombie {
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
     }
     update(){
-        this.x--;
+        this.x -= this.speed;
     }
 }
 
@@ -36,6 +36,7 @@ export class Grave extends Zombie {
         this.health = 1000;
         this.cooldown = 5;
         this.cost = 50;
+        this.speed = 0;
         this.sprite = './assets/images/zombies/gravestone/Zombie_Gravestone1.png';
         this.seedSlotSprite = './assets/images/zombies/gravestone/Zombie_Gravestone1.png';
     }
@@ -56,7 +57,17 @@ export class NormalZombie extends Zombie {
         this.cooldown = 8;
         this.cost = 50;
         this.sprite = './assets/images/zombies/normal_zombie/normal_zombie_standing.png';
-        this.seedSlotSprite = seedSlotSprite;
+        this.seedSlotSprite = './assets/images/zombies/normal_zombie/normal_zombie_standing.png';
+    }
+
+    draw () {
+        const sprite = new Image();
+        sprite.src = this.sprite;
+        context.drawImage(sprite, 0, 0, 28, 44, this.x, this.y, 28 * 2, 44 * 2);
+
+        context.fillStyle = 'blue';
+        context.font = '20px Arial';
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
     }
 }
 export class NewspaperZombie extends Zombie {
