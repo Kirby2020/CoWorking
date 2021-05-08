@@ -71,8 +71,8 @@ sock.on('mouse move', (cursors) => {
 let currentRole = "Spectator"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
-const plants = [];  // Slaat alle gegevens op van de planten op het scherm
-const zombies = []; // Slaat alle gegevens op van de zombies op het scherm
+let plants = [];  // Slaat alle gegevens op van de planten op het scherm
+let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 
 // Wanneer er geklikt wordt op het game venster worden er een aantal dingen gedaan
 // Controleren of je planten speelt of zombies
