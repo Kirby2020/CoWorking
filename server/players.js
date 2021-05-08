@@ -13,9 +13,9 @@ module.exports = class Players {
         this.players = new Set();
     }
 
-    add(username, playerState = 'in lobby', id) {
+    add(username, playerState = 'in lobby', id, role) {
         console.log('_Add', username)
-        this.players.add({username, playerState, id});
+        this.players.add({username, playerState, id, role});
         return this.players;
     }
 
@@ -50,6 +50,17 @@ module.exports = class Players {
     setState(username, state) {
         const player = this.getOne(username);
         player.playerState = state;
+
+        return player;
+    }
+
+    getRole(username) {
+        return this.getOne(username).role;
+    }
+
+    setRole(username, role) {
+        const player = this.getOne(username);
+        player.role = role;
 
         return player;
     }

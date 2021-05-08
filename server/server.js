@@ -98,7 +98,7 @@ io.on('connection', (sock) => {
         cursors.add(null, null, color);
 
         //console.log('user connected', player);
-        playerSet.add(player, 'in lobby', sock.id);
+        playerSet.add(player, 'in lobby', sock.id, "spectating");
         sock.username = playerSet.getOne(player).username;
 
         // Stuurt de playerlijst naar alle users
@@ -129,6 +129,7 @@ io.on('connection', (sock) => {
 
         sock.on('gameField', gameField => {
             console.log(gameField);
+            io.emit('gameField', gameField);
         })
 
         // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
@@ -146,13 +147,19 @@ io.on('connection', (sock) => {
         sock.on('responseInvite', ({response, to, from}) => {
             console.log(to + ' ' + response + ' ' + from);
             
-            io.to(getId(from)).emit('statusInvite', (response))
-            io.to(getId(to)).emit('statusInvite', (response))
+            io.to(getId(from)).emit('statusInvite', (response));
+            io.to(getId(to)).emit('statusInvite', (response));
             
             if(response === 'accepted') {
                 console.log('Setting playerStates...')
                 playerSet.setState(from, 'selecting');
                 playerSet.setState(to, 'selecting');
+
+                playerSet.setRole(from, "Plants");
+                playerSet.setRole(to, "Zombies");
+
+                io.to(getId(from)).emit('role', ("Plants"));
+                io.to(getId(to)).emit('role', ("Zombies"));
 
                 io.emit('playerList', JSON.stringify([...playerSet.players]));
             }

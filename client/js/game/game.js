@@ -68,8 +68,9 @@ sock.on('mouse move', (cursors) => {
 
 // ---------- GAME ----------
 
-let currentRole = "Plants"; // plant of zombie
-let resources = 200; // Je begint steeds met 75 sun/brains 
+let currentRole = "Spectator"; // plant of zombie, default : spectator
+let resourcesPlants = 200; // Je begint steeds met 75 sun 
+let resourcesZombies = 200; // Je begint steeds met 75 brains 
 const plants = [];  // Slaat alle gegevens op van de planten op het scherm
 const zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 
@@ -81,8 +82,6 @@ const zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 // Controleren of je genoeg resources hebt
 // Versuurd bij elke nieuwe plant of zombie die op het scherm wordt gezet, de volledige arrays van plants/zombies naar de server
 canvas.addEventListener('click', (e) => {
-    sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies})))
-
     const { x, y } = getMouseCoordinates(canvas, e);
     const gridPositionX = x - (x % CELL_SIZE.width);
     const gridPositionY = y - (y % CELL_SIZE.height);
@@ -100,15 +99,17 @@ canvas.addEventListener('click', (e) => {
             return;
         }
         for (let i = 0; i < plants.length; i++) {
-            if(plants[i].x === gridPositionX && plants[i].y === gridPositionY) {
+            if (plants[i].x === gridPositionX && plants[i].y === gridPositionY) {
                 return;
             }
         }
         let tempCost = 50;
 
-        if (resources >= tempCost) {
+        if (resourcesPlants >= tempCost) {
             plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
-            resources -= tempCost;
+            resourcesPlants -= tempCost;
+            sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
+                         resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
         }
     } else if (currentRole === "Zombies") {
         // ---------- SEEDBANKS ----------
@@ -124,21 +125,23 @@ canvas.addEventListener('click', (e) => {
             return;
         }
         for (let i = 0; i < zombies.length; i++) {
-            if(zombies[i].x === gridPositionX && zombies[i].y === gridPositionY) {
+            if (zombies[i].x === gridPositionX && zombies[i].y === gridPositionY) {
                 return;
             }
         }
         let tempCost = 50;
     
-        if (resources >= tempCost) {
+        if (resourcesZombies >= tempCost) {
             zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
-            resources -= tempCost;
+            resourcesZombies -= tempCost;
+            sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
+                         resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
         }
     }
     else {
         console.log('You are currently spectating');
     }
-})
+});
 
 
 function drawPlants() {
@@ -159,6 +162,23 @@ function drawResources() {
     context.font = '25px Arial';
     context.fillText(resources, SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height)
 }
+
+
+sock.on('role', role => {
+    currentRole = role;
+    console.warn('changed role: ', currentRole);
+});
+
+sock.on('gameField', gameField => {
+    gameField = JSON.parse(gameField);
+    console.log(gameField.plants);
+    console.log(gameField.zombies);
+
+    plants = gameField.plants;
+    zombies = gameField.zombies;
+    resourcesPlants = gameField.resourcesPlants;
+    resourcesZombies = gameField.resourcesZombies;
+});
 
 
 function update() {
