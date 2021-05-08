@@ -1,4 +1,4 @@
-import { CELL_SIZE, SEEDSLOT_SIZE } from '../constants.js';
+import { context, CELL_SIZE, SEEDSLOT_SIZE } from '../constants.js';
 
 
 class Zombie {
@@ -6,36 +6,42 @@ class Zombie {
         this.x = x;
         this.y = y;
 
-        this.width = x * CELL_SIZE.width;
-        this.height = y * CELL_SIZE.height;
-
-        this.seedslotWidth = x * SEEDSLOT_SIZE.width;
-        this.seedslotHeight = y * SEEDSLOT_SIZE.height;
+        this.width = CELL_SIZE.width;
+        this.height = CELL_SIZE.height;
+        
+        this.seedslotWidth = SEEDSLOT_SIZE.width;
+        this.seedslotHeight = SEEDSLOT_SIZE.height;
 
         this.isAttacking = false;
         this.timer = 0;
     }
     draw(){
+        const sprite = new Image();
+        sprite.src = this.sprite;
+        context.drawImage(sprite, this.x, this.y, this.width, this.height);
 
+        context.fillStyle = 'blue';
+        context.font = '20px Arial';
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
     }
     update(){
-
+        this.x--;
     }
 }
 
-class Grave extends Zombie {
+export class Grave extends Zombie {
     constructor(x,y) {
         super(x, y);
 
         this.health = 1000;
         this.cooldown = 5;
         this.cost = 50;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/zombies/gravestone/Zombie_Gravestone1.png';
+        this.seedSlotSprite = './assets/images/zombies/gravestone/Zombie_Gravestone1.png';
     }
 }
 
-class NormalZombie extends Zombie {
+export class NormalZombie extends Zombie {
     constructor(x, y) {
         super(x, y);
 
@@ -45,15 +51,15 @@ class NormalZombie extends Zombie {
 
         this.attackSpeed = 0.75;
         this.speed = 2;
-        this.walkSpeed = speed; //Ik vond online dat die er 4 stappen overdeed om 1 vakje te verlopen. Ik weet niet hoe snel dit juist is dus gok ik dit.
+        this.walkSpeed = this.speed; //Ik vond online dat die er 4 stappen overdeed om 1 vakje te verlopen. Ik weet niet hoe snel dit juist is dus gok ik dit.
         
         this.cooldown = 8;
         this.cost = 50;
-        this.sprite = sprite;
+        this.sprite = './assets/images/zombies/normal_zombie/normal_zombie_standing.png';
         this.seedSlotSprite = seedSlotSprite;
     }
 }
-class NewspaperZombie extends Zombie{
+export class NewspaperZombie extends Zombie {
     constructor(x,y) {
         super(x, y);
 
@@ -64,7 +70,7 @@ class NewspaperZombie extends Zombie{
         this.attackSpeed = 0.75;
 
         this.speed = 2;
-        this.walkSpeed = speed;
+        this.walkSpeed = this.speed;
 
         this.cooldown = 15;
         this.cost = 100;
@@ -74,7 +80,7 @@ class NewspaperZombie extends Zombie{
         this.special = {effect: 'rage', duration: 0, multiplier: 2};
     }
 }
-class ConeheadZombie extends Zombie{
+export class ConeheadZombie extends Zombie {
     constructor(x,y) {
         super(x,y);
 
@@ -84,7 +90,7 @@ class ConeheadZombie extends Zombie{
         this.attackSpeed = 0.75;
 
         this.speed = 2;
-        this.walkSpeed = speed;
+        this.walkSpeed = this.speed;
 
         this.cooldown = 15;
         this.cost = 75;
@@ -92,7 +98,7 @@ class ConeheadZombie extends Zombie{
         this.seedSlotSprite = seedSlotSprite;
     }
 }
-class BucketheadZombie extends Zombie{
+export class BucketheadZombie extends Zombie {
     constructor(x,y) {
         super(x,y);
 
@@ -102,7 +108,7 @@ class BucketheadZombie extends Zombie{
         this.attackSpeed = attackSpeed;
 
         this.speed = 2;
-        this.walkSpeed = speed;
+        this.walkSpeed = this.speed;
 
         this.cooldown = 20;
         this.cost = 125;
@@ -111,7 +117,7 @@ class BucketheadZombie extends Zombie{
     }
 }
 
-class PolevaultingZombie extends Zombie{
+export class PolevaultingZombie extends Zombie {
     constructor(x,y) {
         super(x, y);
 
@@ -121,7 +127,7 @@ class PolevaultingZombie extends Zombie{
         this.attackSpeed = attackSpeed;
 
         this.speed = 4;
-        this.walkSpeed = speed;
+        this.walkSpeed = this.speed;
 
         this.cooldown = cooldown;
         this.cost = 100;

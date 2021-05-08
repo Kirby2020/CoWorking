@@ -68,31 +68,89 @@ sock.on('mouse move', (cursors) => {
 
 // ---------- GAME ----------
 
-let currentRole; // plant of zombie
+let currentRole = "Plants"; // plant of zombie
 let resources = 200; // Je begint steeds met 75 sun/brains 
-const plants = [];
-const zombies = [];
+const plants = [];  // Slaat alle gegevens op van de planten op het scherm
+const zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 
+// Wanneer er geklikt wordt op het game venster worden er een aantal dingen gedaan
+// Controleren of je planten speelt of zombies
+// Berekenen van de cel waarin geklikt wordt
+// Controleren of je in het spelveld klikt
+// Controleren of er al niks staat
+// Controleren of je genoeg resources hebt
+// Versuurd bij elke nieuwe plant of zombie die op het scherm wordt gezet, de volledige arrays van plants/zombies naar de server
 canvas.addEventListener('click', (e) => {
+    sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies})))
+
     const { x, y } = getMouseCoordinates(canvas, e);
     const gridPositionX = x - (x % CELL_SIZE.width);
     const gridPositionY = y - (y % CELL_SIZE.height);
 
-    if (gridPositionY < SEEDSLOT_SIZE.height) {
-        return;
-    }
-    let tempCost = 50;
+    if (currentRole === "Plants") {
+        // ---------- SEEDBANKS ----------
 
-    if (resources >= tempCost) {
-        plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
-        resources -= tempCost;
+
+        // ---------- SPELVELD ----------
+        if (gridPositionY < SEEDSLOT_SIZE.height || gridPositionY > 5 * SEEDSLOT_SIZE.height) {
+            return;
+        }
+        if (gridPositionX < 3 * CELL_SIZE.width || gridPositionX > 8 * CELL_SIZE.width) {
+            console.log('for zombies')
+            return;
+        }
+        for (let i = 0; i < plants.length; i++) {
+            if(plants[i].x === gridPositionX && plants[i].y === gridPositionY) {
+                return;
+            }
+        }
+        let tempCost = 50;
+
+        if (resources >= tempCost) {
+            plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
+            resources -= tempCost;
+        }
+    } else if (currentRole === "Zombies") {
+        // ---------- SEEDBANKS ----------
+    
+    
+    
+        // ---------- SPELVELD ----------
+        if (gridPositionY < SEEDSLOT_SIZE.height || gridPositionY > 5 * SEEDSLOT_SIZE.height) {
+            return;
+        }
+        if (gridPositionX < 9 * CELL_SIZE.width || gridPositionX > 11 * CELL_SIZE.width) {
+            console.log('for plants')
+            return;
+        }
+        for (let i = 0; i < zombies.length; i++) {
+            if(zombies[i].x === gridPositionX && zombies[i].y === gridPositionY) {
+                return;
+            }
+        }
+        let tempCost = 50;
+    
+        if (resources >= tempCost) {
+            zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
+            resources -= tempCost;
+        }
     }
-});
+    else {
+        console.log('You are currently spectating');
+    }
+})
 
 
 function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         plants[i].draw();
+    }
+}
+
+function drawZombies() {
+    for (let i = 0; i < zombies.length; i++) {
+        console.log(zombies[i])
+        zombies[i].draw();
     }
 }
 
@@ -106,9 +164,10 @@ function drawResources() {
 function update() {
     drawBackground();
     drawSeedBanks();
-    drawGameGrid();
+    // drawGameGrid();
     drawSelectedCells(currentMousePositions);
     drawPlants();
+    drawZombies();
     drawResources();
     drawCursors(currentMousePositions);
     requestAnimationFrame(update);

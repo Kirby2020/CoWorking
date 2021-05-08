@@ -1,6 +1,4 @@
-import { SEEDSLOT_SIZE } from '../constants.js';
-import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP } from '../constants.js';
-import { loadImage } from '../loaders.js';
+import { context, CELL_SIZE, SEEDSLOT_SIZE } from '../constants.js';
 
 // Geïnspireerd van https://www.youtube.com/watch?v=QxYg8-mhhhs&t=1484s
 // Deze klasse wordt niet zelf gebruikt.
@@ -23,6 +21,11 @@ export class Plant {
         const sprite = new Image();
         sprite.src = this.sprite;
         context.drawImage(sprite, this.x, this.y, this.width, this.height);
+
+        context.fillStyle = 'gold';
+        context.font = '20px Arial';
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
+
     }
 
     update() {

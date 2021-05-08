@@ -124,6 +124,11 @@ io.on('connection', (sock) => {
         });
         sock.on('selectedCell', cell => {
             sock.broadcast.emit('selectedCell', cell);
+        });
+
+
+        sock.on('gameField', gameField => {
+            console.log(gameField);
         })
 
         // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
