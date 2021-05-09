@@ -207,7 +207,7 @@ sock.on('gameField', gameField => {
 
     for (let i = 0; i < gameField.zombies.length; i++) {
         // console.log(zombies[i])
-        const zombie = createPlant(gameField.zombies[i].name, gameField.zombies[i].x, gameField.zombies[i].y);
+        const zombie = createZombie(gameField.zombies[i].name, gameField.zombies[i].x, gameField.zombies[i].y);
         zombies.push(zombie);
     }
 });
