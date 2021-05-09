@@ -193,21 +193,32 @@ sock.on('gameField', gameField => {
     console.log(gameField.plants);
     console.log(gameField.zombies);
 
-
     for (let i = 0; i < gameField.plants.length; i++) {
         // console.log(plants[i])
-        plants.push(new Plant.Sunflower(gameField.plants[i].x, gameField.plants[i].y));
+        const plant = createPlant(gameField.plants[i].name, gameField.plants[i].x, gameField.plants[i].y);
+        plants.push(plant);
     }
-
 
     for (let i = 0; i < gameField.zombies.length; i++) {
         // console.log(zombies[i])
-        zombies.push(new Zombie.NormalZombie(gameField.zombies[i].x, gameField.zombies[i].y));
+        const zombie = createZombie(gameField.zombies[i].name, gameField.zombies[i].x, gameField.zombies[i].y);
+        zombies.push(zombie);
     }
-
-    resourcesPlants = gameField.resourcesPlants;
-    resourcesZombies = gameField.resourcesZombies;
 });
+
+function createPlant(name, x, y) {
+    switch (name) {
+        case 'sunflower': return new Plant.Sunflower;
+        case 'peashooter': return new Plant.Peashooter(x, y);
+    }
+}
+
+function createZombie(name, x, y) {
+    switch (name) {
+        case 'grave': return new Zombie.Grave(x, y);
+        case 'normalZombie': return new Zombie.NormalZombie(x, y);
+    }
+}
 
 
 function update() {
