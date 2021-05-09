@@ -33,9 +33,9 @@ function getCost(name) {
     switch (name) {
         case 'sunflower': return 50;
         case 'peashooter': return 100;
+ 
 
-
-        case 'grave': return new Zombie.Grave(x, y);
-        case 'normalZombie': return new Zombie.NormalZombie(x, y);
+        case 'grave': return 50;
+        case 'normalZombie': return 100;
     }
 }
