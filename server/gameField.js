@@ -7,11 +7,10 @@ module.exports = class GameField {
     }
 
     addPlant(name, x, y) {
-        const plant = createPlant(name, x, y);
-        if (this.resourcesPlants >= plant.cost) {
-            this.plants.push(plant);
-            this.resourcesPlants -= plant.cost;
-        }
+        const plant = {name: name, x: x, y: y}
+        this.plants.push(plant);
+        this.resourcesPlants -= plant.cost;
+        
     }
 
     removePlant(index) {
@@ -19,32 +18,13 @@ module.exports = class GameField {
     }
 
     addZombie(name, x, y) {
-        const zombie = createZombie(name, x, y);
-        if (resourcesZombies >= zombie.cost) {
-            this.zombies.push(zombie);
-            this.resourcesZombies -= zombie.cost;
-        }
+        const zombie = {name: name, x: x, y: y}
+        this.zombies.push(zombie);
+        this.resourcesZombies -= zombie.cost;
     }
+    
 
     removeZombie(index) {
         this.zombies.splice(index, 1);
     }
 }
-
-
-function createPlant(name, x, y) {
-    switch (name) {
-        case 'sunflower': return new Sunflower(x, y);
-        case 'peashooter': return new Peashooter(x, y);
-    }
-}
-
-function createZombie(name, x, y) {
-    switch (name) {
-        case 'grave': return new Grave(x, y);
-        case 'normalZombie': return new NormalZombie(x, y);
-    }
-}
-
-
-
