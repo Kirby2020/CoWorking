@@ -198,6 +198,8 @@ sock.on('gameField', gameField => {
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
+    console.log(gameField.resourcesPlants);
+    console.log(gameField.resourcesZombies);
 
     for (let i = 0; i < gameField.plants.length; i++) {
         // console.log(plants[i])
