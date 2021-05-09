@@ -164,16 +164,20 @@ canvas.addEventListener('click', (e) => {
 function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         // console.log(plants[i])
-        plants[i].update();
-        plants[i].draw();
+        if (plants[i]) {
+            plants[i].update();
+            plants[i].draw();
+        }
     }
 }
 
 function drawZombies() {
     for (let i = 0; i < zombies.length; i++) {
         // console.log(zombies[i])
-        zombies[i].update();
-        zombies[i].draw();
+        if (zombies[i]) {
+            zombies[i].update();
+            zombies[i].draw();
+        }
     }
 }
 
