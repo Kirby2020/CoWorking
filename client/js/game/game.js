@@ -217,7 +217,7 @@ sock.on('gameField', gameField => {
 
 function createPlant(name, x, y) {
     switch (name) {
-        case 'sunflower': return new Plant.Sunflower;
+        case 'sunflower': return new Plant.Sunflower(x, y);
         case 'peashooter': return new Plant.Peashooter(x, y);
     }
 }
