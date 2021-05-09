@@ -2,27 +2,21 @@ import { loadImage } from './loaders.js';
 import { canvas, context, seedBankPlants, seedBankZombies, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_SIZE } from './constants.js';
 import { isIn } from './utils.js';
 
-let backgroundBuffer;
 
 // TEMP Laad de achtergrond
 export function drawBackground() {
-    // const background = new Image();
-    // background.src = './assets/images/backgrounds/background2.jpg'
-    // context.drawImage(background, 0, 0, canvas.width, canvas.height);
+    const background = new Image();
+    background.src = './assets/images/backgrounds/background2.jpg'
+    context.drawImage(background, 0, 0, canvas.width, canvas.height);
 
+    // loadImage('./assets/images/backgrounds/background2.jpg')
+    // .then(image => {
+    //     if(!backgroundBuffer || backgroundBuffer !== image) {
+    //         backgroundBuffer = image;
+    //     }
 
-    loadImage('./assets/images/backgrounds/background2.jpg')
-    .then(image => {
-        if(!backgroundBuffer || backgroundBuffer !== image) {
-            backgroundBuffer = image;
-        }
-
-        context.drawImage(backgroundBuffer, 0, 0, canvas.width, canvas.height);
-    });    
-
-    
-
-
+    //     context.drawImage(backgroundBuffer, 0, 0, canvas.width, canvas.height);
+    // });    
 
     context.strokeStyle = 'red';
     context.lineWidth = 4;
