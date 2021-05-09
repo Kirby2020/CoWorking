@@ -210,6 +210,9 @@ sock.on('gameField', gameField => {
         const zombie = createZombie(gameField.zombies[i].name, gameField.zombies[i].x, gameField.zombies[i].y);
         zombies.push(zombie);
     }
+
+    resourcesPlants = gameField.resourcesPlants;
+    resourcesZombies = gameField.resourcesZombies;
 });
 
 function createPlant(name, x, y) {
