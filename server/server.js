@@ -18,6 +18,7 @@ const randomColor = require('randomcolor');
 const Players = require('./players');
 const GameState = require('./gameState');
 const Cursors = require('./cursors');
+const GameField = require('./gameField');
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -56,6 +57,7 @@ const io = socketio(server, {
 const playerSet = new Players();
 const gameState = new GameState();
 const cursors = new Cursors();
+const gameField = new GameField();
 let gameRoomNumber = 1;
 let playersInRoom = 0;
 
@@ -86,7 +88,7 @@ io.on('connection', (sock) => {
     io.emit('playerList', JSON.stringify([...playerSet.players]));
     // En toont het huidige spel (spectating)
     // Later gaat dit weg als we kunnen werken met rooms en meerdere games tegelijk kunnen runnen
-    io.emit('gameField', gameField);
+    io.emit('gameField', JSON.stringify(gameField));
 
 
 
@@ -130,10 +132,32 @@ io.on('connection', (sock) => {
         });
 
 
-        sock.on('gameField', gameField => {
-            console.log(gameField);
-            io.emit('gameField', gameField);
-        })
+
+        // sock.on('gameField', gameField => {
+        //     console.log(gameField);
+        //     io.emit('gameField', gameField);
+        // });
+
+        // plantInfo = {name, x, y}
+        sock.on('gameFieldAddPlant', plantInfo => {
+            gameField.addPlant(plantInfo.name, plantInfo.x, plantInfo.y);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
+    
+        sock.on('gameFieldRemovePlant', index => {
+            gameField.removePlant(index);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
+
+        // zombieInfo = {name, x, y}
+        sock.on('gameFieldAddZombie', zombieInfo => {
+            gameField.addZombie(zombieInfo.name, zombieInfo.x, zombieInfo.y);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
+        sock.on('gameFieldRemoveZombie', index => {
+            gameField.removeZombie(index);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
 
         // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
         // De ontvanger krijgt de invite met naam

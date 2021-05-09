@@ -111,10 +111,12 @@ canvas.addEventListener('click', (e) => {
         let tempCost = 50;
 
         if (resourcesPlants >= tempCost) {
-            plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
-            resourcesPlants -= tempCost;
-            sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
-                         resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+            // plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
+            // sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
+            //              resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+
+            //resourcesPlants -= tempCost;
+            sock.emit('gameFieldAddPlant', ({name: "sunflower", x: gridPositionX, y: gridPositionY}))
         }
     } else if (currentRole === "Zombies") {
         // ---------- SEEDBANKS ----------
@@ -137,10 +139,12 @@ canvas.addEventListener('click', (e) => {
         let tempCost = 50;
     
         if (resourcesZombies >= tempCost) {
-            zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
-            resourcesZombies -= tempCost;
-            sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
-                         resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+            //zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
+            //resourcesZombies -= tempCost;
+            // sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
+            //              resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+
+            sock.emit('gameFieldAddZombie', ({name: "grave", x: gridPositionX, y: gridPositionY}))
 
                 // alternative maybe: verzendt naam, x en y naar de server
                 // server voegt die toe aan de array en stuurt de array terug
@@ -187,26 +191,29 @@ sock.on('role', role => {
 });
 
 sock.on('gameField', gameField => {
-    plants = [];
-    zombies = [];
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
 
-
-    for (let i = 0; i < gameField.plants.length; i++) {
-        // console.log(plants[i])
-        plants.push(new Plant.Sunflower(gameField.plants[i].x, gameField.plants[i].y));
-    }
-
-
-    for (let i = 0; i < gameField.zombies.length; i++) {
-        // console.log(zombies[i])
-        zombies.push(new Zombie.NormalZombie(gameField.zombies[i].x, gameField.zombies[i].y));
-    }
-
+    plants = gameField.plants;
+    zombies = gameField.zombies;
     resourcesPlants = gameField.resourcesPlants;
     resourcesZombies = gameField.resourcesZombies;
+
+
+    // for (let i = 0; i < gameField.plants.length; i++) {
+    //     // console.log(plants[i])
+    //     plants.push(new Plant.Sunflower(gameField.plants[i].x, gameField.plants[i].y));
+    // }
+
+
+    // for (let i = 0; i < gameField.zombies.length; i++) {
+    //     // console.log(zombies[i])
+    //     zombies.push(new Zombie.NormalZombie(gameField.zombies[i].x, gameField.zombies[i].y));
+    // }
+
+    // resourcesPlants = gameField.resourcesPlants;
+    // resourcesZombies = gameField.resourcesZombies;
 });
 
 
