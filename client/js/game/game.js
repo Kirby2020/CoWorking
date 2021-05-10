@@ -111,10 +111,12 @@ canvas.addEventListener('click', (e) => {
         let tempCost = 50;
 
         if (resourcesPlants >= tempCost) {
-            plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
-            resourcesPlants -= tempCost;
-            sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
-                         resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+            // plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
+            // sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
+            //              resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+
+            //resourcesPlants -= tempCost;
+            sock.emit('gameFieldAddPlant', ({name: "sunflower", x: gridPositionX, y: gridPositionY}))
         }
     } else if (currentRole === "Zombies") {
         // ---------- SEEDBANKS ----------
@@ -137,10 +139,12 @@ canvas.addEventListener('click', (e) => {
         let tempCost = 50;
     
         if (resourcesZombies >= tempCost) {
-            zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
-            resourcesZombies -= tempCost;
-            sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
-                         resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+            //zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
+            //resourcesZombies -= tempCost;
+            // sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
+            //              resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
+
+            sock.emit('gameFieldAddZombie', ({name: "grave", x: gridPositionX, y: gridPositionY}))
 
                 // alternative maybe: verzendt naam, x en y naar de server
                 // server voegt die toe aan de array en stuurt de array terug
@@ -160,16 +164,20 @@ canvas.addEventListener('click', (e) => {
 function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         // console.log(plants[i])
-        plants[i].update();
-        plants[i].draw();
+        if (plants[i]) {
+            plants[i].update();
+            plants[i].draw();
+        }
     }
 }
 
 function drawZombies() {
     for (let i = 0; i < zombies.length; i++) {
         // console.log(zombies[i])
-        zombies[i].update();
-        zombies[i].draw();
+        if (zombies[i]) {
+            zombies[i].update();
+            zombies[i].draw();
+        }
     }
 }
 
@@ -187,11 +195,11 @@ sock.on('role', role => {
 });
 
 sock.on('gameField', gameField => {
-    plants = [];
-    zombies = [];
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
+    console.log(gameField.resourcesPlants);
+    console.log(gameField.resourcesZombies);
 
     for (let i = 0; i < gameField.plants.length; i++) {
         // console.log(plants[i])
@@ -208,7 +216,7 @@ sock.on('gameField', gameField => {
 
 function createPlant(name, x, y) {
     switch (name) {
-        case 'sunflower': return new Plant.Sunflower;
+        case 'sunflower': return new Plant.Sunflower(x, y);
         case 'peashooter': return new Plant.Peashooter(x, y);
     }
 }

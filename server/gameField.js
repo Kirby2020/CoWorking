@@ -9,7 +9,7 @@ module.exports = class GameField {
     addPlant(name, x, y) {
         const plant = {name: name, x: x, y: y}
         this.plants.push(plant);
-        this.resourcesPlants -= plant.cost;
+        this.resourcesPlants -= getCost(name);
         
     }
 
@@ -20,11 +20,22 @@ module.exports = class GameField {
     addZombie(name, x, y) {
         const zombie = {name: name, x: x, y: y}
         this.zombies.push(zombie);
-        this.resourcesZombies -= zombie.cost;
+        this.resourcesZombies -= getCost(name);
     }
     
 
     removeZombie(index) {
         this.zombies.splice(index, 1);
+    }
+}
+
+function getCost(name) {
+    switch (name) {
+        case 'sunflower': return 50;
+        case 'peashooter': return 100;
+ 
+
+        case 'grave': return 50;
+        case 'normalZombie': return 100;
     }
 }

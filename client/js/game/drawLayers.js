@@ -1,4 +1,4 @@
-// import { loadImage } from './loaders.js';
+import { loadImage } from './loaders.js';
 import { canvas, context, seedBankPlants, seedBankZombies, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_SIZE } from './constants.js';
 import { isIn } from './utils.js';
 
@@ -6,9 +6,14 @@ import { isIn } from './utils.js';
 // TEMP Laad de achtergrond
 export function drawBackground() {
 
-    const background = new Image();
-    background.src = './assets/images/backgrounds/background2.jpg'
-    context.drawImage(background, 0, 0, canvas.width, canvas.height);
+    // const background = new Image();
+    // background.src = './assets/images/backgrounds/background2.jpg'
+    // context.drawImage(background, 0, 0, canvas.width, canvas.height);
+
+    loadImage('./assets/images/backgrounds/background2.jpg')
+    .then(image => {
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    });    
 
 
     context.strokeStyle = 'red';
