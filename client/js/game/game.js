@@ -68,13 +68,13 @@ sock.on('mouse move', (cursors) => {
 
 // ---------- GAME ----------
 
-let currentRole = "Zombies"; // plant of zombie, default : spectator
+let currentRole = "Plants"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 let currentFrame = 0;
-let selectedSeedSlots = {plant: null, zombie: null}
+let selectedSeedSlots = {plant: 0, zombie: 0}
 
 // Wanneer er geklikt wordt op het game venster worden er een aantal dingen gedaan
 // Controleren of je planten speelt of zombies
@@ -110,11 +110,11 @@ canvas.addEventListener('click', (e) => {
                 return;
             }
         }
-        let tempCost = 50;
 
-        if (resourcesPlants >= tempCost) {
+        if (resourcesPlants >= getSelectedPlantCost()) {
 
-            sock.emit('gameFieldAddPlant', ({name: "sunflower", x: gridPositionX, y: gridPositionY}))
+
+            sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}))
         }
     } else if (currentRole === "Zombies") {
         // ---------- SEEDBANKS ----------
@@ -134,7 +134,7 @@ canvas.addEventListener('click', (e) => {
                 return;
             }
         }
-        let tempCost = 50;
+        let tempCost = getSelectedPlantCost();
     
         if (resourcesZombies >= tempCost) {
 
@@ -183,6 +183,28 @@ canvas.addEventListener('keypress', (e) => {
     sock.emit('selectedSeedSlot', (JSON.stringify(selectedSeedSlots)));
 });
 
+function getSelectedPlant() {
+    switch (selectedSeedSlots.plant) {
+        case 0: return 'sunflower';
+        case 1: return 'peashooter';
+        case 2: return 'repeater';
+        case 3: return 'wallnut';
+        case 4: return 'snowpea';
+        case 5: return 'chomper';
+    }
+}
+
+function getSelectedPlantCost() {
+    switch (selectedSeedSlots.plant) {
+        case 0: return 50;
+        case 1: return 100;
+        case 2: return 150;
+        case 3: return 50;
+        case 4: return 175;
+        case 5: return 150;
+    }
+}
+
 
 function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
@@ -217,11 +239,9 @@ function drawSelectedSeedSlots() {
     // Als er een seedslot geselecteerd is, zoek de seedslot in de grid met de index van het object selectedSeedSlots
     // en kleur het in.
     if (selectedSeedSlots.plant !== null) {
-        console.warn(seedBankGridPlants[selectedSeedSlots.plant])
         seedBankGridPlants[selectedSeedSlots.plant].drawSelected('red');
     }
     if (selectedSeedSlots.zombie !== null) {
-        console.warn(seedBankGridZombies[selectedSeedSlots.zombie])
         seedBankGridZombies[selectedSeedSlots.zombie].drawSelected('blue');
     }
 }
@@ -241,6 +261,9 @@ sock.on('gameField', gameField => {
     console.log(gameField.zombies);
     console.log(gameField.resourcesPlants);
     console.log(gameField.resourcesZombies);
+
+    resourcesPlants = gameField.resourcesPlants || 0;
+    resourcesZombies = gameField.resourcesZombies || 0;
 
     for (let i = 0; i < gameField.plants.length; i++) {
         // console.log(plants[i])
@@ -263,6 +286,18 @@ function createPlant(name, x, y) {
     switch (name) {
         case 'sunflower': return new Plant.Sunflower(x, y);
         case 'peashooter': return new Plant.Peashooter(x, y);
+        case 'repeater': return new Plant.Repeater(x, y);
+        case 'wallnut': return new Plant.Wallnut(x, y);
+        case 'tallnut': return new Plant.Tallnut(x, y);
+        case 'snowpea': return new Plant.Snowpea(x, y);
+        case 'potatomine': return new Plant.PotatoMine(x, y);
+        case 'cherrybomb': return new Plant.CherryBomb(x, y);
+        case 'chomper': return new Plant.Chomper(x,y);
+        case 'squash': return new Plant.Squash(x, y);
+        case 'jalapeno': return new Plant.Jalapeno(x, y);
+        case 'pumpkin': return new Plant.Pumpkin(x, y);
+        case 'torchwood': return new Plant.Torchwood(x, y);
+
     }
 }
 

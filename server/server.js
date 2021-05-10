@@ -78,6 +78,7 @@ setInterval(() => {
     console.log('SET', playerSet);
     console.log('CURSORS', cursors);
     console.log('GAMEFIELD', gameField);
+    console.log('--------------------------------')
 }, 1000)
 
 
@@ -193,6 +194,11 @@ io.on('connection', (sock) => {
                 io.to(getId(to)).emit('role', ("Zombies"));
 
                 io.emit('playerList', JSON.stringify([...playerSet.players]));
+
+                // reset gameField bij een invite (nieuwe game)
+                gameField.reset();
+                io.emit('gameField', gameField);
+                
             }
         })
 

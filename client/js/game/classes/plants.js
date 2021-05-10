@@ -62,8 +62,8 @@ export class Peashooter extends Plant {
         this.attackSpeed = 1;
         this.cooldown = 10;
         this.cost = 100;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/max/m2i8i8G6G6N4H7m2/
+        this.sprite = './assets/images/plants/seedslots2/peashooterSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/peashooterSeedSlotSprite2.png';   // https://www.clipartmax.com/max/m2i8i8G6G6N4H7m2/
     }
 }
 
@@ -76,8 +76,8 @@ export class Repeater extends Plant {
         this.attackSpeed = 0.5;
         this.cooldown = 10;
         this.cost = 150;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8b1Z5Z5Z5K9K9_zombies-plants-vs-zombies-2-repeater/
+        this.sprite = './assets/images/plants/seedslots2/repeaterSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/repeaterSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8b1Z5Z5Z5K9K9_zombies-plants-vs-zombies-2-repeater/
     }
 }
 
@@ -88,8 +88,8 @@ export class Wallnut extends Plant {
         this.health = 1000;
         this.cooldown = 30;
         this.cost = 50;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8A0H7N4N4H7A0_plants-vs-zombies-2-wallnut-the-wallnut-by-illustation16-potato-plants-vs/
+        this.sprite = './assets/images/plants/seedslots2/wallnutSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/wallnutSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8A0H7N4N4H7A0_plants-vs-zombies-2-wallnut-the-wallnut-by-illustation16-potato-plants-vs/
     }
 }
 
@@ -100,8 +100,8 @@ export class Tallnut extends Plant {
         this.health = 3000;
         this.cooldown = 30;
         this.cost = 125;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/max/m2i8m2Z5H7m2N4i8/
+        this.sprite = './assets/images/plants/seedslots2/tallnutSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/tallnutSeedSlotSprite2.png';   // https://www.clipartmax.com/max/m2i8m2Z5H7m2N4i8/
     }
 }
 
@@ -114,8 +114,8 @@ export class Snowpea extends Plant {
         this.attackSpeed = 1;
         this.cooldown = 10;
         this.cost = 150;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8H7m2m2N4N4b1_plants-vs-zombies-2-snow-pea-by-illustation16-plants-vs-zombies-plantas/
+        this.sprite = './assets/images/plants/seedslots2/snowpeaSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/snowpeaSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8H7m2m2N4N4b1_plants-vs-zombies-2-snow-pea-by-illustation16-plants-vs-zombies-plantas/
 
         this.special = {effect: 'slow', duration: 3, multiplier: 0.5};
     }
@@ -129,8 +129,8 @@ export class PotatoMine extends Plant {
         this.attackDamage = 500;
         this.cooldown = 20;
         this.cost = 25;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8Z5H7b1K9i8b1_zombies-2-generator-site-%5Bnew%5D-plants-vs-pvz-2-potato-mine/
+        this.sprite = './assets/images/plants/seedslots2/potatomineSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/potatomineSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8Z5H7b1K9i8b1_zombies-2-generator-site-%5Bnew%5D-plants-vs-pvz-2-potato-mine/
 
         this.special = {effect: 'range', x: 2, y: 0};
     }
@@ -144,8 +144,8 @@ export class CherryBomb extends Plant {
         this.attackDamage = 500;
         this.cooldown = 30;
         this.cost = 150;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;   // https://www.clipartmax.com/middle/m2i8i8Z5m2K9m2A0_plants-vs-zombies-cherry-bomb/
+        this.sprite = './assets/images/plants/seedslots2/cherrybombSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/cherrybombSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8i8Z5m2K9m2A0_plants-vs-zombies-cherry-bomb/
 
         this.special = {effect: 'range', x: 3, y: 3};
     }
@@ -160,8 +160,8 @@ export class Chomper extends Plant {
         this.attackSpeed = 1;
         this.cooldown = 10;
         this.cost = 175;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/plants/seedslots2/chomperSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/chomperSeedSlotSprite2.png';
 
         this.special = {effect: 'range', x: 2, y: 0};
     }
@@ -175,8 +175,8 @@ export class Squash extends Plant {
         this.attackDamage = 500;
         this.cooldown = 20;
         this.cost = 50;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/plants/seedslots2/squashSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/squashSeedSlotSprite2.png';
 
         this.special = {effect: 'range', x: 2, y: 0};
     }
@@ -190,8 +190,8 @@ export class Jalapeno extends Plant {
         this.attackDamage = 500;
         this.cooldown = 30;
         this.cost = 125;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/plants/seedslots2/jalapenoSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/jalapenoSeedSlotSprite2.png';
 
         this.special = {effect: 'range', x: 9, y: 0};
     }
@@ -204,8 +204,8 @@ export class Pumpkin extends Plant {
         this.health = 500;
         this.cooldown = 20;
         this.cost = 125;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/plants/seedslots2/pumpkinSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/pumpkinSeedSlotSprite2.png';
     }
 }
 
@@ -216,8 +216,8 @@ export class Torchwood extends Plant {
         this.health = 200;
         this.cooldown = 10;
         this.cost = 75;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/plants/seedslots2/torchwoodSeedSlotSprite2.png';
+        this.seedSlotSprite = './assets/images/plants/seedslots2/torchwoodSeedSlotSprite2.png';
 
         this.special = {effect: 'attackboost', duration: 0, multiplier: 2};
     }
