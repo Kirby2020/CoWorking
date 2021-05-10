@@ -233,6 +233,9 @@ sock.on('role', role => {
 });
 
 sock.on('gameField', gameField => {
+    if(!gameField) {
+        return;
+    }
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
@@ -253,7 +256,7 @@ sock.on('gameField', gameField => {
 });
 
 sock.on('selectedSeedSlot', selectedSeedSlot => {
-    selectedSeedSlot = JSON.parse(selectedSeedSlot);
+    selectedSeedSlots = JSON.parse(selectedSeedSlot);
 })
 
 function createPlant(name, x, y) {

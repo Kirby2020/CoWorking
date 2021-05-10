@@ -74,10 +74,11 @@ let playersInRoom = 0;
 // }, 5000)
 
 
-// setInterval(() => {
-//     console.log('SET', playerSet);
-//     console.log('CURSORS', cursors)
-// }, 1000)
+setInterval(() => {
+    console.log('SET', playerSet);
+    console.log('CURSORS', cursors);
+    console.log('GAMEFIELD', gameField);
+}, 1000)
 
 
 // Wanneer iemand verbind met de server (naar de site gaat)

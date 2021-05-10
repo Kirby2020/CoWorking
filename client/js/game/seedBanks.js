@@ -1,5 +1,22 @@
 import { context, seedBankGridPlants, seedBankGridZombies, seedBankPlants, seedBankZombies, SEEDSLOT_SIZE } from './constants.js';
 import { CellSeedBank } from './classes/Cell.js';
+import { loadImage } from './loaders.js';
+
+let seedBankPlantGraphic;
+let seedBankZombieGraphic;
+
+loadImage('./assets/images/gui/seedBankPlants.png')
+.then(image => {
+    seedBankPlantGraphic = image;
+}); 
+
+loadImage('./assets/images/gui/seedBankZombies.png')
+.then(image => {
+    seedBankZombieGraphic = image;
+}); 
+
+
+
 
 // Maakt in het geheugen een grid op de seedbanks met cellen
 function createSeedBankGridPlants() {
@@ -32,19 +49,13 @@ function drawSeedBanksGrid() {
 
 // Tekent de achtergrond voor de seedbanks
 function drawSeedBanksBackground() {
-    // context.fillStyle = seedBankPlants.color;
-    // context.fillRect(seedBankPlants.x, seedBankPlants.y, seedBankPlants.width, seedBankPlants.height);
+    if (!seedBankPlantGraphic || !seedBankZombieGraphic) {
+        return;
+    }
 
-    // context.fillStyle = seedBankZombies.color;
-    // context.fillRect(seedBankZombies.x, seedBankZombies.y, seedBankZombies.width, seedBankZombies.height);
+    context.drawImage(seedBankPlantGraphic, seedBankPlants.x, seedBankPlants.y, seedBankPlants.width, seedBankPlants.height);
+    context.drawImage(seedBankZombieGraphic, seedBankZombies.x, seedBankZombies.y, seedBankZombies.width, seedBankZombies.height);
 
-    const seedBankPlant = new Image();
-    seedBankPlant.src = './assets/images/gui/seedBankPlants.png';
-    context.drawImage(seedBankPlant, seedBankPlants.x, seedBankPlants.y, seedBankPlants.width, seedBankPlants.height);
-
-    const seedBankZombie = new Image();
-    seedBankZombie.src = './assets/images/gui/seedBankZombies.png';
-    context.drawImage(seedBankZombie, seedBankZombies.x, seedBankZombies.y, seedBankZombies.width, seedBankZombies.height);
 }
 
 // export functie dat alles tekent van de seedbanks
