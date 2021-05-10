@@ -5,6 +5,7 @@ import { loadImage } from './loaders.js';
 let seedBankPlantGraphic;
 let seedBankZombieGraphic;
 
+
 loadImage('./assets/images/gui/seedBankPlants.png')
 .then(image => {
     seedBankPlantGraphic = image;
@@ -40,7 +41,17 @@ createSeedBankGridZombies();
 // Tekent de grid op de seedbanks
 function drawSeedBanksGrid() {
     for (let i = 0; i < seedBankGridPlants.length; i++) {
-        seedBankGridPlants[i].draw();
+        let seedBankCell = seedBankGridPlants[i]
+        seedBankCell.draw();
+
+        let sprite = new Image();
+        sprite.src = Object.values(plantSprites)[i];
+
+        context.drawImage(sprite, seedBankCell.x, seedBankCell.y, seedBankCell.width, seedBankCell.height);
+
+        context.fillStyle = 'gold';
+        context.font = '40px Arial';
+        context.fillText(Math.floor(Object.values(plantCosts)[i]), seedBankCell.x, seedBankCell.y + seedBankCell.height);
     }
     for (let i = 0; i < seedBankGridZombies.length; i++) {
         seedBankGridZombies[i].draw();
@@ -57,6 +68,25 @@ function drawSeedBanksBackground() {
     context.drawImage(seedBankZombieGraphic, seedBankZombies.x, seedBankZombies.y, seedBankZombies.width, seedBankZombies.height);
 
 }
+
+const plantSprites = {
+    sunflower: './assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png',
+    peashooter: './assets/images/plants/seedslots2/peashooterSeedSlotSprite2.png',
+    repeater: './assets/images/plants/seedslots2/repeaterSeedSlotSprite2.png',
+    wallnut: './assets/images/plants/seedslots2/wallnutSeedSlotSprite2.png',
+    snowpea: './assets/images/plants/seedslots2/snowpeaSeedSlotSprite2.png',
+    chomper: './assets/images/plants/seedslots2/chomperSeedSlotSprite2.png'
+}
+
+const plantCosts = {
+    sunflower: 50,
+    peashooter: 100,
+    repeater: 150,
+    wallnut: 50,
+    snowpea: 175,
+    chomper: 150
+}
+
 
 // export functie dat alles tekent van de seedbanks
 export function drawSeedBanks() {

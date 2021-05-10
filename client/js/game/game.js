@@ -134,11 +134,10 @@ canvas.addEventListener('click', (e) => {
                 return;
             }
         }
-        let tempCost = getSelectedPlantCost();
     
-        if (resourcesZombies >= tempCost) {
+        if (resourcesZombies >= getSelectedZombieCost()) {
 
-            sock.emit('gameFieldAddZombie', ({name: "grave", x: gridPositionX, y: gridPositionY}))
+            sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
 
                 // alternative maybe: verzendt naam, x en y naar de server
                 // server voegt die toe aan de array en stuurt de array terug
@@ -202,6 +201,28 @@ function getSelectedPlantCost() {
         case 3: return 50;
         case 4: return 175;
         case 5: return 150;
+    }
+}
+
+function getSelectedZombie() {
+    switch (selectedSeedSlots.zombie) {
+        case 0: return 'grave';
+        case 1: return 'normalZombie';
+        case 2: return 'coneheadZombie';
+        case 3: return 'bucketheadZombie';
+        case 4: return 'newspaperZombie';
+        case 5: return 'polevaultingZombie';
+    }
+}
+
+function getSelectedZombieCost() {
+    switch (selectedSeedSlots.zombie) {
+        case 0: return 50;
+        case 1: return 50;
+        case 2: return 75;
+        case 3: return 125;
+        case 4: return 100;
+        case 5: return 100;
     }
 }
 
@@ -305,6 +326,10 @@ function createZombie(name, x, y) {
     switch (name) {
         case 'grave': return new Zombie.Grave(x, y);
         case 'normalZombie': return new Zombie.NormalZombie(x, y);
+        case 'coneheadZombie': return new Zombie.ConeheadZombie(x, y);
+        case 'bucketheadZombie': return new Zombie.BucketheadZombie(x, y);
+        case 'newspaperZombie': return new Zombie.NewspaperZombie(x, y);
+        case 'polevaultingZombie': return new Zombie.PolevaultingZombie(x, y);
     }
 }
 

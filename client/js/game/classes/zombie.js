@@ -50,8 +50,8 @@ export class NormalZombie extends Zombie {
 
         this.attackDamage = 10; 
 
-        this.attackSpeed = 0.75;
-        this.speed = 2;
+        this.attackSpeed = 1;
+        this.speed = 0.75;
         this.walkSpeed = this.speed; //Ik vond online dat die er 4 stappen overdeed om 1 vakje te verlopen. Ik weet niet hoe snel dit juist is dus gok ik dit.
         
         this.cooldown = 8;
@@ -85,10 +85,20 @@ export class NewspaperZombie extends Zombie {
 
         this.cooldown = 15;
         this.cost = 100;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/zombies/conehead_zombie/conehead_zombie_standing.png';
+        this.seedSlotSprite = './assets/images/zombies/conehead_zombie/conehead_zombie_standing.png';
 
         this.special = {effect: 'rage', duration: 0, multiplier: 2};
+    }
+
+    draw () {
+        const sprite = new Image();
+        sprite.src = this.sprite;
+        context.drawImage(sprite, 0, 0, 28, 44, this.x, this.y, 28 * 2, 44 * 2);
+
+        context.fillStyle = 'blue';
+        context.font = '20px Arial';
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
     }
 }
 export class ConeheadZombie extends Zombie {
@@ -105,8 +115,18 @@ export class ConeheadZombie extends Zombie {
 
         this.cooldown = 15;
         this.cost = 75;
-        this.sprite = sprite;
-        this.seedSlotSprite = seedSlotSprite;
+        this.sprite = './assets/images/zombies/conehead_zombie/conehead_zombie_standing.png';
+        this.seedSlotSprite = './assets/images/zombies/conehead_zombie/conehead_zombie_standing.png';
+    }
+
+    draw () {
+        const sprite = new Image();
+        sprite.src = this.sprite;
+        context.drawImage(sprite, 0, 0, 28, 44, this.x, this.y, 28 * 2, 44 * 2);
+
+        context.fillStyle = 'blue';
+        context.font = '20px Arial';
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
     }
 }
 export class BucketheadZombie extends Zombie {
