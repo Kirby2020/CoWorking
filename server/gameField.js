@@ -27,6 +27,13 @@ module.exports = class GameField {
     removeZombie(index) {
         this.zombies.splice(index, 1);
     }
+
+    reset() {
+        this.plants = [];
+        this.zombies = [];
+        this.resourcesPlants = 300;
+        this.resourcesZombies = 300;
+    }
 }
 
 function getCost(name) {

@@ -46,7 +46,7 @@ export class Sunflower extends Plant {
         this.health = 100;
         this.cooldown = 5;
         this.cost = 50;
-        this.sprite = './assets/images/plants/sunflower1/Sunflower_idle.gif';
+        this.sprite = './assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png';
         this.seedSlotSprite = './assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png';   // https://www.cleanpng.com/png-plants-vs-zombies-2-it-s-about-time-plants-vs-zomb-696886/download-png.html
     }
 

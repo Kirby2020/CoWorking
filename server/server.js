@@ -130,6 +130,9 @@ io.on('connection', (sock) => {
         sock.on('selectedCell', cell => {
             sock.broadcast.emit('selectedCell', cell);
         });
+        sock.on('selectedSeedSlot', selectedSeedSlot => {
+            io.emit('selectedSeedSlot', selectedSeedSlot);
+        });
 
 
 
@@ -222,6 +225,11 @@ io.on('connection', (sock) => {
             }
             catch (error) {
                 console.log(error);
+            }
+
+            if (playerSet.getAll().size < 1) {
+                gameField.reset();
+                io.emit('gameField', gameField);
             }
         });
 

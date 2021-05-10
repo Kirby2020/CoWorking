@@ -74,6 +74,7 @@ let resourcesZombies = 200; // Je begint steeds met 75 brains
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 let currentFrame = 0;
+let selectedSeedSlots = {plant: null, zombie: null}
 
 // Wanneer er geklikt wordt op het game venster worden er een aantal dingen gedaan
 // Controleren of je planten speelt of zombies
@@ -95,6 +96,7 @@ canvas.addEventListener('click', (e) => {
         // ---------- SEEDBANKS ----------
 
 
+
         // ---------- SPELVELD ----------
         if (gridPositionY < SEEDSLOT_SIZE.height || gridPositionY > 5 * SEEDSLOT_SIZE.height) {
             return;
@@ -111,11 +113,7 @@ canvas.addEventListener('click', (e) => {
         let tempCost = 50;
 
         if (resourcesPlants >= tempCost) {
-            // plants.push(new Plant.Sunflower(gridPositionX, gridPositionY));
-            // sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
-            //              resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
 
-            //resourcesPlants -= tempCost;
             sock.emit('gameFieldAddPlant', ({name: "sunflower", x: gridPositionX, y: gridPositionY}))
         }
     } else if (currentRole === "Zombies") {
@@ -139,10 +137,6 @@ canvas.addEventListener('click', (e) => {
         let tempCost = 50;
     
         if (resourcesZombies >= tempCost) {
-            //zombies.push(new Zombie.Grave(gridPositionX, gridPositionY));
-            //resourcesZombies -= tempCost;
-            // sock.emit('gameField', (JSON.stringify({plants: plants, zombies: zombies,
-            //              resourcesPlants: resourcesPlants, resourcesZombies: resourcesZombies})));
 
             sock.emit('gameFieldAddZombie', ({name: "grave", x: gridPositionX, y: gridPositionY}))
 
@@ -158,6 +152,35 @@ canvas.addEventListener('click', (e) => {
     else {
         console.log('You are currently spectating');
     }
+});
+
+// Eventlistener die kijkt welke seedslot je selecteerd met de cijfertoetsen
+canvas.addEventListener('keypress', (e) => {
+    console.log(e.code);
+    if (currentRole === 'Plants') {
+        switch (e.code) {
+            case 'Digit1': selectedSeedSlots.plant = 0; break;
+            case 'Digit2': selectedSeedSlots.plant = 1; break;
+            case 'Digit3': selectedSeedSlots.plant = 2; break;
+            case 'Digit4': selectedSeedSlots.plant = 3; break;
+            case 'Digit5': selectedSeedSlots.plant = 4; break;
+            case 'Digit6': selectedSeedSlots.plant = 5; break;
+            default: selectedSeedSlots.plant = null; break;
+        }
+    }
+    if (currentRole === 'Zombies') {
+        switch (e.code) {
+            case 'Digit1': selectedSeedSlots.zombie = 0; break;
+            case 'Digit2': selectedSeedSlots.zombie = 1; break;
+            case 'Digit3': selectedSeedSlots.zombie = 2; break;
+            case 'Digit4': selectedSeedSlots.zombie = 3; break;
+            case 'Digit5': selectedSeedSlots.zombie = 4; break;
+            case 'Digit6': selectedSeedSlots.zombie = 5; break;
+            default: selectedSeedSlots.zombie = null; break;
+        }
+    }
+
+    sock.emit('selectedSeedSlot', (JSON.stringify(selectedSeedSlots)));
 });
 
 
@@ -181,11 +204,26 @@ function drawZombies() {
     }
 }
 
+// Tekent de huidige hoeveelheid resources voor planten en zombies
 function drawResources() {
-    context.fillStyle = 'gold'
+    context.fillStyle = 'black'
     context.font = '25px Arial';
-    context.fillText(resourcesPlants, SEEDSLOT_SIZE.width / 2 - 10, SEEDSLOT_SIZE.height);
-    context.fillText(resourcesZombies, canvas.width - SEEDSLOT_SIZE.width, SEEDSLOT_SIZE.height);
+    context.fillText(resourcesPlants, SEEDSLOT_SIZE.width / 2, SEEDSLOT_SIZE.height + 3, SEEDSLOT_SIZE.width);
+    context.fillText(resourcesZombies, canvas.width - SEEDSLOT_SIZE.width - 10, SEEDSLOT_SIZE.height + 3, SEEDSLOT_SIZE.width);
+}
+
+// Tekent de geselecteerde seedslots bovenaan
+function drawSelectedSeedSlots() {
+    // Als er een seedslot geselecteerd is, zoek de seedslot in de grid met de index van het object selectedSeedSlots
+    // en kleur het in.
+    if (selectedSeedSlots.plant !== null) {
+        console.warn(seedBankGridPlants[selectedSeedSlots.plant])
+        seedBankGridPlants[selectedSeedSlots.plant].drawSelected('red');
+    }
+    if (selectedSeedSlots.zombie !== null) {
+        console.warn(seedBankGridZombies[selectedSeedSlots.zombie])
+        seedBankGridZombies[selectedSeedSlots.zombie].drawSelected('blue');
+    }
 }
 
 
@@ -214,6 +252,10 @@ sock.on('gameField', gameField => {
     }
 });
 
+sock.on('selectedSeedSlot', selectedSeedSlot => {
+    selectedSeedSlot = JSON.parse(selectedSeedSlot);
+})
+
 function createPlant(name, x, y) {
     switch (name) {
         case 'sunflower': return new Plant.Sunflower(x, y);
@@ -234,6 +276,7 @@ function update() {
     drawSeedBanks();
     // drawGameGrid();
     drawSelectedCells(currentMousePositions);
+    drawSelectedSeedSlots();
     drawPlants();
     drawZombies();
     drawResources();
