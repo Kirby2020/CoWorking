@@ -91,12 +91,9 @@ function onLogin(e) {
     const sendChat = document.getElementById('sendChatMessage');
     const username = input.value;
 
-    // input.value = '';
     if (username !== '' && players.indexOf(username) === -1) {
         input.style.display = 'none';
         button.style.display = 'none';
-        // input.style.visibility = 'hidden';
-        // button.style.visibility = 'hidden';
         sendChat.disabled = false;
         document.getElementById('inviteList').classList.toggle('hide');
 
