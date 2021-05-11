@@ -77,12 +77,12 @@ let currentFrame = 0;
 let selectedSeedSlots = {plant: 0, zombie: 0}
 
 // Wanneer er geklikt wordt op het game venster worden er een aantal dingen gedaan
-// Controleren of je planten speelt of zombies
+// Controleren of je planten speelt of zombies, default spectator
 // Berekenen van de cel waarin geklikt wordt
 // Controleren of je in het spelveld klikt
 // Controleren of er al niks staat
 // Controleren of je genoeg resources hebt
-// Versuurd bij elke nieuwe plant of zombie die op het scherm wordt gezet, de volledige arrays van plants/zombies naar de server
+// Versuurd bij elke nieuwe plant of zombie die op het scherm wordt gezet de naam en zijn coördinaten
 canvas.addEventListener('click', (e) => {
     const { x, y } = getMouseCoordinates(canvas, e);
     const gridPositionX = x - (x % CELL_SIZE.width);
@@ -105,6 +105,7 @@ canvas.addEventListener('click', (e) => {
             console.log('for zombies')
             return;
         }
+        // Als er al een plant op die plaats staat
         for (let i = 0; i < plants.length; i++) {
             if (plants[i].x === gridPositionX && plants[i].y === gridPositionY) {
                 return;
@@ -112,8 +113,7 @@ canvas.addEventListener('click', (e) => {
         }
 
         if (resourcesPlants >= getSelectedPlantCost()) {
-
-
+            console.warn(getSelectedPlantCost())
             sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}))
         }
     } else if (currentRole === "Zombies") {
@@ -129,6 +129,7 @@ canvas.addEventListener('click', (e) => {
             console.log('for plants')
             return;
         }
+        // Als er al een zombie op die plaats staat
         for (let i = 0; i < zombies.length; i++) {
             if (zombies[i].x === gridPositionX && zombies[i].y === gridPositionY) {
                 return;
@@ -136,7 +137,6 @@ canvas.addEventListener('click', (e) => {
         }
     
         if (resourcesZombies >= getSelectedZombieCost()) {
-
             sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
 
                 // alternative maybe: verzendt naam, x en y naar de server
@@ -182,6 +182,7 @@ canvas.addEventListener('keypress', (e) => {
     sock.emit('selectedSeedSlot', (JSON.stringify(selectedSeedSlots)));
 });
 
+// Functie die kijkt welke seedslot er geselecteerd is en de juiste plant eraan toevoegt
 function getSelectedPlant() {
     switch (selectedSeedSlots.plant) {
         case 0: return 'sunflower';
@@ -192,7 +193,7 @@ function getSelectedPlant() {
         case 5: return 'chomper';
     }
 }
-
+// Functie die kijkt welke seedslot er geselecteerd is en de juiste plant cost eraan toevoegt
 function getSelectedPlantCost() {
     switch (selectedSeedSlots.plant) {
         case 0: return 50;
@@ -203,7 +204,7 @@ function getSelectedPlantCost() {
         case 5: return 150;
     }
 }
-
+// Functie die kijkt welke seedslot er geselecteerd is en de juiste zombie eraan toevoegt
 function getSelectedZombie() {
     switch (selectedSeedSlots.zombie) {
         case 0: return 'grave';
@@ -214,7 +215,7 @@ function getSelectedZombie() {
         case 5: return 'polevaultingZombie';
     }
 }
-
+// Functie die kijkt welke seedslot er geselecteerd is en de juiste zombie cost eraan toevoegt
 function getSelectedZombieCost() {
     switch (selectedSeedSlots.zombie) {
         case 0: return 50;
@@ -226,7 +227,8 @@ function getSelectedZombieCost() {
     }
 }
 
-
+// Overloopt alle planten op het speelveld en tekent ze
+// eventueel wordt de update() functie van een plant uitgevoerd
 function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         // console.log(plants[i])
@@ -236,7 +238,8 @@ function drawPlants() {
         }
     }
 }
-
+// Overloopt alle zombies op het speelveld en tekent ze
+// eventueel wordt de update() functie van een zombie uitgevoerd
 function drawZombies() {
     for (let i = 0; i < zombies.length; i++) {
         // console.log(zombies[i])

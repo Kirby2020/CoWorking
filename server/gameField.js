@@ -40,9 +40,17 @@ function getCost(name) {
     switch (name) {
         case 'sunflower': return 50;
         case 'peashooter': return 100;
+        case 'repeater': return 150;
+        case 'wallnut': return 50;
+        case 'snowpea': return 175;
+        case 'chomper': return 150;
  
 
         case 'grave': return 50;
         case 'normalZombie': return 100;
+        case 'coneheadZombie': return 75;
+        case 'bucketheadZombie': return 125;
+        case 'newspaperZombie': return 100;
+        case 'polevaultingZombie': return 100;
     }
 }

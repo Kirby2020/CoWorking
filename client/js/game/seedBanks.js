@@ -54,7 +54,23 @@ function drawSeedBanksGrid() {
         context.fillText(Math.floor(Object.values(plantCosts)[i]), seedBankCell.x, seedBankCell.y + seedBankCell.height);
     }
     for (let i = 0; i < seedBankGridZombies.length; i++) {
-        seedBankGridZombies[i].draw();
+        let seedBankCell = seedBankGridZombies[i]
+        seedBankCell.draw();
+
+        let sprite;
+        try {
+            sprite = new Image();
+            sprite.src = Object.values(zombieSprites)[i];
+
+            context.drawImage(sprite, seedBankCell.x, seedBankCell.y, seedBankCell.width, seedBankCell.height);
+
+            context.fillStyle = 'gold';
+            context.font = '40px Arial';
+            context.fillText(Math.floor(Object.values(zombieCosts)[i]), seedBankCell.x, seedBankCell.y + seedBankCell.height);
+    }
+    catch (error) {
+
+    }
     }
 }
 
@@ -85,6 +101,24 @@ const plantCosts = {
     wallnut: 50,
     snowpea: 175,
     chomper: 150
+}
+
+const zombieSprites = {
+    grave: './assets/images/zombies/seedslots/gravestoneSeedSlot.png',
+    normalZombie: './assets/images/zombies/seedslots/normalZombieSeedSlot.png',
+    coneheadZombie: './assets/images/zombies/seedslots/coneheadZombieSeedSlot.png',
+    bucketheadZombie: './assets/images/zombies/seedslots/bucketheadZombieSeedSlot.png',
+    newspaperZombie: './assets/images/zombies/seedslots/newspaperZombieSeedSlot.png',
+    polevaultingZombie: './assets/images/zombies/seedslots/polevaultingZombieSeedSlot.png'
+}
+
+const zombieCosts = {
+    grave: 50,
+    normalZombie: 50,
+    coneheadZombie: 75,
+    bucketheadZombie: 125,
+    newspaperZombie: 100,
+    polevaultingZombie: 100
 }
 
 
