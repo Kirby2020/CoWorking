@@ -213,6 +213,21 @@ function getSelectedZombieCost() {
         case 5: return 100;
     }
 }
+function Cooldown(){
+    var timeLeft = this.cooldown;
+    var elem=document.getElementById('some_div'); //gewoon om voorlopig even op te stellen
+    var timerId = setInterval(countdown,1000);
+    function countdown() {
+        if (timeLeft == -1) {
+            clearTimeout(timerId);
+            //Kan weer zombie/plant toevoegen
+        } else {
+            elem.innerHTML = 'wait: ' + timeLeft;
+            timeLeft--;
+            //Niet knn toevoegen van zombies/planten
+        }
+    }
+}
 
 // Overloopt alle planten op het speelveld en tekent ze
 // eventueel wordt de update() functie van een plant uitgevoerd

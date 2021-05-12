@@ -52,7 +52,7 @@ export class NormalZombie extends Zombie {
 
         this.attackSpeed = 1;
         this.speed = 0.75;
-        this.walkSpeed = this.speed; //Ik vond online dat die er 4 stappen overdeed om 1 vakje te verlopen. Ik weet niet hoe snel dit juist is dus gok ik dit.
+        this.walkSpeed = this.speed;
         
         this.cooldown = 8;
         this.cost = 50;
@@ -135,8 +135,8 @@ export class BucketheadZombie extends Zombie {
 
         this.health = 400;
 
-        this.attackDamage = attackDamage;
-        this.attackSpeed = attackSpeed;
+        this.attackDamage = 10;
+        this.attackSpeed = 0.75;
 
         this.speed = 2;
         this.walkSpeed = this.speed;
