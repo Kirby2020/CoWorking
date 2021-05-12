@@ -1,16 +1,25 @@
-import { drawBackground, drawCursors, drawSelectedCells } from './drawLayers.js';
-import { canvas, context, CELL_SIZE, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_GAP, SEEDSLOT_SIZE } from './constants.js';
-import { drawGameGrid } from './gameGrid.js';
-import { drawSeedBanks } from './seedBanks.js';
-import { Cell } from './classes/Cell.js';
-import { isIn } from './utils.js';
+import {drawBackground, drawCursors, drawSelectedCells} from './drawLayers.js';
+import {
+    canvas,
+    context,
+    CELL_SIZE,
+    gameGrid,
+    seedBankGridPlants,
+    seedBankGridZombies,
+    CELL_GAP,
+    SEEDSLOT_SIZE
+} from './constants.js';
+import {drawGameGrid} from './gameGrid.js';
+import {drawSeedBanks} from './seedBanks.js';
+import {Cell} from './classes/Cell.js';
+import {isIn} from './utils.js';
 import * as Plant from './classes/plants.js';
-import * as Zombie from './classes/zombie.js'; 
+import * as Zombie from './classes/zombie.js';
+import * as Goal from './classes/goals.js';
 
 // Verbindt ofwel met de live server of de local server
-export const sock = io('https://pvz-game.herokuapp.com/');
-// https://pvz-game.herokuapp.com/
-// http://localhost:3001
+// export const sock = io('https://pvz-game.herokuapp.com/');
+export const sock = io('http://localhost:3001');
 
 
 console.log('gameGrid', gameGrid);
@@ -41,8 +50,8 @@ canvas.addEventListener('mousemove', (e) => {
     let currentTime = performance.now();
 
     if (currentTime - startTime > timer) {
-        const { x, y } = getMouseCoordinates(canvas, e);
-        sock.emit('mouse move', { x, y });
+        const {x, y} = getMouseCoordinates(canvas, e);
+        sock.emit('mouse move', {x, y});
         startTime = currentTime;
     }
 });
@@ -60,6 +69,8 @@ let resourcesPlants = 200; // Je begint steeds met 75 sun
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
+let lawnmowers = []; // data voor grasmaaiers
+let targets = []; // data voor targets
 let currentFrame = 0;
 let selectedSeedSlots = {plant: 0, zombie: 0}
 
@@ -69,9 +80,9 @@ let selectedSeedSlots = {plant: 0, zombie: 0}
 // Controleren of je in het spelveld klikt
 // Controleren of er al niks staat
 // Controleren of je genoeg resources hebt
-// Versuurd bij elke nieuwe plant of zombie die op het scherm wordt gezet de naam en zijn coördinaten
+// Verstuurd bij elke nieuwe plant of zombie die op het scherm wordt gezet de naam en zijn coördinaten
 canvas.addEventListener('click', (e) => {
-    const { x, y } = getMouseCoordinates(canvas, e);
+    const {x, y} = getMouseCoordinates(canvas, e);
     const gridPositionX = x - (x % CELL_SIZE.width);
     const gridPositionY = y - (y % CELL_SIZE.height);
 
@@ -81,7 +92,6 @@ canvas.addEventListener('click', (e) => {
 
     if (currentRole === "Plants") {
         // ---------- SEEDBANKS ----------
-
 
 
         // ---------- SPELVELD ----------
@@ -105,9 +115,8 @@ canvas.addEventListener('click', (e) => {
         }
     } else if (currentRole === "Zombies") {
         // ---------- SEEDBANKS ----------
-    
-    
-    
+
+
         // ---------- SPELVELD ----------
         if (gridPositionY < SEEDSLOT_SIZE.height || gridPositionY > 5 * SEEDSLOT_SIZE.height) {
             return;
@@ -122,20 +131,19 @@ canvas.addEventListener('click', (e) => {
                 return;
             }
         }
-    
+
         if (resourcesZombies >= getSelectedZombieCost()) {
             sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
 
-                // alternative maybe: verzendt naam, x en y naar de server
-                // server voegt die toe aan de array en stuurt de array terug
-                // client maakt object met naam (switch statement) en x, y
-                // verwijderen???
-                // verzendt index naar de server
-                // server zoekt op de index en verwijderd die plaats en stuurt terug de array
-                // index client == index server 
+            // alternative maybe: verzendt naam, x en y naar de server
+            // server voegt die toe aan de array en stuurt de array terug
+            // client maakt object met naam (switch statement) en x, y
+            // verwijderen???
+            // verzendt index naar de server
+            // server zoekt op de index en verwijderd die plaats en stuurt terug de array
+            // index client == index server
         }
-    }
-    else {
+    } else {
         console.log('You are currently spectating');
     }
 });
@@ -145,24 +153,52 @@ canvas.addEventListener('keypress', (e) => {
     console.log(e.code);
     if (currentRole === 'Plants') {
         switch (e.code) {
-            case 'Digit1': selectedSeedSlots.plant = 0; break;
-            case 'Digit2': selectedSeedSlots.plant = 1; break;
-            case 'Digit3': selectedSeedSlots.plant = 2; break;
-            case 'Digit4': selectedSeedSlots.plant = 3; break;
-            case 'Digit5': selectedSeedSlots.plant = 4; break;
-            case 'Digit6': selectedSeedSlots.plant = 5; break;
-            default: selectedSeedSlots.plant = null; break;
+            case 'Digit1':
+                selectedSeedSlots.plant = 0;
+                break;
+            case 'Digit2':
+                selectedSeedSlots.plant = 1;
+                break;
+            case 'Digit3':
+                selectedSeedSlots.plant = 2;
+                break;
+            case 'Digit4':
+                selectedSeedSlots.plant = 3;
+                break;
+            case 'Digit5':
+                selectedSeedSlots.plant = 4;
+                break;
+            case 'Digit6':
+                selectedSeedSlots.plant = 5;
+                break;
+            default:
+                selectedSeedSlots.plant = null;
+                break;
         }
     }
     if (currentRole === 'Zombies') {
         switch (e.code) {
-            case 'Digit1': selectedSeedSlots.zombie = 0; break;
-            case 'Digit2': selectedSeedSlots.zombie = 1; break;
-            case 'Digit3': selectedSeedSlots.zombie = 2; break;
-            case 'Digit4': selectedSeedSlots.zombie = 3; break;
-            case 'Digit5': selectedSeedSlots.zombie = 4; break;
-            case 'Digit6': selectedSeedSlots.zombie = 5; break;
-            default: selectedSeedSlots.zombie = null; break;
+            case 'Digit1':
+                selectedSeedSlots.zombie = 0;
+                break;
+            case 'Digit2':
+                selectedSeedSlots.zombie = 1;
+                break;
+            case 'Digit3':
+                selectedSeedSlots.zombie = 2;
+                break;
+            case 'Digit4':
+                selectedSeedSlots.zombie = 3;
+                break;
+            case 'Digit5':
+                selectedSeedSlots.zombie = 4;
+                break;
+            case 'Digit6':
+                selectedSeedSlots.zombie = 5;
+                break;
+            default:
+                selectedSeedSlots.zombie = null;
+                break;
         }
     }
 
@@ -172,53 +208,82 @@ canvas.addEventListener('keypress', (e) => {
 // Functie die kijkt welke seedslot er geselecteerd is en de juiste plant eraan toevoegt
 function getSelectedPlant() {
     switch (selectedSeedSlots.plant) {
-        case 0: return 'sunflower';
-        case 1: return 'peashooter';
-        case 2: return 'repeater';
-        case 3: return 'wallnut';
-        case 4: return 'snowpea';
-        case 5: return 'chomper';
+        case 0:
+            return 'sunflower';
+        case 1:
+            return 'peashooter';
+        case 2:
+            return 'repeater';
+        case 3:
+            return 'wallnut';
+        case 4:
+            return 'snowpea';
+        case 5:
+            return 'chomper';
     }
 }
+
 // Functie die kijkt welke seedslot er geselecteerd is en de juiste plant cost eraan toevoegt
 function getSelectedPlantCost() {
     switch (selectedSeedSlots.plant) {
-        case 0: return 50;
-        case 1: return 100;
-        case 2: return 150;
-        case 3: return 50;
-        case 4: return 175;
-        case 5: return 150;
+        case 0:
+            return 50;
+        case 1:
+            return 100;
+        case 2:
+            return 150;
+        case 3:
+            return 50;
+        case 4:
+            return 175;
+        case 5:
+            return 150;
     }
 }
+
 // Functie die kijkt welke seedslot er geselecteerd is en de juiste zombie eraan toevoegt
 function getSelectedZombie() {
     switch (selectedSeedSlots.zombie) {
-        case 0: return 'grave';
-        case 1: return 'normalZombie';
-        case 2: return 'coneheadZombie';
-        case 3: return 'bucketheadZombie';
-        case 4: return 'newspaperZombie';
-        case 5: return 'polevaultingZombie';
+        case 0:
+            return 'grave';
+        case 1:
+            return 'normalZombie';
+        case 2:
+            return 'coneheadZombie';
+        case 3:
+            return 'bucketheadZombie';
+        case 4:
+            return 'newspaperZombie';
+        case 5:
+            return 'polevaultingZombie';
     }
 }
+
 // Functie die kijkt welke seedslot er geselecteerd is en de juiste zombie cost eraan toevoegt
 function getSelectedZombieCost() {
     switch (selectedSeedSlots.zombie) {
-        case 0: return 50;
-        case 1: return 50;
-        case 2: return 75;
-        case 3: return 125;
-        case 4: return 100;
-        case 5: return 100;
+        case 0:
+            return 50;
+        case 1:
+            return 50;
+        case 2:
+            return 75;
+        case 3:
+            return 125;
+        case 4:
+            return 100;
+        case 5:
+            return 100;
     }
 }
-function Cooldown(){
+
+function Cooldown() {
     var timeLeft = this.cooldown;
-    var elem=document.getElementById('some_div'); //gewoon om voorlopig even op te stellen
-    var timerId = setInterval(countdown,1000);
+    var elem = document.getElementById('some_div'); //gewoon om voorlopig even op te stellen
+    var timerId = setInterval(countdown, 1000);
+
     function countdown() {
-        if (timeLeft == -1) {
+        if (timeLeft === -1) {
             clearTimeout(timerId);
             //Kan weer zombie/plant toevoegen
         } else {
@@ -240,6 +305,7 @@ function drawPlants() {
         }
     }
 }
+
 // Overloopt alle zombies op het speelveld en tekent ze
 // eventueel wordt de update() functie van een zombie uitgevoerd
 function drawZombies() {
@@ -248,6 +314,24 @@ function drawZombies() {
         if (zombies[i]) {
             zombies[i].update();
             zombies[i].draw();
+        }
+    }
+}
+
+// Overloopt alle lawnmowers en targets op het speelveld en tekent ze
+// eventueel wordt de update() functie uitgevoerd
+function drawGoals() {
+    for (let i = 0; i < lawnmowers.length; i++) {
+        if (lawnmowers[i]) {
+            if (lawnmowers[i].isMoving === true) {
+                lawnmowers[i].update();
+            }
+            lawnmowers[i].draw();
+        }
+    }
+    for (let i = 0; i < targets.length; i++) {
+        if (targets[i]) {
+            targets[i].draw();
         }
     }
 }
@@ -279,12 +363,14 @@ sock.on('role', role => {
 });
 
 sock.on('gameField', gameField => {
-    if(!gameField) {
+    if (!gameField) {
         return;
     }
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
+    console.log(gameField.lawnmowers);
+    console.log(gameField.targets);
     console.log(gameField.resourcesPlants);
     console.log(gameField.resourcesZombies);
 
@@ -302,6 +388,15 @@ sock.on('gameField', gameField => {
         const zombie = createZombie(gameField.zombies[i].name, gameField.zombies[i].x, gameField.zombies[i].y);
         zombies.push(zombie);
     }
+
+    for (let i = 0; i < gameField.lawnmowers.length; i++) {
+        const lawnmower = new Goal.Lawnmower(gameField.lawnmowers[i].x, gameField.lawnmowers[i].y);
+        lawnmowers.push(lawnmower);
+    }
+    for (let i = 0; i < gameField.targets.length; i++) {
+        const target = new Goal.Target(gameField.targets[i].x, gameField.targets[i].y);
+        targets.push(target);
+    }
 });
 
 sock.on('selectedSeedSlot', selectedSeedSlot => {
@@ -310,31 +405,50 @@ sock.on('selectedSeedSlot', selectedSeedSlot => {
 
 function createPlant(name, x, y) {
     switch (name) {
-        case 'sunflower': return new Plant.Sunflower(x, y);
-        case 'peashooter': return new Plant.Peashooter(x, y);
-        case 'repeater': return new Plant.Repeater(x, y);
-        case 'wallnut': return new Plant.Wallnut(x, y);
-        case 'tallnut': return new Plant.Tallnut(x, y);
-        case 'snowpea': return new Plant.Snowpea(x, y);
-        case 'potatomine': return new Plant.PotatoMine(x, y);
-        case 'cherrybomb': return new Plant.CherryBomb(x, y);
-        case 'chomper': return new Plant.Chomper(x,y);
-        case 'squash': return new Plant.Squash(x, y);
-        case 'jalapeno': return new Plant.Jalapeno(x, y);
-        case 'pumpkin': return new Plant.Pumpkin(x, y);
-        case 'torchwood': return new Plant.Torchwood(x, y);
+        case 'sunflower':
+            return new Plant.Sunflower(x, y);
+        case 'peashooter':
+            return new Plant.Peashooter(x, y);
+        case 'repeater':
+            return new Plant.Repeater(x, y);
+        case 'wallnut':
+            return new Plant.Wallnut(x, y);
+        case 'tallnut':
+            return new Plant.Tallnut(x, y);
+        case 'snowpea':
+            return new Plant.Snowpea(x, y);
+        case 'potatomine':
+            return new Plant.PotatoMine(x, y);
+        case 'cherrybomb':
+            return new Plant.CherryBomb(x, y);
+        case 'chomper':
+            return new Plant.Chomper(x, y);
+        case 'squash':
+            return new Plant.Squash(x, y);
+        case 'jalapeno':
+            return new Plant.Jalapeno(x, y);
+        case 'pumpkin':
+            return new Plant.Pumpkin(x, y);
+        case 'torchwood':
+            return new Plant.Torchwood(x, y);
 
     }
 }
 
 function createZombie(name, x, y) {
     switch (name) {
-        case 'grave': return new Zombie.Grave(x, y);
-        case 'normalZombie': return new Zombie.NormalZombie(x, y);
-        case 'coneheadZombie': return new Zombie.ConeheadZombie(x, y);
-        case 'bucketheadZombie': return new Zombie.BucketheadZombie(x, y);
-        case 'newspaperZombie': return new Zombie.NewspaperZombie(x, y);
-        case 'polevaultingZombie': return new Zombie.PolevaultingZombie(x, y);
+        case 'grave':
+            return new Zombie.Grave(x, y);
+        case 'normalZombie':
+            return new Zombie.NormalZombie(x, y);
+        case 'coneheadZombie':
+            return new Zombie.ConeheadZombie(x, y);
+        case 'bucketheadZombie':
+            return new Zombie.BucketheadZombie(x, y);
+        case 'newspaperZombie':
+            return new Zombie.NewspaperZombie(x, y);
+        case 'polevaultingZombie':
+            return new Zombie.PolevaultingZombie(x, y);
     }
 }
 
@@ -347,6 +461,7 @@ function update() {
     drawSelectedSeedSlots();
     drawPlants();
     drawZombies();
+    drawGoals();
     drawResources();
     drawCursors(currentMousePositions);
     currentFrame++;

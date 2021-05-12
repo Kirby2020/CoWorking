@@ -24,7 +24,6 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 
-
 // Basic express server
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/index.html'))
@@ -32,7 +31,7 @@ app.get('/', (req, res) => {
 // Static folder voor client bestanden te vinden
 app.use(express.static(path.join(__dirname, '../client')));
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
@@ -49,9 +48,6 @@ const io = socketio(server, {
         methods: ["GET", "POST"],
     }
 })
-
-
-
 
 
 const playerSet = new Players();
@@ -93,8 +89,6 @@ io.on('connection', (sock) => {
     io.emit('gameField', JSON.stringify(gameField));
 
 
-
-
     sock.on('login', (player) => {
         // Wanneer iemand is ingelogd wordt hij toegevoegd aan de spelerlijst
         // en stuurt de server een lijst met alle spelers terug naar de clients
@@ -123,9 +117,8 @@ io.on('connection', (sock) => {
         });
 
 
-        
         // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
-        sock.on('mouse move', ({ x, y }) => {
+        sock.on('mouse move', ({x, y}) => {
             cursors.update(color, x, y);
             io.emit('mouse move', JSON.stringify([...cursors.cursors]));
         });
@@ -137,18 +130,34 @@ io.on('connection', (sock) => {
         });
 
 
-
         // sock.on('gameField', gameField => {
         //     console.log(gameField);
         //     io.emit('gameField', gameField);
         // });
+
+        // sock.on('gameFieldAddLawnmower', lawnmowerInfo => {
+        //     gameField.addLawnmower(lawnmowerInfo.x, lawnmowerInfo.y);
+        //     io.emit('gameField', JSON.stringify(gameField));
+        // });
+        sock.on('gameFieldRemoveLawnmower', index => {
+            gameField.removeLawnmower(index);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
+        // sock.on('gameFieldAddTarget', targetInfo => {
+        //     gameField.addTarget(targetInfo.x, targetInfo.y);
+        //     io.emit('gameField', JSON.stringify(gameField));
+        // });
+        sock.on('gameFieldRemoveTarget', index => {
+            gameField.removeTarget(index);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
 
         // plantInfo = {name, x, y}
         sock.on('gameFieldAddPlant', plantInfo => {
             gameField.addPlant(plantInfo.name, plantInfo.x, plantInfo.y);
             io.emit('gameField', JSON.stringify(gameField));
         });
-    
+
         sock.on('gameFieldRemovePlant', index => {
             gameField.removePlant(index);
             io.emit('gameField', JSON.stringify(gameField));
@@ -172,17 +181,17 @@ io.on('connection', (sock) => {
             sock.emit('statusInvite', "pending");
 
         });
-    
+
         // Als de persoon reageert op jouw invite stuurt hij die response terug naar jou
         // Beide spelers hun status verandere naar selecting
         // Later worden ze in een aparte gameroom gestoken
         sock.on('responseInvite', ({response, to, from}) => {
             console.log(to + ' ' + response + ' ' + from);
-            
+
             io.to(getId(from)).emit('statusInvite', (response));
             io.to(getId(to)).emit('statusInvite', (response));
-            
-            if(response === 'accepted') {
+
+            if (response === 'accepted') {
                 console.log('Setting playerStates...')
                 playerSet.setState(from, 'selecting');
                 playerSet.setState(to, 'selecting');
@@ -198,7 +207,7 @@ io.on('connection', (sock) => {
                 // reset gameField bij een invite (nieuwe game)
                 gameField.reset();
                 io.emit('gameField', gameField);
-                
+
             }
         })
 
@@ -209,14 +218,12 @@ io.on('connection', (sock) => {
             if (playersInRoom >= 2) {
                 gameRoomNumber++;
                 playersInRoom = 0;
-            }
-            else {
+            } else {
                 sock.join('gameRoom' + gameRoomNumber);
                 gameState.set('selecting');
                 console.log(gameState.get());
             }
         })
-
 
 
         // Als iemand de server verlaat, wordt iedereen op de hoogte gebracht
@@ -225,12 +232,11 @@ io.on('connection', (sock) => {
             sock.broadcast.emit('chatMessage', `> ${sock.username} speelt niet meer mee.`);
             try {
                 playerSet.remove(sock.username)
-                .then(players => {
-                    sock.broadcast.emit('playerList', JSON.stringify([...players]))
-                })    
+                    .then(players => {
+                        sock.broadcast.emit('playerList', JSON.stringify([...players]))
+                    })
                 cursors.remove(color)
-            }
-            catch (error) {
+            } catch (error) {
                 console.log(error);
             }
 
@@ -239,14 +245,8 @@ io.on('connection', (sock) => {
                 io.emit('gameField', gameField);
             }
         });
-
-
     });
-
-
 });
-
-
 
 
 server.on('error', (error) => {
@@ -256,10 +256,6 @@ server.on('error', (error) => {
 server.listen(port, () => {
     console.log(`Listening on port ${port}`);
 })
-
-
-
-
 
 
 function getId(username) {
