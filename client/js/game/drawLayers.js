@@ -1,6 +1,6 @@
 import { loadImage } from './loaders.js';
 import { canvas, context, seedBankPlants, seedBankZombies, gameGrid, seedBankGridPlants, seedBankGridZombies, CELL_SIZE } from './constants.js';
-import { isIn } from './utils.js';
+import { collision } from './utils.js';
 
 let background2Graphic;
 
@@ -50,17 +50,17 @@ export function drawCursors(cursors) {
 export function drawSelectedCells(mousePositions) {
     mousePositions.forEach(mousePos => {
         gameGrid.forEach(cell => {
-            if (cell && isIn(mousePos, cell)) {
+            if (cell && collision(mousePos, cell)) {
                 cell.drawSelected();
             }
         });
         seedBankGridPlants.forEach(cell => {
-            if (cell && isIn(mousePos, cell)) {
+            if (cell && collision(mousePos, cell)) {
                 cell.drawSelected();
             }
         });
         seedBankGridZombies.forEach(cell => {
-            if (cell && isIn(mousePos, cell)) {
+            if (cell && collision(mousePos, cell)) {
                 cell.drawSelected();
             }
         });

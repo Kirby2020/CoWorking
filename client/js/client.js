@@ -50,10 +50,7 @@ function logPlayers(playerSet) {
     parent.innerHTML = '';
 
     playerSet.forEach(player => {
-        let state = player.playerState;
-        if (player.playerState === 'selecting') {
-            state = player.role;
-        }
+        let state = player.role;
         let markup = `
         <div class="player">
             <p style="background-color:${player.color}" class="name">${player.username} (${state})</p>

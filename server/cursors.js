@@ -4,7 +4,7 @@ module.exports = class Cursors {
     }
 
     add(x, y, color) {
-        this.cursors.add({x, y, color});
+        this.cursors.add({x, y, color, width: 1, height: 1});
         return this.cursors;
     }
 

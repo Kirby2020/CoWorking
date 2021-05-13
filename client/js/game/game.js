@@ -12,7 +12,7 @@ import {
 import {drawGameGrid} from './gameGrid.js';
 import {drawSeedBanks} from './seedBanks.js';
 import {Cell} from './classes/Cell.js';
-import {isIn} from './utils.js';
+import {collision} from './utils.js';
 import * as Plant from './classes/plants.js';
 import * as Zombie from './classes/zombie.js';
 import * as Goal from './classes/goals.js';

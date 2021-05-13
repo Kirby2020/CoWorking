@@ -168,10 +168,7 @@ io.on('connection', (sock) => {
             gameField.addZombie(zombieInfo.name, zombieInfo.x, zombieInfo.y);
             io.emit('gameField', JSON.stringify(gameField));
         });
-        sock.on('gameFieldRemoveZombie', index => {
-            gameField.removeZombie(index);
-            io.emit('gameField', JSON.stringify(gameField));
-        });
+
 
         // Als iemand een invite stuurt, krijgt de zender de status terug (voorlopig pending)
         // De ontvanger krijgt de invite met naam
@@ -193,8 +190,8 @@ io.on('connection', (sock) => {
 
             if (response === 'accepted') {
                 console.log('Setting playerStates...')
-                playerSet.setState(from, 'selecting');
-                playerSet.setState(to, 'selecting');
+                playerSet.setState(from, 'in game');
+                playerSet.setState(to, 'in game');
 
                 playerSet.setRole(from, "Plants");
                 playerSet.setRole(to, "Zombies");
@@ -240,7 +237,7 @@ io.on('connection', (sock) => {
                 console.log(error);
             }
             // reset gameField als er geen personen meer zijn
-            if (playerSet.getAll().size == 0) {
+            if (playerSet.getAll().size < 1) {
                 gameField.reset();
                 io.emit('gameField', JSON.stringify(gameField));
             }

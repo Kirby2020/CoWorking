@@ -41,11 +41,15 @@ module.exports = class GameField {
     }
 
     addZombie(name, x, y) {
+        for (let i = 0; i < this.zombies.length; i++) {
+            if (zombie && zombie.name !== 'grave') {
+                this.removeZombie(i);
+            }
+        }
         const zombie = {name: name, x: x, y: y}
         this.zombies.push(zombie);
         this.resourcesZombies -= getCost(name);
     }
-
 
     removeZombie(index) {
         this.zombies.splice(index, 1);
