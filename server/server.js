@@ -206,7 +206,7 @@ io.on('connection', (sock) => {
 
                 // reset gameField bij een invite (nieuwe game)
                 gameField.reset();
-                io.emit('gameField', gameField);
+                io.emit('gameField', JSON.stringify(gameField));
 
             }
         })
@@ -239,10 +239,10 @@ io.on('connection', (sock) => {
             } catch (error) {
                 console.log(error);
             }
-
-            if (playerSet.getAll().size < 1) {
+            // reset gameField als er geen personen meer zijn
+            if (playerSet.getAll().size == 0) {
                 gameField.reset();
-                io.emit('gameField', gameField);
+                io.emit('gameField', JSON.stringify(gameField));
             }
         });
     });
