@@ -18,8 +18,8 @@ import * as Zombie from './classes/zombie.js';
 import * as Goal from './classes/goals.js';
 
 // Verbindt ofwel met de live server of de local server
-// export const sock = io('https://pvz-game.herokuapp.com/');
-export const sock = io('http://localhost:3001');
+export const sock = io('https://pvz-game.herokuapp.com/');
+// export const sock = io('http://localhost:3001');
 
 
 console.log('gameGrid', gameGrid);
