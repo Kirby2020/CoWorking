@@ -71,9 +71,9 @@ function generateGoals() {
     let y = CELL_SIZE.height + 10;
     for (let i = 0; i < 5; i++) {
         lawnmowers.push({x: x, y: y});
-        if (i % 2 === 0) {
-            targets.push({x: x2, y: y});
-        }
+        // if (i % 2 === 0) {
+        targets.push({x: x2, y: y});
+        // }
         y += CELL_SIZE.height;
     }
     return [lawnmowers, targets];

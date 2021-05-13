@@ -81,7 +81,7 @@ setInterval(() => {
 // Wanneer iemand verbind met de server (naar de site gaat)
 io.on('connection', (sock) => {
     // Alle events komen hier
-
+    gameField.reset();
     // Stuurt de playerlijst ook naar de mensen die nog niet ingelogd zijn
     io.emit('playerList', JSON.stringify([...playerSet.players]));
     // En toont het huidige spel (spectating)
@@ -99,21 +99,21 @@ io.on('connection', (sock) => {
         cursors.add(null, null, color);
 
         //console.log('user connected', player);
-        playerSet.add(player, 'in lobby', sock.id, "spectating");
+        playerSet.add(player, 'in lobby', sock.id, "spectating", color);
         sock.username = playerSet.getOne(player).username;
 
         // Stuurt de playerlijst naar alle users
         io.emit('playerList', JSON.stringify([...playerSet.players]));
 
         // Stuurt een bericht naar de huidige gebruiker
-        sock.emit('chatMessage', `> Welkom ${player}.`);
+        sock.emit('chatMessage', `> Welkom <span style="background-color:${color}" class="name">${player}</span>.`);
 
         // Stuurt een bericht naar alle andere users
-        sock.broadcast.emit('chatMessage', `> ${player} speelt mee!`);
+        sock.broadcast.emit('chatMessage', `> <span style="background-color:${color}" class="name">${player}</span> speelt mee!`);
 
         // Als de server een bericht ontvangt, stuurt hij die door naar de andere gebruikers
         sock.on('chatMessage', (message) => {
-            io.emit('chatMessage', `${player}: ${message}`);
+            io.emit('chatMessage', `<span style="background-color:${color}" class="name">${player}</span>: ${message}`);
         });
 
 
@@ -229,7 +229,7 @@ io.on('connection', (sock) => {
         // Als iemand de server verlaat, wordt iedereen op de hoogte gebracht
         // en verwijderd uit de spelerlijst
         sock.on('disconnect', (reason) => {
-            sock.broadcast.emit('chatMessage', `> ${sock.username} speelt niet meer mee.`);
+            sock.broadcast.emit('chatMessage', `> <span style="background-color:${color}" class="name">${sock.username}</span> speelt niet meer mee.`);
             try {
                 playerSet.remove(sock.username)
                     .then(players => {

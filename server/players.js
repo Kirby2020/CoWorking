@@ -13,9 +13,9 @@ module.exports = class Players {
         this.players = new Set();
     }
 
-    add(username, playerState = 'in lobby', id, role) {
+    add(username, playerState = 'in lobby', id, role, color) {
         console.log('_Add', username)
-        this.players.add({username, playerState, id, role});
+        this.players.add({username, playerState, id, role, color});
         return this.players;
     }
 

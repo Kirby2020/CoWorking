@@ -33,7 +33,7 @@ window.addEventListener('load', () => {
 
 // Voegt een bericht toe aan de chatbox
 function logChat(message) {
-    const parent = document.querySelector('#messages');
+    const parent = document.querySelector('#messages section');
     const p = document.createElement('p');
     p.innerHTML = message;
 
@@ -46,13 +46,17 @@ function logPlayers(playerSet) {
     playerSet = JSON.parse(playerSet);
     console.log(playerSet);
     players = playerSet;
-    const parent = document.querySelector('#players div');
+    const parent = document.querySelector('#players section');
     parent.innerHTML = '';
 
     playerSet.forEach(player => {
+        let state = player.playerState;
+        if (player.playerState === 'selecting') {
+            state = player.role;
+        }
         let markup = `
-        <div>
-            <p>${player.username} (${player.playerState})</p>
+        <div class="player">
+            <p style="background-color:${player.color}" class="name">${player.username} (${state})</p>
             <button class="inviteButton" data-username="${player.username}">+</button>
         </div>
     `;
@@ -126,8 +130,8 @@ function handleInviteReceived(from) {
     let markup = `
         <div>
             <p>${from} heeft je uitgenodigd om te spelen!</p>
-            <button class="inviteAcceptButton" data-username="${from}">V</button>
-            <button class="inviteDeclineButton" data-username="${from}">X</button>
+            <button class="inviteAcceptButton" data-username="${from}">Accepteren</button>
+            <button class="inviteDeclineButton" data-username="${from}">Weigeren</button>
         </div>
     `;
     // https://css-tricks.com/get-references-from-html-built-with-template-literals/
