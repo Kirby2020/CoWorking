@@ -41,12 +41,12 @@ module.exports = class GameField {
     }
 
     addZombie(name, x, y) {
+        const zombie = {name: name, x: x, y: y}
         for (let i = 0; i < this.zombies.length; i++) {
             if (zombie && zombie.name !== 'grave') {
                 this.removeZombie(i);
             }
         }
-        const zombie = {name: name, x: x, y: y}
         this.zombies.push(zombie);
         this.resourcesZombies -= getCost(name);
     }
@@ -102,7 +102,7 @@ function getCost(name) {
         case 'grave':
             return 50;
         case 'normalZombie':
-            return 100;
+            return 50;
         case 'coneheadZombie':
             return 75;
         case 'bucketheadZombie':

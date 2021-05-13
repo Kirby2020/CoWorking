@@ -17,19 +17,7 @@ window.addEventListener('load', () => {
     // Eventlistener voor het inloggen
     document.getElementById('loginForm').addEventListener('submit', onLogin);
 
-    // Eventlisteners voor het verbergen en weergeven van de zijpanelen
-    // document.getElementById("left").addEventListener('click', hideLeft);
-    // document.getElementById("right").addEventListener('click', hideRight);
-
 });
-
-// Toggled de zijpanelen
-// function hideLeft() {
-//     document.getElementById('chat').classList.toggle('hide');
-// }
-// function hideRight() {
-//     document.getElementById('playerList').classList.toggle('hide');
-// }
 
 // Voegt een bericht toe aan de chatbox
 function logChat(message) {
@@ -50,10 +38,9 @@ function logPlayers(playerSet) {
     parent.innerHTML = '';
 
     playerSet.forEach(player => {
-        let state = player.role;
         let markup = `
         <div class="player">
-            <p style="background-color:${player.color}" class="name">${player.username} (${state})</p>
+            <p style="background-color:${player.color}" class="name">${player.username} (${player.role})</p>
             <button class="inviteButton" data-username="${player.username}">+</button>
         </div>
     `;
@@ -87,14 +74,12 @@ function onChat(e) {
 function onLogin(e) {
     e.preventDefault();
 
-    const button = document.getElementById("loginButton");
     const input = document.getElementById('nameBox');
     const sendChat = document.getElementById('sendChatMessage');
     const username = input.value;
 
     if (username !== '' && players.indexOf(username) === -1) {
         input.style.display = 'none';
-        button.style.display = 'none';
         sendChat.disabled = false;
         document.getElementById('inviteList').classList.toggle('hide');
 
@@ -114,7 +99,6 @@ function handleInviteStatus(status) {
         console.log('Changing state');
         sock.emit('requestGameRoom', (memory.username));
     }
-
 }
 
 // Toont de invite op jouw scherm en geeft je de optie om te accepteren of te weigeren
@@ -127,8 +111,10 @@ function handleInviteReceived(from) {
     let markup = `
         <div>
             <p>${from} heeft je uitgenodigd om te spelen!</p>
-            <button class="inviteAcceptButton" data-username="${from}">Accepteren</button>
-            <button class="inviteDeclineButton" data-username="${from}">Weigeren</button>
+            <div>
+                <button class="inviteAcceptButton" data-username="${from}">Accepteren</button>
+                <button class="inviteDeclineButton" data-username="${from}">Weigeren</button>
+            </div>
         </div>
     `;
     // https://css-tricks.com/get-references-from-html-built-with-template-literals/
@@ -177,7 +163,7 @@ function inviteResponseListener() {
             const from = e.target.dataset.username;
             const response = 'accepted';
             sock.emit('responseInvite', ({response: response, to, from}));  // accepted, invited person (YOU, to), inviter (from)
-            e.target.parentNode.remove();
+            e.target.parentNode.parentNode.remove();
         });
     });
 
@@ -185,7 +171,7 @@ function inviteResponseListener() {
     inviteDeclineButtons.forEach(declineButton => {
         declineButton.addEventListener('click', (e) => {
             console.log('Declined invite from', e.target.dataset.username);
-            e.target.parentNode.remove();
+            e.target.parentNode.parentNode.remove();
         });
     });
 }

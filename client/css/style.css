@@ -67,7 +67,7 @@ canvas:hover {
     cursor: none;
 }
 
-#chat.hide, #playerList.hide, #inviteList.hide {
+.hide {
     display: none;
 }
 
@@ -86,13 +86,10 @@ canvas:hover {
 }
 
 #chat, #playerList {
-    /*background-color: lightblue;*/
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /*min-width: 10vw;*/
-    /*max-width: 25vw;*/
     width: 15vw;
 }
 
@@ -101,10 +98,8 @@ canvas:hover {
     border: 4px solid #000000;
     border-radius: 20px;
     max-height: 90vh;
-    /*min-width: 80%;*/
     width: 14vw;
     margin: 1rem 0;
-    /*padding: 1rem 0 2rem;*/
     overflow-y: scroll;
     align-self: center;
 }
@@ -116,8 +111,12 @@ canvas:hover {
     justify-content: right;
 }
 
-#messages p, #players p {
-    margin: 0 1em;
+#messages p {
+    padding: 0 .5rem;
+    line-height: 0;
+}
+
+#players p {
     line-height: 1.5em;
     display: inline;
 }
@@ -138,7 +137,6 @@ canvas:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    /*padding: 1rem 0;*/
     max-height: 30vh;
     max-width: 14vw;
 }
@@ -146,7 +144,8 @@ canvas:hover {
 #chatMessage, #nameBox {
     background-color: #029316;
     color: #181818;
-    border: none;
+    border-top: 4px solid black;
+    border-bottom: none;
     outline: none;
     padding: 1rem;
     border-radius: 1rem;
@@ -156,7 +155,7 @@ canvas:hover {
 }
 
 ::placeholder {
-    color: #acacac;
+    color: #d2c800;
     font-style: italic;
 }
 

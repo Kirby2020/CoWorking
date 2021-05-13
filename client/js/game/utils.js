@@ -1,4 +1,4 @@
-import { CELL_GAP } from './constants.js';
+import {CELL_GAP, CELL_SIZE} from './constants.js';
 
 // Kijkt of er collision is tussen een positie en een cell
 export function collision(object1, object2) {
@@ -9,5 +9,16 @@ export function collision(object1, object2) {
             )
         ) {
             return true;
+    }
+}
+
+export function isOutOfBounds(object) {
+    if (object.x < (CELL_SIZE.width) ||
+        object.x > (13 * CELL_SIZE.width) ||
+        object.y < (CELL_SIZE.height + 10) ||
+        object.y > (5 * CELL_SIZE.height + 10))
+    {
+        console.log(object.name + ' is out of bounds');
+        return true;
     }
 }

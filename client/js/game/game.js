@@ -12,14 +12,14 @@ import {
 import {drawGameGrid} from './gameGrid.js';
 import {drawSeedBanks} from './seedBanks.js';
 import {Cell} from './classes/Cell.js';
-import {collision} from './utils.js';
+import {collision, isOutOfBounds} from './utils.js';
 import * as Plant from './classes/plants.js';
 import * as Zombie from './classes/zombie.js';
 import * as Goal from './classes/goals.js';
 
 // Verbindt ofwel met de live server of de local server
-export const sock = io('https://pvz-game.herokuapp.com/');
-// export const sock = io('http://localhost:3001');
+export const sock = io('http://localhost:3001')
+// export const sock = io('https://pvz-game.herokuapp.com/');
 
 
 console.log('gameGrid', gameGrid);
@@ -64,7 +64,7 @@ sock.on('mouse move', (cursors) => {
 
 // ---------- GAME ----------
 
-let currentRole = "Plants"; // plant of zombie, default : spectator
+let currentRole = "spectator"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
@@ -300,6 +300,11 @@ function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         // console.log(plants[i])
         if (plants[i]) {
+            if (currentRole === 'Plants') {
+                if (plants[i].health === 0) {
+                    sock.emit('gameFieldRemovePlant', (i));
+                }
+            }
             plants[i].update();
             plants[i].draw();
         }
@@ -312,6 +317,14 @@ function drawZombies() {
     for (let i = 0; i < zombies.length; i++) {
         // console.log(zombies[i])
         if (zombies[i]) {
+            if (currentRole === 'Zombies') {
+                if (isOutOfBounds(zombies[i]) || zombies[i].health === 0) {
+                    sock.emit('gameFieldRemoveZombie', (i));
+                }
+                if (zombies[i].x < (CELL_SIZE.width)) {
+                    sock.emit('win', 'Zombies')
+                }
+            }
             zombies[i].update();
             zombies[i].draw();
         }
@@ -323,14 +336,25 @@ function drawZombies() {
 function drawGoals() {
     for (let i = 0; i < lawnmowers.length; i++) {
         if (lawnmowers[i]) {
-            if (lawnmowers[i].isMoving === true) {
-                lawnmowers[i].update();
+            if (currentRole === 'Plants') {
+                if (isOutOfBounds(lawnmowers[i])) {
+                    sock.emit('gameFieldRemoveLawnmower', (i));
+                }
             }
+            lawnmowers[i].update();
             lawnmowers[i].draw();
         }
     }
     for (let i = 0; i < targets.length; i++) {
         if (targets[i]) {
+            if (currentRole === 'Zombies') {
+                if (targets[i].health === 0) {
+                    sock.emit('gameFieldRemoveTarget', (i));
+                }
+                if (targets.length === 0) {
+                    sock.emit('win', 'Plants');
+                }
+            }
             targets[i].draw();
         }
     }
@@ -369,13 +393,19 @@ sock.on('gameField', gameField => {
     gameField = JSON.parse(gameField);
     console.log(gameField.plants);
     console.log(gameField.zombies);
-    console.log(gameField.lawnmowers);
-    console.log(gameField.targets);
+    console.log(gameField.lawnmowers.length);
+    console.log(gameField.targets.length);
     console.log(gameField.resourcesPlants);
     console.log(gameField.resourcesZombies);
 
     resourcesPlants = gameField.resourcesPlants || 0;
     resourcesZombies = gameField.resourcesZombies || 0;
+
+    // reset
+    // plants = [];
+    // zombies = [];
+    // lawnmowers = [];
+    // targets = [];
 
     for (let i = 0; i < gameField.plants.length; i++) {
         // console.log(plants[i])

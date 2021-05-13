@@ -20,7 +20,9 @@ export class Lawnmower extends Goal {
     }
 
     update() {
-        this.x += this.speed;
+        if (this.isMoving === true) {
+            this.x += this.speed;
+        }
     }
 
     draw() {

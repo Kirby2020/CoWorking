@@ -25,7 +25,9 @@ class Zombie {
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
     }
     update(){
-        this.x -= this.speed;
+        if (this.isAttacking === false) {
+            this.x -= this.speed;
+        }
     }
 }
 

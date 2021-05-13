@@ -117,6 +117,14 @@ io.on('connection', (sock) => {
         });
 
 
+        // als een winnaar bepaald is stuur het naar alle spelers
+        sock.on('win', (winner) => {
+            io.emit('chatMessage', `${winner} winnen!`);
+            gameField.reset();
+            io.emit('gameField', JSON.stringify(gameField));
+        });
+
+
         // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
         sock.on('mouse move', ({x, y}) => {
             cursors.update(color, x, y);
@@ -134,19 +142,11 @@ io.on('connection', (sock) => {
         //     console.log(gameField);
         //     io.emit('gameField', gameField);
         // });
-
-        // sock.on('gameFieldAddLawnmower', lawnmowerInfo => {
-        //     gameField.addLawnmower(lawnmowerInfo.x, lawnmowerInfo.y);
-        //     io.emit('gameField', JSON.stringify(gameField));
-        // });
+        
         sock.on('gameFieldRemoveLawnmower', index => {
             gameField.removeLawnmower(index);
             io.emit('gameField', JSON.stringify(gameField));
         });
-        // sock.on('gameFieldAddTarget', targetInfo => {
-        //     gameField.addTarget(targetInfo.x, targetInfo.y);
-        //     io.emit('gameField', JSON.stringify(gameField));
-        // });
         sock.on('gameFieldRemoveTarget', index => {
             gameField.removeTarget(index);
             io.emit('gameField', JSON.stringify(gameField));
@@ -157,7 +157,6 @@ io.on('connection', (sock) => {
             gameField.addPlant(plantInfo.name, plantInfo.x, plantInfo.y);
             io.emit('gameField', JSON.stringify(gameField));
         });
-
         sock.on('gameFieldRemovePlant', index => {
             gameField.removePlant(index);
             io.emit('gameField', JSON.stringify(gameField));
@@ -166,6 +165,10 @@ io.on('connection', (sock) => {
         // zombieInfo = {name, x, y}
         sock.on('gameFieldAddZombie', zombieInfo => {
             gameField.addZombie(zombieInfo.name, zombieInfo.x, zombieInfo.y);
+            io.emit('gameField', JSON.stringify(gameField));
+        });
+        sock.on('gameFieldRemoveZombie', index => {
+            gameField.removeZombie(index);
             io.emit('gameField', JSON.stringify(gameField));
         });
 
