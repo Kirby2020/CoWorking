@@ -81,12 +81,12 @@ setInterval(() => {
 // Wanneer iemand verbind met de server (naar de site gaat)
 io.on('connection', (sock) => {
     // Alle events komen hier
-    gameField.reset();
+    // Toont huidige game
+    io.emit('gameFieldReset', JSON.stringify(gameField));
+
     // Stuurt de playerlijst ook naar de mensen die nog niet ingelogd zijn
     io.emit('playerList', JSON.stringify([...playerSet.players]));
-    // En toont het huidige spel (spectating)
-    // Later gaat dit weg als we kunnen werken met rooms en meerdere games tegelijk kunnen runnen
-    io.emit('gameField', JSON.stringify(gameField));
+
 
 
     sock.on('login', (player) => {
@@ -117,14 +117,6 @@ io.on('connection', (sock) => {
         });
 
 
-        // als een winnaar bepaald is stuur het naar alle spelers
-        sock.on('win', (winner) => {
-            io.emit('chatMessage', `${winner} winnen!`);
-            gameField.reset();
-            io.emit('gameField', JSON.stringify(gameField));
-        });
-
-
         // Bij het ontvangen van een muisbeweging van een client, stuurt de server die muispositie terug naar alle andere clients
         sock.on('mouse move', ({x, y}) => {
             cursors.update(color, x, y);
@@ -143,33 +135,44 @@ io.on('connection', (sock) => {
         //     io.emit('gameField', gameField);
         // });
         
-        sock.on('gameFieldRemoveLawnmower', index => {
-            gameField.removeLawnmower(index);
-            io.emit('gameField', JSON.stringify(gameField));
-        });
-        sock.on('gameFieldRemoveTarget', index => {
-            gameField.removeTarget(index);
-            io.emit('gameField', JSON.stringify(gameField));
-        });
+
 
         // plantInfo = {name, x, y}
         sock.on('gameFieldAddPlant', plantInfo => {
-            gameField.addPlant(plantInfo.name, plantInfo.x, plantInfo.y);
-            io.emit('gameField', JSON.stringify(gameField));
+            const plant = gameField.addPlant(plantInfo.name, plantInfo.x, plantInfo.y);
+            io.emit('gameFieldAddPlant', JSON.stringify(plant));
         });
-        sock.on('gameFieldRemovePlant', index => {
-            gameField.removePlant(index);
-            io.emit('gameField', JSON.stringify(gameField));
+                // zombieInfo = {name, x, y}
+        sock.on('gameFieldAddZombie', zombieInfo => {
+            const zombie = gameField.addZombie(zombieInfo.name, zombieInfo.x, zombieInfo.y);
+            io.emit('gameFieldAddZombie', JSON.stringify(zombie));
         });
 
-        // zombieInfo = {name, x, y}
-        sock.on('gameFieldAddZombie', zombieInfo => {
-            gameField.addZombie(zombieInfo.name, zombieInfo.x, zombieInfo.y);
-            io.emit('gameField', JSON.stringify(gameField));
+        sock.on('gameFieldRemovePlant', index => {
+            gameField.removePlant(index);
+            io.emit('gameFieldRemovePlant', (index));
         });
         sock.on('gameFieldRemoveZombie', index => {
             gameField.removeZombie(index);
-            io.emit('gameField', JSON.stringify(gameField));
+            io.emit('gameFieldRemoveZombie', (index));
+        });
+
+        sock.on('gameFieldRemoveLawnmower', index => {
+            gameField.removeLawnmower(index);
+            io.emit('gameFieldRemoveLawnmower', (index));
+        });
+        sock.on('gameFieldRemoveTarget', index => {
+            gameField.removeTarget(index);
+            io.emit('gameFieldRemoveTarget', (index));
+        });
+
+        // als een winnaar bepaald is stuur het naar alle spelers
+        sock.on('win', (winner) => {
+            io.emit('chatMessage', `${winner} winnen!`);
+            io.emit('win', winner);
+            gameField.setWinner(winner);
+            gameField.reset();
+            io.emit('gameFieldReset', JSON.stringify(gameField));
         });
 
 
@@ -206,7 +209,7 @@ io.on('connection', (sock) => {
 
                 // reset gameField bij een invite (nieuwe game)
                 gameField.reset();
-                io.emit('gameField', JSON.stringify(gameField));
+                io.emit('gameFieldReset', JSON.stringify(gameField));
 
             }
         })
@@ -225,7 +228,6 @@ io.on('connection', (sock) => {
             }
         })
 
-
         // Als iemand de server verlaat, wordt iedereen op de hoogte gebracht
         // en verwijderd uit de spelerlijst
         sock.on('disconnect', (reason) => {
@@ -242,7 +244,7 @@ io.on('connection', (sock) => {
             // reset gameField als er geen personen meer zijn
             if (playerSet.getAll().size < 1) {
                 gameField.reset();
-                io.emit('gameField', JSON.stringify(gameField));
+                io.emit('gameFieldReset', JSON.stringify(gameField));
             }
         });
     });
@@ -261,47 +263,3 @@ server.listen(port, () => {
 function getId(username) {
     return playerSet.getOne(username).id;
 }
-
-/*
-Package.json voor hosted server
-{
-  "name": "coworking",
-  "version": "1.0.0",
-  "scripts": {
-	"start": "node server/server.js
-  },
-  "engines": {
-	  "node": "14.16.x"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "pvz multiplayer game",
-  "dependencies": {
-    "express": "^4.17.1",
-    "socket.io": "^4.0.1",
-    "utf-8-validate": "^5.0.2"
-  }
-}
-
-
-
-{
-  "name": "coworking",
-  "version": "1.0.0",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "express": "^4.17.1",
-    "randomcolor": "^0.6.2",
-    "socket.io": "^4.0.1",
-    "socket.io-client": "^4.0.1"
-  }
-}
-
-*/

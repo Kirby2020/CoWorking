@@ -64,14 +64,16 @@ sock.on('mouse move', (cursors) => {
 
 // ---------- GAME ----------
 
+// Slaat alle data op van de server
 let currentRole = "Zombies"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
-let zombiesPrevious = zombies;
 let lawnmowers = []; // data voor grasmaaiers
 let targets = []; // data voor targets
+let winner;
+// Client specifiek
 let currentFrame = 0;
 let selectedSeedSlots = {plant: 0, zombie: 0}
 
@@ -271,10 +273,23 @@ function drawZombies() {
                 sock.emit('gameFieldRemoveZombie', (i));
             }
             if (zombies[i].x < (CELL_SIZE.width)) {
-                sock.emit('win', 'Zombies')
+                sock.emit('win', 'Zombies');
+                winner = 'Zombies';
             }
             zombies[i].update();
             zombies[i].draw();
+
+
+            for (let j = 0; j < plants.length; j++) {
+                if (collision(zombies[i], plants[j])) {
+                    console.warn("collision", zombies[i], plants[j])
+                    plants[j].health--;
+                    zombies[i].walkSpeed = 0;
+                }
+                else {
+                    zombies[i].walkSpeed = zombies[i].speed;
+                }
+            }
         }
 
     }
@@ -285,7 +300,7 @@ function drawZombies() {
 function drawGoals() {
     for (let i = 0; i < lawnmowers.length; i++) {
         if (lawnmowers[i]) {
-            if (isOutOfBounds(lawnmowers[i])) {
+            if (lawnmowers[i].x > canvas.width) {
                 sock.emit('gameFieldRemoveLawnmower', (i));
             }
             lawnmowers[i].update();
@@ -299,6 +314,7 @@ function drawGoals() {
             }
             if (targets.length < 3) {
                 sock.emit('win', 'Plants');
+                winner = 'Plants';
             }
             targets[i].draw();
         }
@@ -325,61 +341,66 @@ function drawSelectedSeedSlots() {
     }
 }
 
-
+// Bij het ontvangen van een nieuwe rol wordt deze toegekend aan de client
 sock.on('role', role => {
     currentRole = role;
     console.warn('changed role: ', currentRole);
 });
 
-sock.on('gameField', gameField => {
-    if (!gameField) {
-        return;
-    }
+
+// Als de server iets doorstuurt van nieuwe plant, zombie ...
+// wordt die toegevoegd/verwijderd op de client array
+sock.on('gameFieldAddPlant', plantsInfo => {
+    plantsInfo = JSON.parse(plantsInfo);
+    plants.push(createPlant(plantsInfo.plant.name, plantsInfo.plant.x, plantsInfo.plant.y));
+    resourcesPlants = plantsInfo.resources;
+});
+sock.on('gameFieldAddZombie', zombiesInfo => {
+    zombiesInfo = JSON.parse(zombiesInfo);
+    zombies.push(createZombie(zombiesInfo.zombie.name, zombiesInfo.zombie.x, zombiesInfo.zombie.y, zombiesInfo.zombie.id));
+    resourcesZombies = zombiesInfo.resources;
+});
+
+sock.on('gameFieldRemovePlant', index => {
+    plants.splice(index, 1);
+});
+sock.on('gameFieldRemoveZombie', index => {
+    zombies.splice(index, 1);
+});
+
+sock.on('gameFieldRemoveLawnmower', index => {
+    lawnmowers.splice(index, 1);
+});
+sock.on('gameFieldRemoveTarget', index => {
+    targets.splice(index, 1);
+});
+
+sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
-    console.error(gameField)
-    console.log(gameField.plants);
-    console.log(gameField.zombies);
-    console.log(gameField.lawnmowers.length);
-    console.log(gameField.targets.length);
-    console.log(gameField.resourcesPlants);
-    console.log(gameField.resourcesZombies);
+    console.warn(gameField)
 
-    resourcesPlants = gameField.resourcesPlants || 0;
-    resourcesZombies = gameField.resourcesZombies || 0;
+    currentRole = "Zombies"; 
+    resourcesPlants = gameField.resourcesPlants; 
+    resourcesZombies = gameField.resourcesZombies;
+    plants = gameField.plants; 
+    zombies = gameField.zombies; 
+    winner = gameField.winner;    
 
-    // reset
-    // plants = [];
-    // zombies = [];
-    // lawnmowers = [];
-    // targets = [];
+    lawnmowers = [];
+    targets = [];
 
-    plants = [];
-    for (let i = 0; i < gameField.plants.length; i++) {
-        // console.log(plants[i])
-        const plant = createPlant(gameField.plants[i].name, gameField.plants[i].x, gameField.plants[i].y);
-        plants.push(plant);
-    }
-    zombiesPrevious = zombies;
-    zombies = [];
-    for (let i = 0; i < gameField.zombies.length; i++) {
-        // console.log(zombies[i])
-        const zombie = createZombie(gameField.zombies[i].name, gameField.zombies[i].x, gameField.zombies[i].y, gameField.zombies[i].id);
-        zombies.push(zombie);
-    }
+    gameField.lawnmowers.forEach(lawnmower => {
+        lawnmowers.push(new Goal.Lawnmower(lawnmower.x, lawnmower.y));
+    });
 
-    for (let i = 0; i < gameField.lawnmowers.length; i++) {
-        const lawnmower = new Goal.Lawnmower(gameField.lawnmowers[i].x, gameField.lawnmowers[i].y);
-        lawnmowers.push(lawnmower);
-    }
-    for (let i = 0; i < gameField.targets.length; i++) {
-        const target = new Goal.Target(gameField.targets[i].x, gameField.targets[i].y);
-        targets.push(target);
-    }
+    gameField.targets.forEach(target => {
+        targets.push(new Goal.Target(target.x, target.y));
+    });
 });
 
 sock.on('selectedSeedSlot', selectedSeedSlot => {
     selectedSeedSlots = JSON.parse(selectedSeedSlot);
-})
+});
 
 function createPlant(name, x, y) {
     switch (name) {
@@ -432,27 +453,27 @@ function createZombie(name, x, y, id) {
 
 
 function update() {
-    drawBackground();
-    drawSeedBanks();
-    // drawGameGrid();
+    if (!winner) {
+        drawBackground();
+        drawSeedBanks();
+        // drawGameGrid();
+        drawPlants();
+        drawZombies();
+        drawGoals();
+        drawResources();
+        test()
+        currentFrame++;
+    }
     drawSelectedCells(currentMousePositions);
     drawSelectedSeedSlots();
-    drawPlants();
-    drawZombies();
-    drawGoals();
-    drawResources();
     drawCursors(currentMousePositions);
-    test()
-    currentFrame++;
     requestAnimationFrame(update);
 }
 
 update();
 
 
-
 function test() {
-    zombies.forEach(zombie => {
-        console.log(zombie, zombie.x, zombie.y)
-    })
+// console.log(lawnmowers);
+// console.log(winner);
 }

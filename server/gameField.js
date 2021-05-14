@@ -2,10 +2,11 @@ module.exports = class GameField {
     constructor() {
         this.plants = [];
         this.zombies = [];
-        this.lawnmowers = [];
-        this.targets = [];
+        this.lawnmowers = generateGoals()[0];
+        this.targets = generateGoals()[1];
         this.resourcesPlants = 300;
         this.resourcesZombies = 300;
+        this.winner;
     }
 
     // addLawnmower(x, y) {
@@ -22,52 +23,60 @@ module.exports = class GameField {
     //     }
     // }
 
-    removeLawnmower(index) {
-        if (this.lawnmowers[index]) {
-            this.lawnmowers.splice(index, 1);
-        }
-    }
-
-    removeTarget(index) {
-        if (this.targets[index]) {   
-            this.targets.splice(index, 1);
-        }
-    }
-
     addPlant(name, x, y) {
         const plant = {id: this.plants.length, name: name, x: x, y: y}
         this.plants.push(plant);
         this.resourcesPlants -= getCost(name);
-        return this.plants;
-    }
-
-    removePlant(index) {
-        if (this.plants[index]) {
-            this.plants.splice(index, 1);
-        }
+        return { plant: plant, resources: this.resourcesPlants };
     }
 
     addZombie(name, x, y) {
         const zombie = {id: this.zombies.length, name: name, x: x, y: y}
         this.zombies.push(zombie);
         this.resourcesZombies -= getCost(name);
-        return this.zombies;
+        return { zombie: zombie, resources: this.resourcesZombies };
+    }
+
+    removePlant(index) {
+        if (this.plants[index]) {
+            this.plants.splice(index, 1);
+            return index;
+        }
     }
 
     removeZombie(index) {
         if (this.zombies[index]) {
             this.zombies.splice(index, 1);
+            return index;
         }
+    }
+
+    removeLawnmower(index) {
+        if (this.lawnmowers[index]) {
+            this.lawnmowers.splice(index, 1);
+            return index;
+        }
+    }
+
+    removeTarget(index) {
+        if (this.targets[index]) {   
+            this.targets.splice(index, 1);
+            return index;
+        }
+    }
+
+    setWinner(winner) {
+        this.winner = winner;
     }
 
     reset() {
         this.plants = [];
         this.zombies = [];
-        let goals = generateGoals();
-        this.lawnmowers = goals[0];
-        this.targets = goals[1];
+        this.lawnmowers = generateGoals()[0];
+        this.targets = generateGoals()[1];
         this.resourcesPlants = 300;
         this.resourcesZombies = 300;
+        this.winner = "";
     }
 }
 
