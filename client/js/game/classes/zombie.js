@@ -2,9 +2,10 @@ import { context, CELL_SIZE, SEEDSLOT_SIZE } from '../constants.js';
 
 
 class Zombie {
-    constructor(x, y) {
+    constructor(x, y, id) {
         this.x = x;
         this.y = y;
+        this.id = id;
 
         this.width = CELL_SIZE.width;
         this.height = CELL_SIZE.height;
@@ -13,6 +14,7 @@ class Zombie {
         this.seedslotHeight = SEEDSLOT_SIZE.height;
 
         this.isAttacking = false;
+        this.isMoving = false;
         this.timer = 0;
     }
     draw(){
@@ -32,8 +34,8 @@ class Zombie {
 }
 
 export class Grave extends Zombie {
-    constructor(x,y) {
-        super(x, y);
+    constructor(x, y, id) {
+        super(x, y, id);
 
         this.health = 1000;
         this.cooldown = 5;
@@ -45,8 +47,8 @@ export class Grave extends Zombie {
 }
 
 export class NormalZombie extends Zombie {
-    constructor(x, y) {
-        super(x, y);
+    constructor(x, y, id) {
+        super(x, y, id);
 
         this.health = 100;
 
@@ -73,8 +75,8 @@ export class NormalZombie extends Zombie {
     }
 }
 export class NewspaperZombie extends Zombie {
-    constructor(x,y) {
-        super(x, y);
+    constructor(x, y, id) {
+        super(x, y, id);
 
         this.health = 100;
         this.shield = 200;
@@ -104,8 +106,8 @@ export class NewspaperZombie extends Zombie {
     }
 }
 export class ConeheadZombie extends Zombie {
-    constructor(x,y) {
-        super(x,y);
+    constructor(x, y, id) {
+        super(x, y, id);
 
         this.health = 200;
 
@@ -132,8 +134,8 @@ export class ConeheadZombie extends Zombie {
     }
 }
 export class BucketheadZombie extends Zombie {
-    constructor(x,y) {
-        super(x,y);
+    constructor(x, y, id) {
+        super(x, y, id);
 
         this.health = 400;
 
@@ -151,8 +153,8 @@ export class BucketheadZombie extends Zombie {
 }
 
 export class PolevaultingZombie extends Zombie {
-    constructor(x,y) {
-        super(x, y);
+    constructor(x, y, id) {
+        super(x, y, id);
 
         this.health = 150;
 

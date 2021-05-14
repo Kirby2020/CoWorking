@@ -35,9 +35,10 @@ module.exports = class GameField {
     }
 
     addPlant(name, x, y) {
-        const plant = {name: name, x: x, y: y}
+        const plant = {id: this.plants.length, name: name, x: x, y: y}
         this.plants.push(plant);
         this.resourcesPlants -= getCost(name);
+        return this.plants;
     }
 
     removePlant(index) {
@@ -47,14 +48,10 @@ module.exports = class GameField {
     }
 
     addZombie(name, x, y) {
-        const zombie = {name: name, x: x, y: y}
-        for (let i = 0; i < this.zombies.length; i++) {
-            if (zombie && zombie.name !== 'grave') {
-                this.removeZombie(i);
-            }
-        }
+        const zombie = {id: this.zombies.length, name: name, x: x, y: y}
         this.zombies.push(zombie);
         this.resourcesZombies -= getCost(name);
+        return this.zombies;
     }
 
     removeZombie(index) {

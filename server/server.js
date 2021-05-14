@@ -75,7 +75,7 @@ setInterval(() => {
     console.log('CURSORS', cursors);
     console.log('GAMEFIELD', gameField);
     console.log('--------------------------------')
-}, 1000)
+}, 2000)
 
 
 // Wanneer iemand verbind met de server (naar de site gaat)
