@@ -23,11 +23,15 @@ module.exports = class GameField {
     // }
 
     removeLawnmower(index) {
-        this.lawnmowers.splice(index, 1);
+        if (this.lawnmowers[index]) {
+            this.lawnmowers.splice(index, 1);
+        }
     }
 
     removeTarget(index) {
-        this.targets.splice(index, 1);
+        if (this.targets[index]) {   
+            this.targets.splice(index, 1);
+        }
     }
 
     addPlant(name, x, y) {
@@ -37,7 +41,9 @@ module.exports = class GameField {
     }
 
     removePlant(index) {
-        this.plants.splice(index, 1);
+        if (this.plants[index]) {
+            this.plants.splice(index, 1);
+        }
     }
 
     addZombie(name, x, y) {
@@ -52,7 +58,9 @@ module.exports = class GameField {
     }
 
     removeZombie(index) {
-        this.zombies.splice(index, 1);
+        if (this.zombies[index]) {
+            this.zombies.splice(index, 1);
+        }
     }
 
     reset() {

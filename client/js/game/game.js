@@ -300,13 +300,12 @@ function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         // console.log(plants[i])
         if (plants[i]) {
-            if (currentRole === 'Plants') {
-                if (plants[i].health === 0) {
-                    sock.emit('gameFieldRemovePlant', (i));
-                }
-            }
             plants[i].update();
             plants[i].draw();
+
+            if (plants[i].health === 0) {
+                sock.emit('gameFieldRemovePlant', (i));
+            }
         }
     }
 }
@@ -317,13 +316,11 @@ function drawZombies() {
     for (let i = 0; i < zombies.length; i++) {
         // console.log(zombies[i])
         if (zombies[i]) {
-            if (currentRole === 'Zombies') {
-                if (isOutOfBounds(zombies[i]) || zombies[i].health === 0) {
-                    sock.emit('gameFieldRemoveZombie', (i));
-                }
-                if (zombies[i].x < (CELL_SIZE.width)) {
-                    sock.emit('win', 'Zombies')
-                }
+            if (isOutOfBounds(zombies[i]) || zombies[i].health === 0) {
+                sock.emit('gameFieldRemoveZombie', (i));
+            }
+            if (zombies[i].x < (CELL_SIZE.width)) {
+                sock.emit('win', 'Zombies')
             }
             zombies[i].update();
             zombies[i].draw();
@@ -336,10 +333,8 @@ function drawZombies() {
 function drawGoals() {
     for (let i = 0; i < lawnmowers.length; i++) {
         if (lawnmowers[i]) {
-            if (currentRole === 'Plants') {
-                if (isOutOfBounds(lawnmowers[i])) {
-                    sock.emit('gameFieldRemoveLawnmower', (i));
-                }
+            if (isOutOfBounds(lawnmowers[i])) {
+                sock.emit('gameFieldRemoveLawnmower', (i));
             }
             lawnmowers[i].update();
             lawnmowers[i].draw();
@@ -347,13 +342,11 @@ function drawGoals() {
     }
     for (let i = 0; i < targets.length; i++) {
         if (targets[i]) {
-            if (currentRole === 'Zombies') {
-                if (targets[i].health === 0) {
-                    sock.emit('gameFieldRemoveTarget', (i));
-                }
-                if (targets.length === 0) {
-                    sock.emit('win', 'Plants');
-                }
+            if (targets[i].health === 0) {
+                sock.emit('gameFieldRemoveTarget', (i));
+            }
+            if (targets.length < 3) {
+                sock.emit('win', 'Plants');
             }
             targets[i].draw();
         }
