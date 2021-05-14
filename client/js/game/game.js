@@ -18,8 +18,8 @@ import * as Zombie from './classes/zombie.js';
 import * as Goal from './classes/goals.js';
 
 // Verbindt ofwel met de live server of de local server
-// export const sock = io('https://pvz-game.herokuapp.com/');
-export const sock = io('http://localhost:3001');
+export const sock = io('https://pvz-game.herokuapp.com/');
+// export const sock = io('http://localhost:3001');
 
 
 console.log('gameGrid', gameGrid);
@@ -65,7 +65,7 @@ sock.on('mouse move', (cursors) => {
 // ---------- GAME ----------
 
 // Slaat alle data op van de server
-let currentRole = "Zombies"; // plant of zombie, default : spectator
+let currentRole = "Spectator"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
@@ -379,7 +379,7 @@ sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
     console.warn(gameField)
 
-    currentRole = "Zombies"; 
+    currentRole = "Spectator"; 
     resourcesPlants = gameField.resourcesPlants; 
     resourcesZombies = gameField.resourcesZombies;
     plants = gameField.plants; 

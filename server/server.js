@@ -195,6 +195,10 @@ io.on('connection', (sock) => {
             io.to(getId(to)).emit('statusInvite', (response));
 
             if (response === 'accepted') {
+                // reset gameField bij een invite (nieuwe game)
+                gameField.reset();
+                io.emit('gameFieldReset', JSON.stringify(gameField));
+
                 console.log('Setting playerStates...')
                 playerSet.setState(from, 'in game');
                 playerSet.setState(to, 'in game');
@@ -206,11 +210,6 @@ io.on('connection', (sock) => {
                 io.to(getId(to)).emit('role', ("Zombies"));
 
                 io.emit('playerList', JSON.stringify([...playerSet.players]));
-
-                // reset gameField bij een invite (nieuwe game)
-                gameField.reset();
-                io.emit('gameFieldReset', JSON.stringify(gameField));
-
             }
         })
 
