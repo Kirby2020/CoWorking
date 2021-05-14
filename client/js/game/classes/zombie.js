@@ -25,10 +25,15 @@ class Zombie {
         context.fillStyle = 'blue';
         context.font = '20px Arial';
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
+
+
+        context.strokeStyle = 'purple';
+        context.lineWidth = 2;
+        context.strokeRect(this.x, this.y, this.width, this.height);
     }
     update(){
         if (this.isAttacking === false) {
-            this.x -= this.speed;
+            this.x -= this.walkSpeed;
         }
     }
 }

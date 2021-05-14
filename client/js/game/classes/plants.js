@@ -1,4 +1,6 @@
 import { context, CELL_SIZE, SEEDSLOT_SIZE } from '../constants.js';
+import { projectiles } from '../game.js';
+import { Projectile } from './projectile.js';
 
 // Geïnspireerd van https://www.youtube.com/watch?v=QxYg8-mhhhs&t=1484s
 // Deze klasse wordt niet zelf gebruikt.
@@ -29,7 +31,11 @@ export class Plant {
     }
 
     update() {
-        
+        this.timer++;
+
+        if (this.timer % (this.attackSpeed * 60) === 0) {
+            projectiles.push(new Projectile(this.x, this.y, this.projectileSprite));
+        }
     }
 }
 
@@ -64,6 +70,7 @@ export class Peashooter extends Plant {
         this.cost = 100;
         this.sprite = './assets/images/plants/seedslots2/peashooterSeedSlotSprite2.png';
         this.seedSlotSprite = './assets/images/plants/seedslots2/peashooterSeedSlotSprite2.png';   // https://www.clipartmax.com/max/m2i8i8G6G6N4H7m2/
+        this.projectileSprite = './assets/images/particles/ProjectilePea.png';
     }
 }
 
@@ -78,6 +85,7 @@ export class Repeater extends Plant {
         this.cost = 150;
         this.sprite = './assets/images/plants/seedslots2/repeaterSeedSlotSprite2.png';
         this.seedSlotSprite = './assets/images/plants/seedslots2/repeaterSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8b1Z5Z5Z5K9K9_zombies-plants-vs-zombies-2-repeater/
+        this.projectileSprite = './assets/images/particles/ProjectilePea.png';
     }
 }
 
@@ -116,6 +124,7 @@ export class Snowpea extends Plant {
         this.cost = 150;
         this.sprite = './assets/images/plants/seedslots2/snowpeaSeedSlotSprite2.png';
         this.seedSlotSprite = './assets/images/plants/seedslots2/snowpeaSeedSlotSprite2.png';   // https://www.clipartmax.com/middle/m2i8H7m2m2N4N4b1_plants-vs-zombies-2-snow-pea-by-illustation16-plants-vs-zombies-plantas/
+        this.projectileSprite = './assets/images/particles/ProjectileSnowPea.png';
 
         this.special = {effect: 'slow', duration: 3, multiplier: 0.5};
     }

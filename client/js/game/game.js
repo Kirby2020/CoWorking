@@ -16,10 +16,11 @@ import {collision, isOutOfBounds} from './utils.js';
 import * as Plant from './classes/plants.js';
 import * as Zombie from './classes/zombie.js';
 import * as Goal from './classes/goals.js';
+import { Projectile } from './classes/projectile.js';
 
 // Verbindt ofwel met de live server of de local server
-export const sock = io('https://pvz-game.herokuapp.com/');
-// export const sock = io('http://localhost:3001');
+// export const sock = io('https://pvz-game.herokuapp.com/');
+export const sock = io('http://localhost:3001');
 
 
 console.log('gameGrid', gameGrid);
@@ -72,6 +73,7 @@ let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 let lawnmowers = []; // data voor grasmaaiers
 let targets = []; // data voor targets
+export let projectiles = [];
 let winner;
 // Client specifiek
 let currentFrame = 0;
@@ -113,7 +115,7 @@ canvas.addEventListener('click', (e) => {
         }
 
         if (resourcesPlants >= getSelectedPlantCost()) {
-            console.warn(getSelectedPlantCost())
+            // console.warn(getSelectedPlantCost())
             sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}))
         }
     } else if (currentRole === "Zombies") {
@@ -154,7 +156,7 @@ canvas.addEventListener('click', (e) => {
 
 // Eventlistener die kijkt welke seedslot je selecteerd met de cijfertoetsen
 canvas.addEventListener('keypress', (e) => {
-    console.log(e.code);
+    // console.log(e.code);
     if (currentRole === 'Plants') {
         switch (e.code) {
             case 'Digit1': selectedSeedSlots.plant = 0; break;
@@ -255,7 +257,7 @@ function drawPlants() {
             plants[i].update();
             plants[i].draw();
 
-            if (plants[i].health === 0) {
+            if (plants[i].health <= 0) {
                 sock.emit('gameFieldRemovePlant', (i));
             }
         }
@@ -267,9 +269,9 @@ function drawPlants() {
 function drawZombies() {
     
     for (let i = 0; i < zombies.length; i++) {
-        // console.log(zombies[i])
+        console.error(zombies)
         if (zombies[i]) {
-            if (isOutOfBounds(zombies[i]) || zombies[i].health === 0) {
+            if (zombies[i].health <= 0) {
                 sock.emit('gameFieldRemoveZombie', (i));
             }
             if (zombies[i].x < (CELL_SIZE.width)) {
@@ -290,6 +292,13 @@ function drawZombies() {
                     zombies[i].walkSpeed = zombies[i].speed;
                 }
             }
+
+            for (let k = 0; k < lawnmowers.length; k++) {
+                if (lawnmowers[k] && zombies[i] && collision(zombies[i], lawnmowers[k])) {
+                    console.warn('collision', zombies[i], lawnmowers[k])
+                    lawnmowers[k].isMoving = true;
+                }
+            }
         }
 
     }
@@ -305,6 +314,12 @@ function drawGoals() {
             }
             lawnmowers[i].update();
             lawnmowers[i].draw();
+
+            for (let j = 0; j < zombies.length; j++) {
+                if (lawnmowers[i] && zombies[j] && collision(lawnmowers[i], zombies[j])) {
+                    sock.emit('gameFieldRemoveZombie', j);
+                }
+            }
         }
     }
     for (let i = 0; i < targets.length; i++) {
@@ -341,6 +356,20 @@ function drawSelectedSeedSlots() {
     }
 }
 
+
+function drawProjectiles() {
+    for (let i = 0; i < projectiles.length; i++) {
+        console.warn(projectiles)
+        projectiles[i].update();
+        projectiles[i].draw();
+
+        if (projectiles[i] && projectiles[i].x > canvas.width) {
+            projectiles.splice(i, 1);
+            i--;
+        }
+    }
+}
+
 // Bij het ontvangen van een nieuwe rol wordt deze toegekend aan de client
 sock.on('role', role => {
     currentRole = role;
@@ -357,7 +386,10 @@ sock.on('gameFieldAddPlant', plantsInfo => {
 });
 sock.on('gameFieldAddZombie', zombiesInfo => {
     zombiesInfo = JSON.parse(zombiesInfo);
+    console.warn('zombie', createZombie(zombiesInfo.zombie.name, zombiesInfo.zombie.x, zombiesInfo.zombie.y, zombiesInfo.zombie.id))
+    console.error('before', zombies)
     zombies.push(createZombie(zombiesInfo.zombie.name, zombiesInfo.zombie.x, zombiesInfo.zombie.y, zombiesInfo.zombie.id));
+    console.error('after', zombies)
     resourcesZombies = zombiesInfo.resources;
 });
 
@@ -379,7 +411,7 @@ sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
     console.warn(gameField)
 
-    currentRole = "Spectator"; 
+    currentRole = "Plants"; 
     resourcesPlants = gameField.resourcesPlants; 
     resourcesZombies = gameField.resourcesZombies;
     plants = gameField.plants; 
@@ -435,9 +467,10 @@ function createPlant(name, x, y) {
 }
 
 function createZombie(name, x, y, id) {
+    console.error(name, x, y, id)
     switch (name) {
         case 'grave':
-            return new Zombie.Grave(x, y , id);
+            return new Zombie.Grave(x, y, id);
         case 'normalZombie':
             return new Zombie.NormalZombie(x, y, id);
         case 'coneheadZombie':
@@ -460,6 +493,7 @@ function update() {
         drawPlants();
         drawZombies();
         drawGoals();
+        drawProjectiles();
         drawResources();
         test()
         currentFrame++;
@@ -476,4 +510,5 @@ update();
 function test() {
 // console.log(lawnmowers);
 // console.log(winner);
+// console.warn('zombies', zombies)
 }
