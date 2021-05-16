@@ -9,20 +9,6 @@ module.exports = class GameField {
         this.winner;
     }
 
-    // addLawnmower(x, y) {
-    //     if (this.lawnmowers.length !== 5) {
-    //         const lawnmower = {x: x, y: y}
-    //         this.lawnmowers.push(lawnmower);
-    //     }
-    // }
-    //
-    // addTarget(x, y) {
-    //     if (this.targets.length !== 3) {
-    //         const target = {x: x, y: y}
-    //         this.targets.push(target);
-    //     }
-    // }
-
     addPlant(name, x, y) {
         const plant = {id: this.plants.length, name: name, x: x, y: y}
         this.plants.push(plant);
@@ -89,9 +75,7 @@ function generateGoals() {
     let y = CELL_SIZE.height + 10;
     for (let i = 0; i < 5; i++) {
         lawnmowers.push({x: x, y: y});
-        // if (i % 2 === 0) {
         targets.push({x: x2, y: y});
-        // }
         y += CELL_SIZE.height;
     }
     return [lawnmowers, targets];
