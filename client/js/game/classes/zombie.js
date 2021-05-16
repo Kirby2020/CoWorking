@@ -29,14 +29,17 @@ class Zombie {
 
         context.fillStyle = 'blue';
         context.font = '20px Arial';
-        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height);
+        // context.fillText(Math.floor(this.timer), this.x, this.y + 25);
 
         // HITBOX
-        // context.strokeStyle = 'purple';
-        // context.lineWidth = 2;
-        // context.strokeRect(this.x, this.y, this.width, this.height);
+        context.strokeStyle = 'purple';
+        context.lineWidth = 2;
+        context.strokeRect(this.x, this.y, this.width, this.height);
     }
     update(){
+        this.timer++;
+
         if (this.isAttacking === false) {
             this.x -= this.walkSpeed;
         }
@@ -53,12 +56,32 @@ export class Grave extends Zombie {
         this.cooldown = 5;
         this.cost = 50;
         this.speed = 0;
+        this.generateSpeed = 20;
+        this.hasBrains = false;
+        this.brains = 25;
         this.sprite = './assets/images/zombies/gravestone/Zombie_Gravestone1.png';
         this.seedSlotSprite = './assets/images/zombies/gravestone/Zombie_Gravestone1.png';
+        this.projectileSprite = './assets/images/zombies/Brain_by_BP.png';
+    }
+
+    draw() {
+        super.draw();
+
+        if (this.hasBrains === true) {
+            const sprite = new Image();
+            sprite.src = this.projectileSprite;
+            context.drawImage(sprite, this.x, this.y, this.width, this.width); // height = width om vierkant te houden
+        }
     }
 
     update() {
+        super.update();
 
+        this.walkSpeed = 0;
+
+        if (this.timer % (this.generateSpeed * 60) === 0 && this.hasBrains === false) {
+            this.hasBrains = true;
+        }
     }
 }
 
@@ -83,9 +106,9 @@ export class NormalZombie extends Zombie {
         context.font = '20px Arial';
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
 
-                context.strokeStyle = 'purple';
-        context.lineWidth = 2;
-        context.strokeRect(this.x, this.y, this.width, this.height);
+        // context.strokeStyle = 'purple';
+        // context.lineWidth = 2;
+        // context.strokeRect(this.x, this.y, this.width, this.height);
     }
 }
 

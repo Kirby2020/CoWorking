@@ -54,6 +54,8 @@ const playerSet = new Players();
 const gameState = new GameState();
 const cursors = new Cursors();
 const gameField = new GameField();
+let timer = 0;
+let timerOn = false
 let gameRoomNumber = 1;
 let playersInRoom = 0;
 
@@ -74,6 +76,15 @@ setInterval(() => {
     console.log('SET', playerSet);
     console.log('CURSORS', cursors);
     console.log('GAMEFIELD', gameField);
+    if (timerOn) {
+        timer++;
+        console.log(timer);
+        if (timer === 30) {
+            const resources = gameField.passiveResources();
+            io.emit('gameFieldPassiveResources', JSON.stringify(resources));
+            timer = 0;
+        }
+    }
     console.log('--------------------------------')
 }, 2000)
 
@@ -134,15 +145,22 @@ io.on('connection', (sock) => {
         //     console.log(gameField);
         //     io.emit('gameField', gameField);
         // });
-        
 
+        sock.on('gameFieldAddSun', plantInfo => {
+            const sun = gameField.addSun(plantInfo.index, plantInfo.sun);
+            io.emit('gameFieldSetSun', JSON.stringify(sun));
+        });
+        sock.on('gameFieldAddBrains', zombieInfo => {
+            const brains = gameField.addBrains(zombieInfo.index, zombieInfo.brains);
+            io.emit('gameFieldSetBrains', JSON.stringify(brains));
+        });
 
         // plantInfo = {name, x, y}
         sock.on('gameFieldAddPlant', plantInfo => {
             const plant = gameField.addPlant(plantInfo.name, plantInfo.x, plantInfo.y);
             io.emit('gameFieldAddPlant', JSON.stringify(plant));
         });
-                // zombieInfo = {name, x, y}
+        // zombieInfo = {name, x, y}
         sock.on('gameFieldAddZombie', zombieInfo => {
             const zombie = gameField.addZombie(zombieInfo.name, zombieInfo.x, zombieInfo.y);
             io.emit('gameFieldAddZombie', JSON.stringify(zombie));
@@ -209,6 +227,9 @@ io.on('connection', (sock) => {
                 io.to(getId(from)).emit('role', ("Plants"));
                 io.to(getId(to)).emit('role', ("Zombies"));
 
+                timer = 0;
+                timerOn = true;
+
                 io.emit('playerList', JSON.stringify([...playerSet.players]));
             }
         })
@@ -243,6 +264,8 @@ io.on('connection', (sock) => {
             // reset gameField als er geen personen meer zijn
             if (playerSet.getAll().size < 1) {
                 gameField.reset();
+                timerOn = false;
+                timer = 0;
                 io.emit('gameFieldReset', JSON.stringify(gameField));
             }
         });

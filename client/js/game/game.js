@@ -12,7 +12,7 @@ import {
 import {drawGameGrid} from './gameGrid.js';
 import {drawSeedBanks} from './seedBanks.js';
 import {Cell} from './classes/Cell.js';
-import {collision, isOutOfBounds} from './utils.js';
+import {collision} from './utils.js';
 import * as Plant from './classes/plants.js';
 import * as Zombie from './classes/zombie.js';
 import * as Goal from './classes/goals.js';
@@ -109,14 +109,15 @@ canvas.addEventListener('click', (e) => {
         }
         // Als er al een plant op die plaats staat
         for (let i = 0; i < plants.length; i++) {
-
             if (plants[i].x === gridPositionX && plants[i].y === gridPositionY + 10) {
-
+                if (plants[i].hasSun === true) {
+                    sock.emit('gameFieldAddSun', ({index: i, sun: plants[i].sun}));
+                }
                 return;
             }
         }
 
-        if (true /*resourcesPlants >= getSelectedPlantCost()*/) {
+        if (resourcesPlants >= getSelectedPlantCost()) {
             // console.warn(getSelectedPlantCost())
             sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}))
         }
@@ -134,13 +135,18 @@ canvas.addEventListener('click', (e) => {
         }
         // Als er al een zombie op die plaats staat
         for (let i = 0; i < zombies.length; i++) {
-            if (zombies[i].x === gridPositionX && zombies[i].y === gridPositionY && 
-                zombies[i] instanceof Zombie.Grave && getSelectedZombie() === 'grave') {
-                return;
+            if (zombies[i].x === gridPositionX && zombies[i].y === gridPositionY && zombies[i] instanceof Zombie.Grave) {
+                if (zombies[i].hasBrains === true) {
+                    sock.emit('gameFieldAddBrains', ({index: i, brains: zombies[i].brains}));
+                    return;
+                }
+                if (getSelectedZombie() === 'grave') {
+                    return;
+                }
             }
         }
 
-        if (true /* resourcesZombies >= getSelectedZombieCost() */) {
+        if (resourcesZombies >= getSelectedZombieCost()) {
             sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
 
             // alternative maybe: verzendt naam, x en y naar de server
@@ -344,7 +350,7 @@ function drawGoals() {
 
 
             for (let j = 0; j < zombies.length; j++) {
-                if (lawnmowers[i] && zombies[j] && zombies[j] instanceof Zombie.Grave == false && collision(lawnmowers[i], zombies[j])) {
+                if (lawnmowers[i] && zombies[j] && !(zombies[j] instanceof Zombie.Grave) && collision(lawnmowers[i], zombies[j])) {
                     zombies.splice(j, 1);
                     j--;
                     sock.emit('gameFieldRemoveZombie', (j));
@@ -440,6 +446,23 @@ sock.on('gameFieldAddZombie', zombiesInfo => {
 
     resourcesZombies = zombiesInfo.resources;
 });
+sock.on('gameFieldSetSun', plantInfo => {
+    plantInfo = JSON.parse(plantInfo);
+    plants[plantInfo.index].hasSun = false;
+    plants[plantInfo.index].timer = 0;
+    resourcesPlants = plantInfo.sun;
+});
+sock.on('gameFieldSetBrains', zombieInfo => {
+    zombieInfo = JSON.parse(zombieInfo);
+    zombies[zombieInfo.index].hasBrains = false;
+    zombies[zombieInfo.index].timer = 0;
+    resourcesZombies = zombieInfo.brains;
+});
+sock.on('gameFieldPassiveResources', resources => {
+    resources = JSON.parse(resources);
+    resourcesPlants = resources.sun;
+    resourcesZombies = resources.brains;
+})
 
 // sock.on('gameFieldRemovePlant', index => {
 //     plants.splice(index, 1);

@@ -6,21 +6,37 @@ module.exports = class GameField {
         this.targets = generateGoals()[1];
         this.resourcesPlants = 300;
         this.resourcesZombies = 300;
-        this.winner;
+        this.winner = "";
+    }
+
+    passiveResources() {
+        this.resourcesPlants += 25;
+        this.resourcesZombies += 25;
+        return {sun: this.resourcesPlants, brains: this.resourcesZombies};
+    }
+
+    addSun(index, count) {
+        this.resourcesPlants += count;
+        return {index: index, sun: this.resourcesPlants};
+    }
+
+    addBrains(index, count) {
+        this.resourcesZombies += count;
+        return {index: index, brains: this.resourcesZombies};
     }
 
     addPlant(name, x, y) {
         const plant = {id: this.plants.length, name: name, x: x, y: y}
         this.plants.push(plant);
         this.resourcesPlants -= getCost(name);
-        return { plant: plant, resources: this.resourcesPlants };
+        return {plant: plant, resources: this.resourcesPlants};
     }
 
     addZombie(name, x, y) {
         const zombie = {id: this.zombies.length, name: name, x: x, y: y}
         this.zombies.push(zombie);
         this.resourcesZombies -= getCost(name);
-        return { zombie: zombie, resources: this.resourcesZombies };
+        return {zombie: zombie, resources: this.resourcesZombies};
     }
 
     removePlant(index) {
@@ -45,7 +61,7 @@ module.exports = class GameField {
     }
 
     removeTarget(index) {
-        if (this.targets[index]) {   
+        if (this.targets[index]) {
             this.targets.splice(index, 1);
             return index;
         }

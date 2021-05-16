@@ -26,12 +26,12 @@ export class Plant {
 
         context.fillStyle = 'red';
         context.font = '20px Arial';
-        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
+        context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height);
+        // context.fillText(Math.floor(this.timer), this.x, this.y + 25);
 
-        context.strokeStyle = 'purple';
-        context.lineWidth = 2;
-        context.strokeRect(this.x, this.y, this.width, this.height);
-
+        // context.strokeStyle = 'purple';
+        // context.lineWidth = 2;
+        // context.strokeRect(this.x, this.y, this.width, this.height);
     }
 
     update() {
@@ -56,10 +56,31 @@ export class Sunflower extends Plant {
         this.health = 100;
         this.cooldown = 5;
         this.cost = 50;
+        this.generateSpeed = 20;
+        this.hasSun = false;
+        this.sun = 25;
         this.sprite = './assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png';
         this.seedSlotSprite = './assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png';   // https://www.cleanpng.com/png-plants-vs-zombies-2-it-s-about-time-plants-vs-zomb-696886/download-png.html
+        this.projectileSprite = './assets/images/plants/Sun_PvZ2.png';
     }
 
+    draw() {
+        super.draw();
+
+        if (this.hasSun === true) {
+            const sprite = new Image();
+            sprite.src = this.projectileSprite;
+            context.drawImage(sprite, this.x, this.y, this.width, this.width); // height = width om vierkant te houden
+        }
+    }
+
+    update() {
+        super.update();
+
+        if (this.timer % (this.generateSpeed * 60) === 0 && this.hasSun === false) {
+            this.hasSun = true;
+        }
+    }
 
 }
 

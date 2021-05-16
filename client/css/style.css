@@ -151,7 +151,7 @@ canvas:hover {
     border-radius: 1rem;
     font-size: calc(var(--default-font-size) + 0.4em);
     cursor: text;
-    max-width: 13vw;
+    width: 13vw;
 }
 
 ::placeholder {
