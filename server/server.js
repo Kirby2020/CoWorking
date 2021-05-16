@@ -150,20 +150,20 @@ io.on('connection', (sock) => {
 
         sock.on('gameFieldRemovePlant', index => {
             gameField.removePlant(index);
-            io.emit('gameFieldRemovePlant', (index));
+            // io.emit('gameFieldRemovePlant', (index));
         });
         sock.on('gameFieldRemoveZombie', index => {
             gameField.removeZombie(index);
-            io.emit('gameFieldRemoveZombie', (index));
+            // io.emit('gameFieldRemoveZombie', (index));
         });
 
         sock.on('gameFieldRemoveLawnmower', index => {
             gameField.removeLawnmower(index);
-            io.emit('gameFieldRemoveLawnmower', (index));
+            // io.emit('gameFieldRemoveLawnmower', (index));
         });
         sock.on('gameFieldRemoveTarget', index => {
             gameField.removeTarget(index);
-            io.emit('gameFieldRemoveTarget', (index));
+            // io.emit('gameFieldRemoveTarget', (index));
         });
 
         // als een winnaar bepaald is stuur het naar alle spelers

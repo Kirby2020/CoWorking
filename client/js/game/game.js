@@ -114,7 +114,7 @@ canvas.addEventListener('click', (e) => {
             }
         }
 
-        if (resourcesPlants >= getSelectedPlantCost()) {
+        if (true /*resourcesPlants >= getSelectedPlantCost()*/) {
             // console.warn(getSelectedPlantCost())
             sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}))
         }
@@ -138,7 +138,7 @@ canvas.addEventListener('click', (e) => {
             }
         }
 
-        if (resourcesZombies >= getSelectedZombieCost()) {
+        if (true /* resourcesZombies >= getSelectedZombieCost() */) {
             sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
 
             // alternative maybe: verzendt naam, x en y naar de server
@@ -260,14 +260,16 @@ function drawPlants() {
         }
 
         for (let j = 0; j < zombies.length; j++) {
+            if (plants[i] && plants[i].health <= 0) {
+                // sock.emit('gameFieldRemovePlant', (i));
+                zombies[j].walkSpeed = zombies[j].speed;
+                plants.splice(i, 1);
+                i--;
+            }
+
             if (zombies[j] && plants[i] && collision(zombies[j], plants[i])) {
                 zombies[j].walkSpeed = 0;
                 plants[i].health -= 0.5;
-            }
-
-            if (plants[i] && plants[i].health <= 0) {
-                sock.emit('gameFieldRemovePlant', (i));
-                zombies[j].walkSpeed = zombies[j].speed;
             }
         }
 
@@ -285,23 +287,26 @@ function drawZombies() {
     
     for (let i = 0; i < zombies.length; i++) {
         if (zombies[i]) {
-            if (zombies[i].health <= 0) {
-                sock.emit('gameFieldRemoveZombie', (i));
-            }
-            if (zombies[i].x < (CELL_SIZE.width)) {
-                sock.emit('win', 'Zombies');
-                winner = 'Zombies';
-            }
             zombies[i].update();
             zombies[i].draw();
 
+            if (zombies[i].x < CELL_SIZE.width) {
+                sock.emit('win', 'Zombies');
+                winner = 'Zombies';
+            }
 
             for (let k = 0; k < lawnmowers.length; k++) {
                 if (lawnmowers[k] && zombies[i] && collision(zombies[i], lawnmowers[k])) {
-                    console.warn('collision', zombies[i], lawnmowers[k])
                     lawnmowers[k].isMoving = true;
                 }
             }
+
+            if (zombies[i].health <= 0) {
+                zombies.splice(i, 1);
+                i--;
+                // sock.emit('gameFieldRemoveZombie', (i));
+            }
+
         }
 
     }
@@ -312,29 +317,39 @@ function drawZombies() {
 function drawGoals() {
     for (let i = 0; i < lawnmowers.length; i++) {
         if (lawnmowers[i]) {
-            if (lawnmowers[i].x > canvas.width) {
-                sock.emit('gameFieldRemoveLawnmower', (i));
-            }
             lawnmowers[i].update();
             lawnmowers[i].draw();
 
+            if (lawnmowers[i].x > canvas.width) {
+                lawnmowers.splice(i, 1);
+                i--;
+                sock.emit('gameFieldRemoveLawnmower', (i));
+            }
+
+
             for (let j = 0; j < zombies.length; j++) {
-                if (lawnmowers[i] && zombies[j] && collision(lawnmowers[i], zombies[j])) {
-                    sock.emit('gameFieldRemoveZombie', j);
+                if (lawnmowers[i] && zombies[j] && zombies[j] instanceof Zombie.Grave == false && collision(lawnmowers[i], zombies[j])) {
+                    zombies.splice(j, 1);
+                    j--;
+                    sock.emit('gameFieldRemoveZombie', (j));
                 }
             }
         }
     }
     for (let i = 0; i < targets.length; i++) {
         if (targets[i]) {
+            targets[i].draw();
+
             if (targets[i].health <= 0) {
+                targets.splice(i, 1);
+                i--;
                 sock.emit('gameFieldRemoveTarget', (i));
             }
             if (targets.length < 3) {
                 sock.emit('win', 'Plants');
                 winner = 'Plants';
             }
-            targets[i].draw();
+
         }
     }
 }
@@ -404,32 +419,31 @@ sock.on('gameFieldAddPlant', plantsInfo => {
 });
 sock.on('gameFieldAddZombie', zombiesInfo => {
     zombiesInfo = JSON.parse(zombiesInfo);
-    console.warn('zombie', createZombie(zombiesInfo.zombie.name, zombiesInfo.zombie.x, zombiesInfo.zombie.y, zombiesInfo.zombie.id))
-    console.error('before', zombies)
     zombies.push(createZombie(zombiesInfo.zombie.name, zombiesInfo.zombie.x, zombiesInfo.zombie.y, zombiesInfo.zombie.id));
-    console.error('after', zombies)
+    console.log('zombies', zombies)
+
     resourcesZombies = zombiesInfo.resources;
 });
 
-sock.on('gameFieldRemovePlant', index => {
-    plants.splice(index, 1);
-});
-sock.on('gameFieldRemoveZombie', index => {
-    zombies.splice(index, 1);
-});
+// sock.on('gameFieldRemovePlant', index => {
+//     plants.splice(index, 1);
+// });
+// sock.on('gameFieldRemoveZombie', index => {
+//     zombies.splice(index, 1);
+// });
 
-sock.on('gameFieldRemoveLawnmower', index => {
-    lawnmowers.splice(index, 1);
-});
-sock.on('gameFieldRemoveTarget', index => {
-    targets.splice(index, 1);
-});
+// sock.on('gameFieldRemoveLawnmower', index => {
+//     lawnmowers.splice(index, 1);
+// });
+// sock.on('gameFieldRemoveTarget', index => {
+//     targets.splice(index, 1);
+// });
 
 sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
     console.warn(gameField)
 
-    currentRole = "Plants"; 
+    currentRole = "Zombies"; 
     resourcesPlants = gameField.resourcesPlants; 
     resourcesZombies = gameField.resourcesZombies;
     plants = gameField.plants; 
@@ -485,8 +499,26 @@ function createPlant(name, x, y) {
     }
 }
 
+// function createZombie(name, x, y, id) {
+//     return new Promise((resolve, reject) => {
+//         switch (name) {
+//             case 'grave':
+//                 resolve(new Zombie.Grave(x, y, id));
+//             case 'normalZombie':
+//                 resolve(new Zombie.NormalZombie(x, y, id));
+//             case 'coneheadZombie':
+//                 resolve(new Zombie.ConeheadZombie(x, y, id));
+//             case 'bucketheadZombie':
+//                 resolve(new Zombie.BucketheadZombie(x, y, id));
+//             case 'newspaperZombie':
+//                 resolve(new Zombie.NewspaperZombie(x, y, id));
+//             case 'polevaultingZombie':
+//                 resolve(new Zombie.PolevaultingZombie(x, y, id));
+//         }
+//     }) 
+// }
+
 function createZombie(name, x, y, id) {
-    console.error(name, x, y, id)
     switch (name) {
         case 'grave':
             return new Zombie.Grave(x, y, id);
@@ -529,5 +561,5 @@ update();
 function test() {
 // console.log(lawnmowers);
 // console.log(winner);
-// console.warn('zombies', zombies)
+// console.error('zombies', zombies)
 }

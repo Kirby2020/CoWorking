@@ -9,9 +9,9 @@ import { Projectile } from './projectile.js';
 export class Plant {
     constructor(x, y) {
         this.x = x;
-        this.y = y;
-        this.width = CELL_SIZE.width;
-        this.height = CELL_SIZE.height;
+        this.y = y + 10;
+        this.width = CELL_SIZE.width - 10;
+        this.height = CELL_SIZE.height - 10;
         this.seedslotWidth = SEEDSLOT_SIZE.width;
         this.seedslotHeight = SEEDSLOT_SIZE.height;
         this.isShooting = false;
@@ -27,6 +27,10 @@ export class Plant {
         context.fillStyle = 'red';
         context.font = '20px Arial';
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height)
+
+        context.strokeStyle = 'purple';
+        context.lineWidth = 2;
+        context.strokeRect(this.x, this.y, this.width, this.height);
 
     }
 
@@ -231,3 +235,6 @@ export class Torchwood extends Plant {
         this.special = {effect: 'attackboost', duration: 0, multiplier: 2};
     }
 }
+
+
+Math.random()
