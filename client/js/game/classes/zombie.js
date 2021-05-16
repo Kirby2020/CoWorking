@@ -47,7 +47,7 @@ export class Grave extends Zombie {
     constructor(x, y, id) {
         super(x, y, id);
 
-        this.health = 1000;
+        this.health = 500;
         this.attackDamage = 0; 
         this.attackSpeed = 1;
         this.cooldown = 5;

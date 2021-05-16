@@ -93,7 +93,7 @@ canvas.addEventListener('click', (e) => {
 
     console.log('gridX', gridPositionX)
     console.log('gridY', gridPositionY)
-    console.log('x', x, 'y', y)
+
 
     if (currentRole === "Plants") {
         // ---------- SEEDBANKS ----------
@@ -109,7 +109,9 @@ canvas.addEventListener('click', (e) => {
         }
         // Als er al een plant op die plaats staat
         for (let i = 0; i < plants.length; i++) {
-            if (plants[i].x === gridPositionX && plants[i].y === gridPositionY) {
+
+            if (plants[i].x === gridPositionX && plants[i].y === gridPositionY + 10) {
+
                 return;
             }
         }
@@ -260,16 +262,20 @@ function drawPlants() {
         }
 
         for (let j = 0; j < zombies.length; j++) {
-            if (plants[i] && plants[i].health <= 0) {
+            if (zombies[j] && plants[i] && collision(zombies[j], plants[i])) {
+                zombies[j].walkSpeed = 0;
+                plants[i].health -= 0.4;
+            }
+
+            if (zombies[j] && plants[i] && plants[i].health <= 0) {
                 // sock.emit('gameFieldRemovePlant', (i));
+                const zombiesSamePosition = getZombiesSamePosition(zombies[j].x);
+                zombiesSamePosition.forEach(zombie => {
+                    zombie.walkSpeed = zombie.speed;
+                })
                 zombies[j].walkSpeed = zombies[j].speed;
                 plants.splice(i, 1);
                 i--;
-            }
-
-            if (zombies[j] && plants[i] && collision(zombies[j], plants[i])) {
-                zombies[j].walkSpeed = 0;
-                plants[i].health -= 0.5;
             }
         }
 
@@ -279,6 +285,16 @@ function drawPlants() {
         //     }
         // }
     }
+}
+
+function getZombiesSamePosition(x) {
+    const zombiesSamePosition = [];
+    zombies.forEach(zombie => {
+        if (zombie.x === x) {
+            zombiesSamePosition.push(zombie);
+        }
+    });
+    return zombiesSamePosition;
 }
 
 // Overloopt alle zombies op het speelveld en tekent ze
