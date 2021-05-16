@@ -257,10 +257,25 @@ function drawPlants() {
             plants[i].update();
             plants[i].draw();
 
-            if (plants[i].health <= 0) {
+        }
+
+        for (let j = 0; j < zombies.length; j++) {
+            if (zombies[j] && plants[i] && collision(zombies[j], plants[i])) {
+                zombies[j].walkSpeed = 0;
+                plants[i].health -= 0.5;
+            }
+
+            if (plants[i] && plants[i].health <= 0) {
                 sock.emit('gameFieldRemovePlant', (i));
+                zombies[j].walkSpeed = zombies[j].speed;
             }
         }
+
+        // for (let j = 0; j < zombies.length; j++) {
+        //     if (zombies[j] && plants[i] && zombies[j].y == plants[i].y) {
+        //         plants[i].isShooting = true;
+        //     }
+        // }
     }
 }
 
@@ -269,7 +284,6 @@ function drawPlants() {
 function drawZombies() {
     
     for (let i = 0; i < zombies.length; i++) {
-        console.error(zombies)
         if (zombies[i]) {
             if (zombies[i].health <= 0) {
                 sock.emit('gameFieldRemoveZombie', (i));
@@ -281,17 +295,6 @@ function drawZombies() {
             zombies[i].update();
             zombies[i].draw();
 
-
-            for (let j = 0; j < plants.length; j++) {
-                if (collision(zombies[i], plants[j])) {
-                    console.warn("collision", zombies[i], plants[j])
-                    plants[j].health--;
-                    zombies[i].walkSpeed = 0;
-                }
-                else {
-                    zombies[i].walkSpeed = zombies[i].speed;
-                }
-            }
 
             for (let k = 0; k < lawnmowers.length; k++) {
                 if (lawnmowers[k] && zombies[i] && collision(zombies[i], lawnmowers[k])) {
@@ -324,7 +327,7 @@ function drawGoals() {
     }
     for (let i = 0; i < targets.length; i++) {
         if (targets[i]) {
-            if (targets[i].health === 0) {
+            if (targets[i].health <= 0) {
                 sock.emit('gameFieldRemoveTarget', (i));
             }
             if (targets.length < 3) {
@@ -359,13 +362,28 @@ function drawSelectedSeedSlots() {
 
 function drawProjectiles() {
     for (let i = 0; i < projectiles.length; i++) {
-        console.warn(projectiles)
         projectiles[i].update();
         projectiles[i].draw();
 
         if (projectiles[i] && projectiles[i].x > canvas.width) {
             projectiles.splice(i, 1);
             i--;
+        }
+
+        for (let j = 0; j < zombies.length; j++) {
+            if (zombies[j] && projectiles[i] && collision(projectiles[i], zombies[j])) {
+                zombies[j].health -= projectiles[i].power;
+                projectiles.splice(i, 1);
+                i--;
+            }
+        }
+
+        for (let k = 0; k < targets.length; k++) {
+            if (projectiles[i] && targets[k] && collision(projectiles[i], targets[k])) {
+                targets[k].health -= projectiles[i].power;
+                projectiles.splice(i, 1);
+                i--;
+            }
         }
     }
 }
@@ -418,6 +436,7 @@ sock.on('gameFieldReset', gameField => {
     zombies = gameField.zombies; 
     winner = gameField.winner;    
 
+    projectiles = [];
     lawnmowers = [];
     targets = [];
 

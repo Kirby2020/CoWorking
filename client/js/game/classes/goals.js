@@ -5,8 +5,7 @@ export class Goal {
         this.x = x;
         this.y = y;
         this.width = CELL_SIZE.width;
-        this.height = CELL_SIZE.height;
-        this.timer = 0;
+        this.height = CELL_SIZE.height - 10;
     }
 }
 

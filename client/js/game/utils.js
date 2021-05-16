@@ -1,4 +1,4 @@
-import {CELL_GAP, CELL_SIZE} from './constants.js';
+import {CELL_SIZE} from './constants.js';
 
 // Kijkt of er collision is tussen een positie en een cell
 export function collision(object1, object2) {
