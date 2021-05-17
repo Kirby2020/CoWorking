@@ -133,18 +133,26 @@ canvas.addEventListener('click', (e) => {
             console.log('for plants')
             return;
         }
+
+        console.error(gridPositionX, gridPositionY)
         // Als er al een zombie op die plaats staat
         for (let i = 0; i < zombies.length; i++) {
-            if (zombies[i].x === gridPositionX && zombies[i].y === gridPositionY && zombies[i] instanceof Zombie.Grave) {
+
+            if (zombies[i].x === gridPositionX && zombies[i].y === gridPositionY + 6) {
+
                 if (zombies[i].hasBrains === true) {
                     sock.emit('gameFieldAddBrains', ({index: i, brains: zombies[i].brains}));
+                    zombies[i].hasBrains = false;
                     return;
                 }
-                if (getSelectedZombie() === 'grave') {
+                if (getSelectedZombie() === 'grave' && zombies[i] instanceof Zombie.Grave) {
+                    console.warn('sdfhusjdf')
                     return;
                 }
-            }
+
+            }   
         }
+        
 
         if (resourcesZombies >= getSelectedZombieCost()) {
             sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
@@ -409,6 +417,7 @@ function drawProjectiles() {
 
         for (let j = 0; j < zombies.length; j++) {
             if (zombies[j] && projectiles[i] && collision(projectiles[i], zombies[j])) {
+                const special = getSpecial(projectiles[i]);
                 zombies[j].health -= projectiles[i].power;
                 projectiles.splice(i, 1);
                 i--;
@@ -424,6 +433,13 @@ function drawProjectiles() {
         }
     }
 }
+
+function getSpecial(projectile) {
+    if (!projectile.special) {
+        return;
+    }
+    console.log(projectile.special)
+};
 
 // Bij het ontvangen van een nieuwe rol wordt deze toegekend aan de client
 sock.on('role', role => {
@@ -442,10 +458,9 @@ sock.on('gameFieldAddPlant', plantsInfo => {
 sock.on('gameFieldAddZombie', zombiesInfo => {
     zombiesInfo = JSON.parse(zombiesInfo);
     zombies.push(createZombie(zombiesInfo.zombie.name, zombiesInfo.zombie.x, zombiesInfo.zombie.y, zombiesInfo.zombie.id));
-    console.log('zombies', zombies)
-
     resourcesZombies = zombiesInfo.resources;
 });
+
 sock.on('gameFieldSetSun', plantInfo => {
     plantInfo = JSON.parse(plantInfo);
     plants[plantInfo.index].hasSun = false;
@@ -458,11 +473,12 @@ sock.on('gameFieldSetBrains', zombieInfo => {
     zombies[zombieInfo.index].timer = 0;
     resourcesZombies = zombieInfo.brains;
 });
+
 sock.on('gameFieldPassiveResources', resources => {
     resources = JSON.parse(resources);
     resourcesPlants = resources.sun;
     resourcesZombies = resources.brains;
-})
+});
 
 // sock.on('gameFieldRemovePlant', index => {
 //     plants.splice(index, 1);

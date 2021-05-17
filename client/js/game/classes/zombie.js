@@ -18,8 +18,6 @@ class Zombie {
         this.speed = 0.75;
         this.walkSpeed = this.speed;
 
-        this.isAttacking = false;
-        this.isMoving = false;
         this.timer = 0;
     }
     draw(){
@@ -40,9 +38,7 @@ class Zombie {
     update(){
         this.timer++;
 
-        if (this.isAttacking === false) {
-            this.x -= this.walkSpeed;
-        }
+        this.x -= this.walkSpeed;
     }
 }
 
@@ -75,9 +71,7 @@ export class Grave extends Zombie {
     }
 
     update() {
-        super.update();
-
-        this.walkSpeed = 0;
+        this.timer++;
 
         if (this.timer % (this.generateSpeed * 60) === 0 && this.hasBrains === false) {
             this.hasBrains = true;

@@ -27,7 +27,7 @@ export class Plant {
         context.fillStyle = 'red';
         context.font = '20px Arial';
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height);
-        // context.fillText(Math.floor(this.timer), this.x, this.y + 25);
+        context.fillText(Math.floor(this.timer), this.x, this.y + 25);
 
         // context.strokeStyle = 'purple';
         // context.lineWidth = 2;
@@ -38,7 +38,7 @@ export class Plant {
         this.timer++;
 
         if (this.timer % (this.attackSpeed * 60) === 0) {
-            projectiles.push(new Projectile(this.x, this.y, this.projectileSprite));
+            projectiles.push(new Projectile(this.x, this.y, this.special, this.projectileSprite));
         }
     }
 }
@@ -70,7 +70,9 @@ export class Sunflower extends Plant {
         if (this.hasSun === true) {
             const sprite = new Image();
             sprite.src = this.projectileSprite;
-            context.drawImage(sprite, this.x, this.y, this.width, this.width); // height = width om vierkant te houden
+            context.globalAlpha = 0.85;
+            context.drawImage(sprite, this.x, this.y, this.width + 20, this.width + 20); // height = width om vierkant te houden
+            context.globalAlpha = 1;
         }
     }
 
