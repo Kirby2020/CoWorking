@@ -249,7 +249,11 @@ function getSelectedZombieCost() {
 
 function Cooldown() {
     var timeLeft = this.cooldown;
-    var elem = document.getElementById('some_div'); //gewoon om voorlopig even op te stellen
+    //   var elem = canvas.addEventListener(click,(e)=>{
+    //   const {x, y} = getMouseCoordinates(canvas, e);
+    //   const gridPositionX = x - (x % CELL_SIZE.width);
+    //   const gridPositionY = y - (y % CELL_SIZE.height);
+    //   });
     var timerId = setInterval(countdown, 1000);
 
     function countdown() {
