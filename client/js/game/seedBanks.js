@@ -1,38 +1,46 @@
-import { context, seedBankGridPlants, seedBankGridZombies, seedBankPlants, seedBankZombies, SEEDSLOT_SIZE } from './constants.js';
+import {
+    canvas,
+    context,
+    seedBankGridPlants,
+    seedBankGridZombies,
+    seedBankPlants,
+    seedBankZombies,
+    SEEDSLOT_SIZE
+} from './constants.js';
 import { CellSeedBank } from './classes/Cell.js';
 import { loadImage } from './loaders.js';
+import { time } from './game.js';
 
 let seedBankPlantGraphic;
 let seedBankZombieGraphic;
 
 
 loadImage('./assets/images/gui/seedBankPlants.png')
-.then(image => {
-    seedBankPlantGraphic = image;
-}); 
+    .then(image => {
+        seedBankPlantGraphic = image;
+    });
 
 loadImage('./assets/images/gui/seedBankZombies.png')
-.then(image => {
-    seedBankZombieGraphic = image;
-}); 
-
-
+    .then(image => {
+        seedBankZombieGraphic = image;
+    });
 
 
 // Maakt in het geheugen een grid op de seedbanks met cellen
 function createSeedBankGridPlants() {
-    for (let y = seedBankPlants.y; y <= 1 * SEEDSLOT_SIZE.height; y += SEEDSLOT_SIZE.height) {
+    for (let y = seedBankPlants.y; y <= SEEDSLOT_SIZE.height; y += SEEDSLOT_SIZE.height) {
         for (let x = seedBankPlants.x + SEEDSLOT_SIZE.width + 25; x < seedBankPlants.x + 7 * SEEDSLOT_SIZE.width; x += SEEDSLOT_SIZE.width + 5) {
             seedBankGridPlants.push(new CellSeedBank(x, y));
         }
-    }    
+    }
 }
+
 function createSeedBankGridZombies() {
-    for (let y = seedBankZombies.y; y <= 1 * SEEDSLOT_SIZE.height; y += SEEDSLOT_SIZE.height) {
+    for (let y = seedBankZombies.y; y <= SEEDSLOT_SIZE.height; y += SEEDSLOT_SIZE.height) {
         for (let x = seedBankZombies.x + 10; x < seedBankZombies.x + 6 * SEEDSLOT_SIZE.width; x += SEEDSLOT_SIZE.width + 5) {
             seedBankGridZombies.push(new CellSeedBank(x, y));
         }
-    }    
+    }
 }
 
 createSeedBankGridPlants();
@@ -40,6 +48,7 @@ createSeedBankGridZombies();
 
 // Tekent de grid op de seedbanks
 function drawSeedBanksGrid() {
+    drawTime();
     for (let i = 0; i < seedBankGridPlants.length; i++) {
         let seedBankCell = seedBankGridPlants[i]
         seedBankCell.draw();
@@ -52,6 +61,10 @@ function drawSeedBanksGrid() {
         context.fillStyle = 'gold';
         context.font = '40px Arial';
         context.fillText(Math.floor(Object.values(plantCosts)[i]), seedBankCell.x, seedBankCell.y + seedBankCell.height);
+
+        if (time >= 600 && i === 0) {
+            drawRedX(seedBankCell);
+        }
     }
     for (let i = 0; i < seedBankGridZombies.length; i++) {
         let seedBankCell = seedBankGridZombies[i]
@@ -67,11 +80,37 @@ function drawSeedBanksGrid() {
             context.fillStyle = 'gold';
             context.font = '40px Arial';
             context.fillText(Math.floor(Object.values(zombieCosts)[i]), seedBankCell.x, seedBankCell.y + seedBankCell.height);
-    }
-    catch (error) {
 
+            if (time >= 600 && i === 0) {
+                drawRedX(seedBankCell);
+            }
+        } catch (error) {
+
+        }
     }
-    }
+}
+
+function drawTime() {
+    let timeString = ((time / 60) < 10 ? '0' : '') + Math.floor(time / 60) + ':' + ((time % 60) < 10 ? '0' : '') + (time % 60)
+    context.fillStyle = 'white';
+    context.fillRect(1, canvas.height - 27, seedBankGridPlants[0].width, 26);
+    context.strokeStyle = 'black';
+    context.strokeRect(1, canvas.height - 27, seedBankGridPlants[0].width, 26);
+    context.fillStyle = 'black';
+    context.fillText(timeString, 3, canvas.height - 4);
+}
+
+function drawRedX(seedBankCell) {
+    context.strokeStyle = 'red';
+    context.lineWidth = 3;
+    context.beginPath();
+    context.moveTo(seedBankCell.x, seedBankCell.y);
+    context.lineTo(seedBankCell.x + seedBankCell.width, seedBankCell.y + seedBankCell.height);
+    context.stroke();
+    context.beginPath();
+    context.moveTo(seedBankCell.x + seedBankCell.width, seedBankCell.y);
+    context.lineTo(seedBankCell.x, seedBankCell.y + seedBankCell.height);
+    context.stroke();
 }
 
 // Tekent de achtergrond voor de seedbanks

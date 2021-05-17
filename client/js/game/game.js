@@ -73,6 +73,7 @@ let plants = [];  // Slaat alle gegevens op van de planten op het scherm
 let zombies = []; // Slaat alle gegevens op van de zombies op het scherm
 let lawnmowers = []; // data voor grasmaaiers
 let targets = []; // data voor targets
+export let time = 0;
 export let projectiles = [];
 let winner;
 // Client specifiek
@@ -117,9 +118,13 @@ canvas.addEventListener('click', (e) => {
             }
         }
 
+        if (time >= 600 && getSelectedPlant() === 'sunflower') {
+            return;
+        }
+
         if (resourcesPlants >= getSelectedPlantCost()) {
             // console.warn(getSelectedPlantCost())
-            sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}))
+            sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}));
         }
     } else if (currentRole === "Zombies") {
         // ---------- SEEDBANKS ----------
@@ -146,16 +151,20 @@ canvas.addEventListener('click', (e) => {
                     return;
                 }
                 if (getSelectedZombie() === 'grave' && zombies[i] instanceof Zombie.Grave) {
-                    console.warn('sdfhusjdf')
+                    console.warn('It\'s a grave...')
                     return;
                 }
 
-            }   
+            }
         }
-        
+
+
+        if (time >= 600 && getSelectedZombie() === 'grave') {
+            return;
+        }
 
         if (resourcesZombies >= getSelectedZombieCost()) {
-            sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}))
+            sock.emit('gameFieldAddZombie', ({name: getSelectedZombie(), x: gridPositionX, y: gridPositionY}));
 
             // alternative maybe: verzendt naam, x en y naar de server
             // server voegt die toe aan de array en stuurt de array terug
@@ -443,7 +452,7 @@ function getSpecial(projectile) {
         return;
     }
     console.log(projectile.special)
-};
+}
 
 // Bij het ontvangen van een nieuwe rol wordt deze toegekend aan de client
 sock.on('role', role => {
@@ -483,6 +492,9 @@ sock.on('gameFieldPassiveResources', resources => {
     resourcesPlants = resources.sun;
     resourcesZombies = resources.brains;
 });
+sock.on('time', (timer) => {
+    time = timer;
+})
 
 // sock.on('gameFieldRemovePlant', index => {
 //     plants.splice(index, 1);

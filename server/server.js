@@ -79,14 +79,17 @@ setInterval(() => {
     if (timerOn) {
         timer++;
         console.log(timer);
-        if (timer === 30) {
+        io.emit('time', timer);
+        if (timer % 60 === 0) {
             const resources = gameField.passiveResources();
             io.emit('gameFieldPassiveResources', JSON.stringify(resources));
-            timer = 0;
+        }
+        if (timer === 600) {
+            io.emit('chatMessage', `> <span style="color:red">SUDDEN DEATH!</span>`)
         }
     }
     console.log('--------------------------------')
-}, 2000)
+}, 1000);
 
 
 // Wanneer iemand verbind met de server (naar de site gaat)
