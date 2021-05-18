@@ -55,7 +55,6 @@ const gameState = new GameState();
 const cursors = new Cursors();
 const gameField = new GameField();
 let timer = 0;
-let timerOn = false
 let gameRoomNumber = 1;
 let playersInRoom = 0;
 
@@ -76,7 +75,7 @@ setInterval(() => {
     console.log('SET', playerSet);
     console.log('CURSORS', cursors);
     console.log('GAMEFIELD', gameField);
-    if (timerOn) {
+    if (gameState.get() === 'in game') {
         timer++;
         console.log(timer);
         io.emit('time', timer);
@@ -189,10 +188,17 @@ io.on('connection', (sock) => {
 
         // als een winnaar bepaald is stuur het naar alle spelers
         sock.on('win', (winner) => {
-            io.emit('chatMessage', `${winner} winnen!`);
+            io.emit('chatMessage', `> ${winner} winnen!`);
             io.emit('win', winner);
             gameField.setWinner(winner);
+            gameState.set('results');
+            for (const player of playerSet.players) {
+                playerSet.setRole(player.username, 'spectating');
+                playerSet.setState(player.username, 'in lobby');
+            }
+            io.emit('playerList', JSON.stringify([...playerSet.players]));
             gameField.reset();
+            timer = 0;
             io.emit('gameFieldReset', JSON.stringify(gameField));
         });
 
@@ -203,11 +209,10 @@ io.on('connection', (sock) => {
             console.log('from', from, 'to', to);
             io.to(getId(to)).emit('invite', (from))
             sock.emit('statusInvite', "pending");
-
         });
 
         // Als de persoon reageert op jouw invite stuurt hij die response terug naar jou
-        // Beide spelers hun status verandere naar selecting
+        // Beide spelers hun status veranderd naar selecting
         // Later worden ze in een aparte gameroom gestoken
         sock.on('responseInvite', ({response, to, from}) => {
             console.log(to + ' ' + response + ' ' + from);
@@ -231,7 +236,6 @@ io.on('connection', (sock) => {
                 io.to(getId(to)).emit('role', ("Zombies"));
 
                 timer = 0;
-                timerOn = true;
 
                 io.emit('playerList', JSON.stringify([...playerSet.players]));
             }
@@ -246,7 +250,8 @@ io.on('connection', (sock) => {
                 playersInRoom = 0;
             } else {
                 sock.join('gameRoom' + gameRoomNumber);
-                gameState.set('selecting');
+                // gameState.set('selecting');
+                gameState.set('in game'); // aangezien we geen select screen hebben
                 console.log(gameState.get());
             }
         })

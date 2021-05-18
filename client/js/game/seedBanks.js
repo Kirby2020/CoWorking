@@ -49,6 +49,7 @@ createSeedBankGridZombies();
 // Tekent de grid op de seedbanks
 function drawSeedBanksGrid() {
     drawTime();
+    // drawRedText()
     for (let i = 0; i < seedBankGridPlants.length; i++) {
         let seedBankCell = seedBankGridPlants[i]
         seedBankCell.draw();
@@ -111,6 +112,15 @@ function drawRedX(seedBankCell) {
     context.moveTo(seedBankCell.x + seedBankCell.width, seedBankCell.y);
     context.lineTo(seedBankCell.x, seedBankCell.y + seedBankCell.height);
     context.stroke();
+    drawRedText()
+}
+
+function drawRedText() {
+    if (time <= 605) { // toont de text voor 5 seconden
+        context.fillStyle = 'red';
+        context.font = '70px Rock Salt, cursive';
+        context.fillText('SUDDEN DEATH!', canvas.width / 4, canvas.height * 3 / 5)
+    }
 }
 
 // Tekent de achtergrond voor de seedbanks

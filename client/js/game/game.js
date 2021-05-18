@@ -66,7 +66,7 @@ sock.on('mouse move', (cursors) => {
 // ---------- GAME ----------
 
 // Slaat alle data op van de server
-let currentRole = "Spectator"; // plant of zombie, default : spectator
+let currentRole = "spectating"; // plant of zombie, default : spectator
 let resourcesPlants = 200; // Je begint steeds met 75 sun 
 let resourcesZombies = 200; // Je begint steeds met 75 brains 
 let plants = [];  // Slaat alle gegevens op van de planten op het scherm
@@ -75,7 +75,7 @@ let lawnmowers = []; // data voor grasmaaiers
 let targets = []; // data voor targets
 export let time = 0;
 export let projectiles = [];
-let winner;
+export let winner;
 // Client specifiek
 let currentFrame = 0;
 let selectedSeedSlots = {plant: 0, zombie: 0}
@@ -388,12 +388,11 @@ function drawGoals() {
                 i--;
                 sock.emit('gameFieldRemoveTarget', (i));
             }
-            if (targets.length < 3) {
-                sock.emit('win', 'Plants');
-                winner = 'Plants';
-            }
-
         }
+    }
+    if (targets.length < 3) {
+        sock.emit('win', 'Plants');
+        winner = 'Plants';
     }
 }
 
@@ -514,7 +513,7 @@ sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
     console.warn(gameField)
 
-    currentRole = "Zombies"; 
+    currentRole = "spectating";
     resourcesPlants = gameField.resourcesPlants; 
     resourcesZombies = gameField.resourcesZombies;
     plants = gameField.plants; 

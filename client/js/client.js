@@ -1,5 +1,5 @@
 // Verbindt ofwel met de live server of de local server
-import { sock } from './game/game.js';
+import { sock, winner } from './game/game.js';
 // const sock = io.connect('https://game.jonathanvercammen.ikdoeict.be');
 
 let memory = {};
@@ -175,6 +175,42 @@ function inviteResponseListener() {
         });
     });
 }
+
+sock.on('win', winner => {
+
+    const element = document.getElementById('win-box');
+    console.log(element);
+    element.style.display = 'flex';
+    element.innerHTML = '';
+    let markup;
+
+    if (winner === "Plants") {
+        markup = `
+        <div>
+            <button onclick="document.getElementById('win-box').style.display = 'none'">X</button>
+            <div>
+                <img src="./assets/images/plants/seedslots2/sunflowerSeedSlotSprite2.png" alt="sunflower">
+                <img src="./assets/images/trophy_hi_res.png" alt="trofee">
+            </div>
+            <p>Plants winnen!</p>
+        </div>`;
+    } else if (winner === "Zombies") {
+        markup = `
+        <div>
+            <button onclick="document.getElementById('win-box').style.display = 'none'">X</button>
+            <div>
+                <img src="./assets/images/trophy_hi_res.png" alt="trofee">
+                <img src="./assets/images/zombies/seedslots/normalZombieSeedSlot.png" alt="zombie">
+            </div>
+            <p>Zombies winnen!</p>
+        </div>`;
+    }
+    // https://css-tricks.com/get-references-from-html-built-with-template-literals/
+    const getNodes = str => {
+        return new DOMParser().parseFromString(str, 'text/html').body.childNodes;
+    }
+    element.appendChild(getNodes(markup)[0]);
+});
 
 // Bij het ontvangen van een chatbericht door de server of andere client
 // wordt het bericht in de chatbox weergegeven
