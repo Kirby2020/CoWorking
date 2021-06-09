@@ -255,24 +255,24 @@ function getSelectedZombieCost() {
         case 5: return 100;
     }
 }
-
+//timer voor cooldown
+var kanPlaatsen = false;
 function Cooldown() {
     var timeLeft = this.cooldown;
-    //   var elem = canvas.addEventListener(click,(e)=>{
-    //   const {x, y} = getMouseCoordinates(canvas, e);
-    //   const gridPositionX = x - (x % CELL_SIZE.width);
-    //   const gridPositionY = y - (y % CELL_SIZE.height);
-    //   });
     var timerId = setInterval(countdown, 1000);
 
     function countdown() {
         if (timeLeft === -1) {
             clearTimeout(timerId);
+
             //Kan weer zombie/plant toevoegen
+            kanPlaatsen=true;
         } else {
             elem.innerHTML = 'wait: ' + timeLeft;
             timeLeft--;
+
             //Niet knn toevoegen van zombies/planten
+            kanPlaatsen=false;
         }
     }
 }
@@ -536,36 +536,37 @@ sock.on('gameFieldReset', gameField => {
 sock.on('selectedSeedSlot', selectedSeedSlot => {
     selectedSeedSlots = JSON.parse(selectedSeedSlot);
 });
+if(kanPlaatsen===true) {
+    function createPlant(name, x, y) {
+        switch (name) {
+            case 'sunflower':
+                return new Plant.Sunflower(x, y);
+            case 'peashooter':
+                return new Plant.Peashooter(x, y);
+            case 'repeater':
+                return new Plant.Repeater(x, y);
+            case 'wallnut':
+                return new Plant.Wallnut(x, y);
+            case 'tallnut':
+                return new Plant.Tallnut(x, y);
+            case 'snowpea':
+                return new Plant.Snowpea(x, y);
+            case 'potatomine':
+                return new Plant.PotatoMine(x, y);
+            case 'cherrybomb':
+                return new Plant.CherryBomb(x, y);
+            case 'chomper':
+                return new Plant.Chomper(x, y);
+            case 'squash':
+                return new Plant.Squash(x, y);
+            case 'jalapeno':
+                return new Plant.Jalapeno(x, y);
+            case 'pumpkin':
+                return new Plant.Pumpkin(x, y);
+            case 'torchwood':
+                return new Plant.Torchwood(x, y);
 
-function createPlant(name, x, y) {
-    switch (name) {
-        case 'sunflower':
-            return new Plant.Sunflower(x, y);
-        case 'peashooter':
-            return new Plant.Peashooter(x, y);
-        case 'repeater':
-            return new Plant.Repeater(x, y);
-        case 'wallnut':
-            return new Plant.Wallnut(x, y);
-        case 'tallnut':
-            return new Plant.Tallnut(x, y);
-        case 'snowpea':
-            return new Plant.Snowpea(x, y);
-        case 'potatomine':
-            return new Plant.PotatoMine(x, y);
-        case 'cherrybomb':
-            return new Plant.CherryBomb(x, y);
-        case 'chomper':
-            return new Plant.Chomper(x, y);
-        case 'squash':
-            return new Plant.Squash(x, y);
-        case 'jalapeno':
-            return new Plant.Jalapeno(x, y);
-        case 'pumpkin':
-            return new Plant.Pumpkin(x, y);
-        case 'torchwood':
-            return new Plant.Torchwood(x, y);
-
+        }
     }
 }
 
@@ -587,21 +588,22 @@ function createPlant(name, x, y) {
 //         }
 //     }) 
 // }
-
-function createZombie(name, x, y, id) {
-    switch (name) {
-        case 'grave':
-            return new Zombie.Grave(x, y, id);
-        case 'normalZombie':
-            return new Zombie.NormalZombie(x, y, id);
-        case 'coneheadZombie':
-            return new Zombie.ConeheadZombie(x, y, id);
-        case 'bucketheadZombie':
-            return new Zombie.BucketheadZombie(x, y, id);
-        case 'newspaperZombie':
-            return new Zombie.NewspaperZombie(x, y, id);
-        case 'polevaultingZombie':
-            return new Zombie.PolevaultingZombie(x, y, id);
+if (kanPlaatsen === true) {
+    function createZombie(name, x, y, id) {
+        switch (name) {
+            case 'grave':
+                return new Zombie.Grave(x, y, id);
+            case 'normalZombie':
+                return new Zombie.NormalZombie(x, y, id);
+            case 'coneheadZombie':
+                return new Zombie.ConeheadZombie(x, y, id);
+            case 'bucketheadZombie':
+                return new Zombie.BucketheadZombie(x, y, id);
+            case 'newspaperZombie':
+                return new Zombie.NewspaperZombie(x, y, id);
+            case 'polevaultingZombie':
+                return new Zombie.PolevaultingZombie(x, y, id);
+        }
     }
 }
 
