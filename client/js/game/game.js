@@ -123,7 +123,7 @@ canvas.addEventListener('click', (e) => {
         }
 
         if (resourcesPlants >= getSelectedPlantCost()) {
-            // console.warn(getSelectedPlantCost())
+            
             sock.emit('gameFieldAddPlant', ({name: getSelectedPlant(), x: gridPositionX, y: gridPositionY}));
         }
     } else if (currentRole === "Zombies") {
@@ -208,6 +208,7 @@ canvas.addEventListener('keypress', (e) => {
     sock.emit('selectedSeedSlot', (JSON.stringify(selectedSeedSlots)));
 });
 
+
 // Functie die kijkt welke seedslot er geselecteerd is en de juiste plant eraan toevoegt
 function getSelectedPlant() {
     switch (selectedSeedSlots.plant) {
@@ -255,6 +256,7 @@ function getSelectedZombieCost() {
         case 5: return 100;
     }
 }
+
 //timer voor cooldown
 var kanPlaatsen = false;
 function Cooldown() {
@@ -459,7 +461,6 @@ sock.on('role', role => {
     console.warn('changed role: ', currentRole);
 });
 
-
 // Als de server iets doorstuurt van nieuwe plant, zombie ...
 // wordt die toegevoegd/verwijderd op de client array
 sock.on('gameFieldAddPlant', plantsInfo => {
@@ -491,9 +492,10 @@ sock.on('gameFieldPassiveResources', resources => {
     resourcesPlants = resources.sun;
     resourcesZombies = resources.brains;
 });
+
 sock.on('time', (timer) => {
     time = timer;
-})
+});
 
 // sock.on('gameFieldRemovePlant', index => {
 //     plants.splice(index, 1);
@@ -513,7 +515,7 @@ sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
     console.warn(gameField)
 
-    currentRole = "spectating";
+    currentRole = "Plants";
     resourcesPlants = gameField.resourcesPlants; 
     resourcesZombies = gameField.resourcesZombies;
     plants = gameField.plants; 
@@ -536,7 +538,8 @@ sock.on('gameFieldReset', gameField => {
 sock.on('selectedSeedSlot', selectedSeedSlot => {
     selectedSeedSlots = JSON.parse(selectedSeedSlot);
 });
-if(kanPlaatsen===true) {
+
+if (kanPlaatsen){
     function createPlant(name, x, y) {
         switch (name) {
             case 'sunflower':
@@ -570,25 +573,8 @@ if(kanPlaatsen===true) {
     }
 }
 
-// function createZombie(name, x, y, id) {
-//     return new Promise((resolve, reject) => {
-//         switch (name) {
-//             case 'grave':
-//                 resolve(new Zombie.Grave(x, y, id));
-//             case 'normalZombie':
-//                 resolve(new Zombie.NormalZombie(x, y, id));
-//             case 'coneheadZombie':
-//                 resolve(new Zombie.ConeheadZombie(x, y, id));
-//             case 'bucketheadZombie':
-//                 resolve(new Zombie.BucketheadZombie(x, y, id));
-//             case 'newspaperZombie':
-//                 resolve(new Zombie.NewspaperZombie(x, y, id));
-//             case 'polevaultingZombie':
-//                 resolve(new Zombie.PolevaultingZombie(x, y, id));
-//         }
-//     }) 
-// }
-if (kanPlaatsen === true) {
+
+if (kanPlaatsen) {
     function createZombie(name, x, y, id) {
         switch (name) {
             case 'grave':

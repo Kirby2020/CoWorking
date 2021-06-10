@@ -27,7 +27,7 @@ export class Plant {
         context.fillStyle = 'red';
         context.font = '20px Arial';
         context.fillText(Math.floor(this.health), this.x, this.y + CELL_SIZE.height);
-        context.fillText(Math.floor(this.timer), this.x, this.y + 25);
+        // context.fillText(Math.floor(this.timer), this.x, this.y + 25);
 
         // context.strokeStyle = 'purple';
         // context.lineWidth = 2;

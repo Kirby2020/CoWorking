@@ -31,9 +31,9 @@ class Zombie {
         // context.fillText(Math.floor(this.timer), this.x, this.y + 25);
 
         // HITBOX
-        context.strokeStyle = 'purple';
-        context.lineWidth = 2;
-        context.strokeRect(this.x, this.y, this.width, this.height);
+        // context.strokeStyle = 'purple';
+        // context.lineWidth = 2;
+        // context.strokeRect(this.x, this.y, this.width, this.height);
     }
     update(){
         this.timer++;
