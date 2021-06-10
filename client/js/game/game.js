@@ -11,7 +11,7 @@ import {
 } from './constants.js';
 import {drawGameGrid} from './gameGrid.js';
 import {drawSeedBanks} from './seedBanks.js';
-import {Cell} from './classes/Cell.js';
+import {Cell, CellSeedBank} from './classes/Cell.js';
 import {collision} from './utils.js';
 import * as Plant from './classes/plants.js';
 import * as Zombie from './classes/zombie.js';
@@ -217,7 +217,7 @@ function getSelectedPlant() {
         case 2: return 'repeater';
         case 3: return 'wallnut';
         case 4: return 'snowpea';
-        case 5: return 'chomper';
+        case 5: return 'potatomine';
     }
 }
 
@@ -229,7 +229,7 @@ function getSelectedPlantCost() {
         case 2: return 150;
         case 3: return 50;
         case 4: return 175;
-        case 5: return 150;
+        case 5: return 25;
     }
 }
 
@@ -281,7 +281,7 @@ function Cooldown() {
 
 // Overloopt alle planten op het speelveld en tekent ze
 // eventueel wordt de update() functie van een plant uitgevoerd
-function drawPlants() {
+async function drawPlants() {
     for (let i = 0; i < plants.length; i++) {
         // console.log(plants[i])
         if (plants[i]) {
@@ -294,15 +294,27 @@ function drawPlants() {
             if (zombies[j] && plants[i] && collision(zombies[j], plants[i])) {
                 zombies[j].walkSpeed = 0;
                 plants[i].health -= 0.4;
+
+                if (plants[i] instanceof Plant.PotatoMine) {
+                    zombies.splice(j, 1);
+                    plants.splice(i, 1);
+                    i--;
+                    j--;
+                }
+
             }
 
             if (zombies[j] && plants[i] && plants[i].health <= 0) {
                 // sock.emit('gameFieldRemovePlant', (i));
-                const zombiesSamePosition = getZombiesSamePosition(zombies[j].x);
-                zombiesSamePosition.forEach(zombie => {
-                    zombie.walkSpeed = zombie.speed;
-                })
-                zombies[j].walkSpeed = zombies[j].speed;
+                const zombiesSamePosition = await getZombiesSamePosition(zombies[j].x, 10);
+                if(zombiesSamePosition.length > 1) {
+                    zombiesSamePosition.forEach(zombie => {
+                        zombie.walkSpeed = zombie.speed;
+                    })
+                }
+                else {
+                    zombies[j].walkSpeed = zombies[j].speed;
+                }
                 plants.splice(i, 1);
                 i--;
             }
@@ -316,14 +328,18 @@ function drawPlants() {
     }
 }
 
-function getZombiesSamePosition(x) {
-    const zombiesSamePosition = [];
-    zombies.forEach(zombie => {
-        if (zombie.x === x) {
-            zombiesSamePosition.push(zombie);
-        }
-    });
-    return zombiesSamePosition;
+function getZombiesSamePosition(x, acc) {
+    return new Promise((resolve, reject) => {
+        const zombiesSamePosition = [];
+        zombies.forEach(zombie => {
+            if (zombie.x >= x - acc && zombie.x <= x + acc ) {
+                zombiesSamePosition.push(zombie);
+            }
+        });
+        resolve(zombiesSamePosition.reverse());
+
+    })
+
 }
 
 // Overloopt alle zombies op het speelveld en tekent ze
@@ -515,7 +531,7 @@ sock.on('gameFieldReset', gameField => {
     gameField = JSON.parse(gameField);
     console.warn(gameField)
 
-    currentRole = "Plants";
+    currentRole = "Spectating";
     resourcesPlants = gameField.resourcesPlants; 
     resourcesZombies = gameField.resourcesZombies;
     plants = gameField.plants; 

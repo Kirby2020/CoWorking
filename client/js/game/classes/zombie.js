@@ -66,7 +66,9 @@ export class Grave extends Zombie {
         if (this.hasBrains === true) {
             const sprite = new Image();
             sprite.src = this.projectileSprite;
+            context.globalAlpha = 0.85;
             context.drawImage(sprite, this.x, this.y, this.width, this.width); // height = width om vierkant te houden
+            context.globalAlpha = 1;
         }
     }
 

@@ -30,5 +30,3 @@ export class CellSeedBank extends Cell {
         this.height = SEEDSLOT_SIZE.height; // Gaat waarschijnlijk nog weg
     }
 }
-
-

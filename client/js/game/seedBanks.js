@@ -140,7 +140,8 @@ const plantSprites = {
     repeater: './assets/images/plants/seedslots2/repeaterSeedSlotSprite2.png',
     wallnut: './assets/images/plants/seedslots2/wallnutSeedSlotSprite2.png',
     snowpea: './assets/images/plants/seedslots2/snowpeaSeedSlotSprite2.png',
-    chomper: './assets/images/plants/seedslots2/chomperSeedSlotSprite2.png'
+    potatomine: './assets/images/plants/seedslots2/potatomineSeedSlotSprite2.png'
+    //chomper: './assets/images/plants/seedslots2/chomperSeedSlotSprite2.png'
 }
 
 const plantCosts = {
@@ -149,7 +150,8 @@ const plantCosts = {
     repeater: 150,
     wallnut: 50,
     snowpea: 175,
-    chomper: 150
+    potatomine: 25
+    //chomper: 150
 }
 
 const zombieSprites = {
