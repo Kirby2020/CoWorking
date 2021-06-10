@@ -555,59 +555,57 @@ sock.on('selectedSeedSlot', selectedSeedSlot => {
     selectedSeedSlots = JSON.parse(selectedSeedSlot);
 });
 
-if (kanPlaatsen){
-    function createPlant(name, x, y) {
-        switch (name) {
-            case 'sunflower':
-                return new Plant.Sunflower(x, y);
-            case 'peashooter':
-                return new Plant.Peashooter(x, y);
-            case 'repeater':
-                return new Plant.Repeater(x, y);
-            case 'wallnut':
-                return new Plant.Wallnut(x, y);
-            case 'tallnut':
-                return new Plant.Tallnut(x, y);
-            case 'snowpea':
-                return new Plant.Snowpea(x, y);
-            case 'potatomine':
-                return new Plant.PotatoMine(x, y);
-            case 'cherrybomb':
-                return new Plant.CherryBomb(x, y);
-            case 'chomper':
-                return new Plant.Chomper(x, y);
-            case 'squash':
-                return new Plant.Squash(x, y);
-            case 'jalapeno':
-                return new Plant.Jalapeno(x, y);
-            case 'pumpkin':
-                return new Plant.Pumpkin(x, y);
-            case 'torchwood':
-                return new Plant.Torchwood(x, y);
+function createPlant(name, x, y) {
+    switch (name) {
+        case 'sunflower':
+            return new Plant.Sunflower(x, y);
+        case 'peashooter':
+            return new Plant.Peashooter(x, y);
+        case 'repeater':
+            return new Plant.Repeater(x, y);
+        case 'wallnut':
+            return new Plant.Wallnut(x, y);
+        case 'tallnut':
+            return new Plant.Tallnut(x, y);
+        case 'snowpea':
+            return new Plant.Snowpea(x, y);
+        case 'potatomine':
+            return new Plant.PotatoMine(x, y);
+        case 'cherrybomb':
+            return new Plant.CherryBomb(x, y);
+        case 'chomper':
+            return new Plant.Chomper(x, y);
+        case 'squash':
+            return new Plant.Squash(x, y);
+        case 'jalapeno':
+            return new Plant.Jalapeno(x, y);
+        case 'pumpkin':
+            return new Plant.Pumpkin(x, y);
+        case 'torchwood':
+            return new Plant.Torchwood(x, y);
 
-        }
     }
 }
 
 
-if (kanPlaatsen) {
-    function createZombie(name, x, y, id) {
-        switch (name) {
-            case 'grave':
-                return new Zombie.Grave(x, y, id);
-            case 'normalZombie':
-                return new Zombie.NormalZombie(x, y, id);
-            case 'coneheadZombie':
-                return new Zombie.ConeheadZombie(x, y, id);
-            case 'bucketheadZombie':
-                return new Zombie.BucketheadZombie(x, y, id);
-            case 'newspaperZombie':
-                return new Zombie.NewspaperZombie(x, y, id);
-            case 'polevaultingZombie':
-                return new Zombie.PolevaultingZombie(x, y, id);
-        }
+
+function createZombie(name, x, y, id) {
+    switch (name) {
+        case 'grave':
+            return new Zombie.Grave(x, y, id);
+        case 'normalZombie':
+            return new Zombie.NormalZombie(x, y, id);
+        case 'coneheadZombie':
+            return new Zombie.ConeheadZombie(x, y, id);
+        case 'bucketheadZombie':
+            return new Zombie.BucketheadZombie(x, y, id);
+        case 'newspaperZombie':
+            return new Zombie.NewspaperZombie(x, y, id);
+        case 'polevaultingZombie':
+            return new Zombie.PolevaultingZombie(x, y, id);
     }
 }
+
 
 
 function update() {

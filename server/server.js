@@ -79,7 +79,7 @@ setInterval(() => {
         timer++;
         console.log(timer);
         io.emit('time', timer);
-        if (timer % 60 === 0) {
+        if (timer % 10 === 0) {
             const resources = gameField.passiveResources();
             io.emit('gameFieldPassiveResources', JSON.stringify(resources));
         }
