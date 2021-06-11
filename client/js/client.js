@@ -27,6 +27,7 @@ function logChat(message) {
 
     parent.appendChild(p);
     parent.scrollTop = parent.scrollHeight;
+    document.getElementById('chatForm').scrollIntoView();
 }
 
 // Voegt de lijst van spelers toe op het scherm
