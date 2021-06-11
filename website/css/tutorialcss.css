@@ -1,0 +1,41 @@
+.tutorialPart{
+    display: flex;
+    margin-top: 1rem;
+    justify-content: center;
+}
+.picturetut{
+    width: 50%;
+}
+.picturetut2{
+    width: 96%;
+    display: flex;
+    margin: 1rem auto auto;
+}
+p{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+h2{
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.textpart{
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+@media only screen and (max-width: 600px) {
+    .picturetut{
+        display: none;
+    }
+    .picturetut2{
+        display: none;
+    }
+    .textpart{
+        width: 95%;
+    }
+}

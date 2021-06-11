@@ -23,3 +23,14 @@ h2{
     transform: rotateY(180deg);
     margin-left: 2rem;
 }
+@media only screen and (max-width: 600px) {
+    .pictureplant{
+        display: none;
+    }
+    .picturezombie{
+        display: none;
+    }
+    h2{
+        margin-top: 2rem;
+    }
+}
