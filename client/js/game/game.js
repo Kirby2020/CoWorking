@@ -260,7 +260,7 @@ function getSelectedZombieCost() {
 //timer voor cooldown
 var kanPlaatsen = false;
 function Cooldown() {
-    var timeLeft = this.cooldown;
+    var timeLeft = Zombie.cooldown;
     var timerId = setInterval(countdown, 1000);
 
     function countdown() {
@@ -270,7 +270,7 @@ function Cooldown() {
             //Kan weer zombie/plant toevoegen
             kanPlaatsen=true;
         } else {
-            elem.innerHTML = 'wait: ' + timeLeft;
+            elem.innerHTML = 'wait: ' + Zombie.cooldown - timeLeft;
             timeLeft--;
 
             //Niet knn toevoegen van zombies/planten
