@@ -23,7 +23,8 @@
   "main": "./client/js/main.js",
   "scripts": {
     "startServer": "node ./server/server.js",
-    "start": "electron .",
+    "startClient": "electron .",
+    "start": "node ./server/server.js",
     "packager": "electron-packager ./ --platform=win32 --arch=ia32 --icon=client/assets/pvz.ico",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
