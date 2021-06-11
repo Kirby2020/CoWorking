@@ -1,5 +1,5 @@
 # Plants Versus Zombies Multiplayer
-Info & download op: https://pvz-info.jonathanvercammen.ikdoeict.be/
+Info & download op: https://margauxmeuleman.ikdoeict.be/semester2/coworking/
 
 Credits:
  - Meuleman Margaux
