@@ -38,3 +38,12 @@
 p{
     width: 95%;
 }
+@media only screen and (max-width: 600px) {
+    .lines{
+        display: block;
+    }
+    .standardsize{
+        width: 95%;
+        margin: 1rem auto auto;
+    }
+}
